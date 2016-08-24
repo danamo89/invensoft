@@ -1,0 +1,598 @@
+<ui:composition template="/WEB-INF/facelets/templates/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <h:form id="personasForm" >
+            <h:panelGroup id="generalPanelGroup" rendered="#{!personasController.showPersonasTable}">
+                <p:tabView id="generalTabView" cache="false" >
+                    <p:tab title="Informacion personal">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Información del Personal"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid style="width: 100%">
+                            <p:row>
+                                <p:column style="width: 5%">
+                                    <p:graphicImage name="images/broken.png" width="150" height="200"/>
+                                </p:column>
+                                <p:column>
+                                    <p:panelGrid style="width: 100%">
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Legajo" />
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputText label="Legajo" required="true" value="#{personasController.persona.legajo}" 
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="Lugar de Trabajo" />
+                                            </p:column>
+                                            <p:column style="width: 60%">
+                                                <p:inputText label="Lugar de Trabajo" required="true" value="#{personasController.persona.lugarDeTrabajo}" 
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid style="width: 100%">
+                                        <f:facet name="header">
+                                            <p:row>
+                                                <p:column style="text-align: center">
+                                                    <p:outputLabel value="Datos Personales"/>
+                                                </p:column>
+                                            </p:row>
+                                        </f:facet>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid style="width: 100%">
+                                        <p:row>
+                                            <p:column style="width: 10%">
+                                                <p:outputLabel value="Apellidos"/>
+                                            </p:column>
+                                            <p:column colspan="2">
+                                                <p:inputText label="Apellidos" required="true" value="#{personasController.persona.apellidos}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                            <p:column style="width: 12%">
+                                                <p:outputLabel value="Nombres"/>
+                                            </p:column>
+                                            <p:column colspan="2">
+                                                <p:inputText label="Nombres" required="true" value="#{personasController.persona.nombres}" 
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Tipo de Identificación"/>
+                                            </p:column>
+                                            <p:column style="width: 15%">
+                                                <p:selectOneMenu  value="#{personasController.persona.tipoIdentificacion.idTipoIdentificacion}" disabled="#{usuarioController.readOnly}">
+                                                    <f:selectItems var="tipoIdentificacion" value="#{personasController.tiposIdentificacionList}" 
+                                                                   itemLabel="#{tipoIdentificacion.descripcion}" itemValue="#{tipoIdentificacion.idTipoIdentificacion}"/>
+                                                </p:selectOneMenu >
+                                            </p:column>
+                                            <p:column style="width: 12%">
+                                                <p:outputLabel value="Número de Identificación"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputText value="#{personasController.persona.numeroIdentificacion}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="País de Origen"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:selectOneMenu  value="#{personasController.persona.paisOrigen.idPais}" style="width: 95%" 
+                                                                  disabled="#{usuarioController.readOnly}">
+                                                    <f:selectItems var="pais" value="#{personasController.paisesList}" 
+                                                                   itemLabel="#{pais.nombre}" itemValue="#{pais.idPais}"/>
+                                                </p:selectOneMenu >
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Lugar de Nacimiento"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputText value="#{personasController.persona.lugarNacimiento}" 
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="Fecha de Nacimiento"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:calendar navigator="true" pattern="dd/MM/yyyy" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                                            value="#{personasController.persona.fechaNacimiento}"/>
+                                            </p:column>
+                                            <p:column><p:outputLabel value="Estado Civíl"/></p:column>
+                                            <p:column>
+                                                <p:selectOneMenu  value="#{personasController.persona.estadoCivil.idEstadoCivil}" style="width: 95%" 
+                                                                  disabled="#{usuarioController.readOnly}">
+                                                    <f:selectItems var="estadoCivil" value="#{personasController.estadosCivilesList}" 
+                                                                   itemLabel="#{estadoCivil.descripcion}" itemValue="#{estadoCivil.idEstadoCivil}"/>
+                                                </p:selectOneMenu >
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="CUIL"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputMask mask="99-99999999-9" value="#{personasController.persona.cuil}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:tab>
+                    <p:tab title="Informacion de Contacto">
+                        <p:panelGrid id="personasInformacionDeContactoForm" style="width: 100%; vertical-align: top">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <p:panelGrid style="width: 100%">
+                                        <f:facet name="header">
+                                            <p:row>
+                                                <p:column style="text-align: center">
+                                                    <p:outputLabel value="Domicilio"/>
+                                                </p:column>
+                                            </p:row>
+                                        </f:facet>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid style="width: 100%">
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Domicilio"/>
+                                            </p:column>
+                                            <p:column colspan="5">
+                                                <p:inputText value="#{personasController.persona.domicilio}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Número"/>
+                                            </p:column>
+                                            <p:column style="width: 26%">
+                                                <p:inputText value="#{personasController.persona.numeroDomicilio}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="Piso"/>
+                                            </p:column>
+                                            <p:column style="width: 26%">
+                                                <p:inputText value="#{personasController.persona.piso}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="Depto"/>
+                                            </p:column>
+                                            <p:column style="width: 26%">
+                                                <p:inputText value="#{personasController.persona.departamento}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Código Postal"/>
+                                            </p:column>
+                                            <p:column style="width: 26%">
+                                                <p:inputText value="#{personasController.persona.codigoPostal}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="Localidad"/>
+                                            </p:column>
+                                            <p:column style="width: 26%">
+                                                <p:inputText value="#{personasController.persona.localidad}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="Provincia"/>
+                                            </p:column>
+                                            <p:column style="width: 26%">
+                                                <p:inputText value="#{personasController.persona.provincia}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid style="width: 100%">
+                                        <f:facet name="header">
+                                            <p:row>
+                                                <p:column style="text-align: center">
+                                                    <p:outputLabel value="Datos de Contacto"/>
+                                                </p:column>
+                                            </p:row>
+                                        </f:facet>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid style="width: 100%">
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="Telefono Particular"/>
+                                            </p:column>
+                                            <p:column style="width: 26%">
+                                                <p:inputText value="#{personasController.persona.telefonoParticular}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="Celular"/>
+                                            </p:column>
+                                            <p:column style="width: 26%">
+                                                <p:inputText value="#{personasController.persona.celular}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="E-Mail"/>
+                                            </p:column>
+                                            <p:column style="width: 26%">
+                                                <p:inputText value="#{personasController.persona.email}"
+                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:tab>
+                    <p:tab id="informacionFamiliarTab" title="Información Familiar">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Familiares"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid>
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel value="Nombre completo"/>
+                                </p:column>
+                                <p:column colspan="5">
+                                    <p:inputText value="#{personasController.familiar.nombre}"
+                                                 readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel value="Tipo de Identificación"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu  value="#{personasController.familiar.tipoIdentificacion.idTipoIdentificacion}" style="width: 95%" 
+                                                      disabled="#{usuarioController.readOnly}">
+                                        <f:selectItems var="tipoIdentificacion" value="#{personasController.tiposIdentificacionList}" 
+                                                       itemLabel="#{tipoIdentificacion.descripcion}" itemValue="#{tipoIdentificacion.idTipoIdentificacion}"/>
+                                    </p:selectOneMenu >
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel value="Número de Identificación"/>
+                                </p:column>
+                                <p:column>
+                                    <p:inputText value="#{personasController.familiar.numeroIdentificacion}"
+                                                 readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel value="Fecha de Nacimiento"/>
+                                </p:column>
+                                <p:column style="width: 20%">
+                                    <p:calendar navigator="true" pattern="dd/MM/yyyy" value="#{personasController.familiar.fechaNacimiento}"
+                                                readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>    
+                                <p:column>
+                                    <p:outputLabel value="Parentesco"/>
+                                </p:column>
+                                <p:column> 
+                                    <p:selectOneMenu  value="#{personasController.familiar.parentesco}" style="width: 95%" 
+                                                      disabled="#{usuarioController.readOnly}">
+                                        <f:selectItem itemLabel="Padre" itemValue="Padre"/>
+                                        <f:selectItem itemLabel="Madre" itemValue="Madre"/>
+                                        <f:selectItem itemLabel="Hermano(a)" itemValue="Hermano(a)"/>
+                                        <f:selectItem itemLabel="Tio(a)" itemValue="Tio(a)"/>
+                                        <f:selectItem itemLabel="Primo(a)" itemValue="Primo(a)"/>
+                                    </p:selectOneMenu >
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel value="Ultimo año cursado"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu value="#{personasController.familiar.ultimoAnioCursado}" disabled="#{usuarioController.readOnly}">
+                                        <f:selectItems value="#{personasController.rangoAniosPermitidos}" var="anio" itemLabel="#{anio}" itemValue="#{anio}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column style="text-align: center" colspan="10">
+                                    <br/>
+                                    <p:commandButton value="Agregar" icon="ui-icon-plusthick" actionListener="#{personasController.onAddFamiliar()}" 
+                                                     disabled="#{usuarioController.readOnly}" update=":personasForm:generalTabView"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <br/><br/>
+                        <p:dataTable id="tableFamiliares" rows="5" paginator="true" paginatorPosition="bottom" style="width: 100%"
+                                     rowIndexVar="index" widgetVar="widget" var="familiar" value="#{personasController.persona.familiaresList}"
+                                     emptyMessage="No posee registros aún.">
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <p:outputLabel value="Listado de Familiares" />
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="#" style="width: 3%">
+                                <p:outputLabel value="#{index+1}" />
+                            </p:column>
+                            <p:column headerText="Nombre">
+                                <p:outputLabel value="#{familiar.nombre}" />
+                            </p:column>
+                            <p:column headerText="Tipo de identificacion">
+                                <p:outputLabel value="#{familiar.tipoIdentificacion.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Numero de Identificacion" style="width: 20%">
+                                <p:outputLabel value="#{familiar.numeroIdentificacion}" />
+                            </p:column>
+                            <p:column headerText="Parentesco" style="width: 15%">
+                                <p:outputLabel value="#{familiar.parentesco}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:tab>
+                    <p:tab title="Educacion Formal">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Registro de estudios formales realizados"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid style="width: 100%">
+                            <p:row>
+                                <p:column style="width: 15%">
+                                    <p:outputLabel value="Titulo obtenido"/>
+                                </p:column>
+                                <p:column colspan="3">
+                                    <p:inputText value="#{personasController.educacionFormal.titulo}"
+                                                 readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel value="Institución"/>
+                                </p:column>
+                                <p:column colspan="3">
+                                    <p:inputText value="#{personasController.educacionFormal.institucion}"
+                                                 readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel value="Nivel de Estudio"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu  value="#{personasController.educacionFormal.nivelEstudio}" style="width: 95%" disabled="#{usuarioController.readOnly}">
+                                        <f:selectItem itemLabel="Primario" itemValue="Primario"/>
+                                        <f:selectItem itemLabel="Secundario" itemValue="Secundario"/>
+                                        <f:selectItem itemLabel="Terciario" itemValue="Terciario"/>
+                                        <f:selectItem itemLabel="Universitario" itemValue="Universitario"/>
+                                        <f:selectItem itemLabel="Postgrado" itemValue="Postgrado"/>
+                                    </p:selectOneMenu >
+                                </p:column>
+                                <p:column style="width: 10%">
+                                    <p:outputLabel value="Año de Egreso"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu value="#{personasController.educacionFormal.anioEgreso}" style="width: 95%" disabled="#{usuarioController.readOnly}">
+                                        <f:selectItems value="#{personasController.rangoAniosPermitidos}" var="anio" itemLabel="#{anio}" itemValue="#{anio}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column style="text-align: center" colspan="10">
+                                    <br/>
+                                    <p:commandButton value="Agregar" icon="ui-icon-plusthick" actionListener="#{personasController.onAddEducacionFormal()}" 
+                                                     disabled="#{usuarioController.readOnly}" update=":personasForm:generalTabView"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <br/><br/>
+                        <p:dataTable id="tableEducacionesFormales" rows="5" paginator="true" paginatorPosition="bottom" style="width: 100%"
+                                     rowIndexVar="index" widgetVar="widget" var="educacionFormal" value="#{personasController.persona.educacionesFormalesList}"
+                                     emptyMessage="No posee registros aún.">
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <p:outputLabel value="Listado de Educaciones Formales" />
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="#" style="width: 3%">
+                                <p:outputLabel value="#{index+1}" />
+                            </p:column>
+                            <p:column headerText="Titulo Obtenido">
+                                <p:outputLabel value="#{educacionFormal.titulo}" />
+                            </p:column>
+                            <p:column headerText="Institución">
+                                <p:outputLabel value="#{educacionFormal.institucion}" />
+                            </p:column>
+                            <p:column headerText="Nivel de Estudio" style="width: 20%">
+                                <p:outputLabel value="#{educacionFormal.nivelEstudio}" />
+                            </p:column>
+                            <p:column headerText="Año de Egreso" style="width: 10%">
+                                <p:outputLabel value="#{educacionFormal.anioEgreso}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:tab>
+                    <p:tab title="Educacion No Formal">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Registro de estudios no formales realizados"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid style="width: 100%">
+                            <p:row>
+                                <p:column style="width: 13%">
+                                    <p:outputLabel value="Tipo de Educacion"/>
+                                </p:column>
+                                <p:column> 
+                                    <p:selectOneMenu  value="#{personasController.educacionNoFormal.tipoEducacionNoFormal}" style="width: 95%" disabled="#{usuarioController.readOnly}" >
+                                        <f:selectItem itemLabel="Curso" itemValue="Curso"/>
+                                        <f:selectItem itemLabel="Taller" itemValue="Taller"/>
+                                        <f:selectItem itemLabel="Seminario" itemValue="Seminario"/>
+                                        <f:selectItem itemLabel="Capacitacion" itemValue="Capacitacion"/>
+                                        <f:selectItem itemLabel="Otro" itemValue="Otro"/>
+                                    </p:selectOneMenu >
+                                </p:column>
+                                <p:column style="width: 5%">
+                                    <p:outputLabel value="Tematica"/>
+                                </p:column>
+                                <p:column>
+                                    <p:inputText value="#{personasController.educacionNoFormal.tema}"
+                                                 readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                </p:column>
+                                <p:column style="width: 5%">
+                                    <p:outputLabel value="Fecha"/>
+                                </p:column>
+                                <p:column>
+                                    <p:calendar value="#{personasController.educacionNoFormal.fecha}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel value="Institución"/>
+                                </p:column>
+                                <p:column colspan="5">
+                                    <p:inputText value="#{personasController.educacionNoFormal.institucion}"
+                                                 readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column style="text-align: center" colspan="10">
+                                    <br/>
+                                    <p:commandButton value="Agregar" icon="ui-icon-plusthick" actionListener="#{personasController.onAddEducacionNoFormal()}" 
+                                                     disabled="#{usuarioController.readOnly}" update=":personasForm:generalTabView"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <br/><br/>
+                        <p:dataTable id="tableEducacionesNoFormales" rows="5" paginator="true" paginatorPosition="bottom" style="width: 100%"
+                                     rowIndexVar="index" widgetVar="widget" var="educacionNoFormal" value="#{personasController.persona.educacionesNoFormalesList}"
+                                     emptyMessage="No posee registros aún.">
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <p:outputLabel value="Listado de Educaciones No Formales" />
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="#" style="width: 3%">
+                                <p:outputLabel value="#{index+1}" />
+                            </p:column>
+                            <p:column headerText="Tipo">
+                                <p:outputLabel value="#{educacionNoFormal.tipoEducacionNoFormal}" />
+                            </p:column>
+                            <p:column headerText="Tematica">
+                                <p:outputLabel value="#{educacionNoFormal.tema}" />
+                            </p:column>
+                            <p:column headerText="Institución">
+                                <p:outputLabel value="#{educacionNoFormal.institucion}" />
+                            </p:column>
+                            <p:column headerText="Fecha del Estudio" style="width: 20%">
+                                <p:outputLabel value="#{educacionNoFormal.fecha}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                            </p:column>
+                        </p:dataTable>
+                    </p:tab>
+                </p:tabView>
+
+                <p:panelGrid style="width: 100%">
+                    <p:row>
+                        <p:column colspan="2">
+                            <br/><hr/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="text-align: right">
+                            <p:commandButton value="Cancelar" icon="ui-icon-close" style="background-color: tomato" update=":personasForm" immediate="true">
+                                <f:setPropertyActionListener  target="#{personasController.showPersonasTable}" value="#{!personasController.showPersonasTable}"/>
+                            </p:commandButton> 
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Aceptar" icon="ui-icon-check" style="background-color: seagreen" actionListener="#{personasController.onSave()}" 
+                                             disabled="#{usuarioController.readOnly}"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{personasController.showPersonasTable}" style="width: 100%; text-align: center">
+                <h:outputText value="Listado de personas registradas en el sistema" style="font-size: 15px"/>
+
+                <br/><br/>
+
+                <p:dataTable id="personasTable" rows="10" paginator="true" paginatorPosition="bottom" style="width: 100%"
+                             var="persona" rowIndexVar="index" widgetVar="widget" value="#{personasController.personasList}" >
+                    <f:facet name="header">
+                        <p:outputPanel>
+                            <table style="border: none; border-width: 0px">
+                                <tr>
+                                    <td style="border: none; border-width: 0px; text-align: left">
+                                        <p:commandButton icon="ui-icon-plus" actionListener="#{personasController.onCreatePersona()}" update=":personasForm"
+                                                         disabled="#{usuarioController.readOnly}"/>
+                                    </td>
+                                    <td style="border: none; border-width: 0px; font-size: 15px">
+                                        <p:outputLabel value="Personas" />
+                                    </td>
+                                    <td style="border: none; border-width: 0px; text-align: right">
+                                        <p:outputLabel value="Buscar: " />
+                                        <p:inputText id="globalFilter" onkeyup="PF('widget').filter()" style="width:150px" placeholder="Enter keyword"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column headerText="#" style="width: 3%">
+                        <p:outputLabel value="#{index+1}" />
+                    </p:column>
+                    <p:column headerText="Legajo" filterBy="#{persona.legajo}" filterMatchMode="contains">
+                        <p:outputLabel value="#{persona.legajo}" />
+                    </p:column>
+                    <p:column headerText="Nombres" filterBy="#{persona.nombres}" filterMatchMode="contains">
+                        <p:outputLabel value="#{persona.nombres}" />
+                    </p:column>
+                    <p:column headerText="Apellidos" filterBy="#{persona.apellidos}" filterMatchMode="contains">
+                        <p:outputLabel value="#{persona.apellidos}" />
+                    </p:column>
+                    <p:column headerText="Email" filterBy="#{persona.email}" filterMatchMode="contains">
+                        <p:outputLabel value="#{persona.email}" />
+                    </p:column>
+                    <p:column style="width:32px;text-align: center">
+                        <p:commandButton icon="ui-icon-search" title="View" actionListener="#{personasController.onViewPersonaDetailedInfo(persona)}" update=":personasForm"/>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+
+        </h:form>
+    </ui:define>
+</ui:composition> 

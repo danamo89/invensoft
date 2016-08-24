@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+    
+    <global-method-security secured-annotations="enabled" jsr250-annotations="enabled" />
+    
+    <http realm="Sample Realm" auto-config="true" entry-point-ref="authenticationEntryPoint" use-expressions="true">
+        <intercept-url pattern="/pages/secure/**" access="hasRole('ROLE_USER')" />
+        
+        <!-- login-page = redireccion cuando valida ROL en url -->
+        <form-login login-processing-url="/j_spring_security_check"
+                    login-page="/pages/login/login.xhtml"
+                    default-target-url="/"
+                    authentication-failure-url="/pages/login/login.xhtml" />
+                 
+        <session-management invalid-session-url="/pages/login/login.xhtml">
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="true" />
+        </session-management>
+             
+        <logout logout-url="/j_spring_security_logout"
+                logout-success-url="/pages/login/login.xhtml"
+                invalidate-session="true"/>
+                
+        <session-management session-fixation-protection="newSession">
+            <concurrency-control max-sessions="1"  error-if-maximum-exceeded="true"/>
+        </session-management>
+    </http>
+
+    <beans:bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+        <beans:property name="loginFormUrl" value="/pages/login/login.xhtml" />
+    </beans:bean>
+
+    <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="userDetailsService">
+            <password-encoder ref="passwordEncoder"/>            
+        </authentication-provider>
+    </authentication-manager>
+       
+    <beans:bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <beans:constructor-arg value="/pages/login/login.xhtml"/>
+        <beans:constructor-arg>
+            <beans:list>
+                <beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+            </beans:list>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    <beans:bean id="sessionManagementFilter" class="org.springframework.security.web.session.SessionManagementFilter">
+        <beans:constructor-arg name="securityContextRepository" ref="httpSessionSecurityContextRepository" />
+        <!--<beans:property name="invalidSessionUrl" value="/faces/pages/login/loginFailure.xhtml" />-->
+        <!-- this permits redirection to session timeout page from javascript/ajax or http -->
+        <!--<beans:property name="redirectStrategy" ref="jsfRedirectStrategy" />-->
+    </beans:bean>
+    
+    <beans:bean id="jsfRedirectStrategy" class="com.invensoft.security.strategy.JsfRedirectStrategy"/>
+    <beans:bean id="httpSessionSecurityContextRepository" class="org.springframework.security.web.context.HttpSessionSecurityContextRepository"/>
+
+</beans:beans>

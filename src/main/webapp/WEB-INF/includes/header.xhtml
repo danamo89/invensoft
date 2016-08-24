@@ -1,0 +1,22 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html" 
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <h:form id="headerForm">
+        <div align="center">
+            <h2>Modulo de Personas</h2>
+        </div>
+        <div align="right" style="vertical-align: bottom">
+<!--            <h:outputText value="Usuario en linea: "/>
+            <strong>#{request.userPrincipal.name}</strong>-->
+            <p:spacer width="20px"/>
+            <a href="#{request.contextPath}/j_spring_security_logout">
+                <p:button icon="ui-icon-extlink" value="Logout"/>
+            </a>
+        </div>
+    </h:form>
+
+</div> 

@@ -1,0 +1,16 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html" 
+     xmlns:p="http://primefaces.org/ui">
+
+    <h:form>
+        <p:menu id="menu">
+            <p:menuitem value="#{msg['menu.option.home.label']}" actionListener="#{menuController.onRedirectTo('index')}" />
+            <p:menuitem value="#{msg['menu.second.submenu.first.option']}" actionListener="#{menuController.onRedirectTo('configuration/users/personas')}"/>
+            <p:menuitem value="#{msg['menu.second.submenu.second.option']}" actionListener="#{menuController.onRedirectTo('configuration/users/reportes')}" />
+        </p:menu>
+    </h:form>
+
+</div>
+

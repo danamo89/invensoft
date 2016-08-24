@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>S.C.R.I.P.</title>
+        
+        <h:outputScript library="js" name="jquery-ui-1.11.4/jquery-ui.js" />
+        <h:outputScript library="js" name="jquery-ui-1.11.4/jquery-ui.min.js" />
+        
+        <ui:insert name="head"/>
+    </h:head>
+
+    <h:body>
+        <p:layout fullPage="true">
+            <p:layoutUnit position="north" size="90" resizable="false" closable="false" collapsible="false">
+                <ui:include src="/WEB-INF/includes/header.xhtml"/>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="west" size="175" header="Menú" collapsible="true">
+                <ui:include src="/WEB-INF/includes/sideNavigation.xhtml"/>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">
+                <p:messages autoUpdate="true" severity="fatal" showDetail="true" closable="true" escape="false"/>
+                <p:messages autoUpdate="true" severity="error,warning,info" closable="true" escape="false"/>
+                <br/>
+                <ui:insert name="content">Content</ui:insert>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="south" size="40" resizable="false" closable="false" collapsible="false">
+                <ui:include src="/WEB-INF/includes/footer.xhtml"/>
+            </p:layoutUnit>
+        </p:layout>
+        
+        <f:facet name="last">
+            <h:outputStylesheet library="css" name="invensoft.css" />
+        </f:facet>
+    </h:body>
+</html>

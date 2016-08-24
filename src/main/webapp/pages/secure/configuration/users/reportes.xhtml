@@ -1,0 +1,26 @@
+<ui:composition template="/WEB-INF/facelets/templates/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <h:form id="reportesForm" >
+            <p:panelGrid style="width: 100%">
+                <p:row>
+                    <p:column style="width: 70%">
+                        <p:chart type="bar" model="#{personasChartsController.barChartModel}" style="height:300px"/>
+                    </p:column>
+                    <p:column>
+                        <p:chart type="pie" model="#{personasChartsController.pieChartModel}" style="width:400px;height:300px" />
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+            
+            <br/><br/>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>

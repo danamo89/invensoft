@@ -1,0 +1,45 @@
+<ui:composition template="/WEB-INF/facelets/templates/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <h:form id="profileForm" >
+            <h:panelGrid style="width: 60%; padding-left: 3em" columns="2">
+                <h:graphicImage style="border-width: 1px; border-style: dashed; width: 200px; height: 200px;" value="/resources/images/noFoto.jpg"/>
+
+                <h:panelGroup style="text-align: center">
+                    <h:outputText id="profile_name" style="border-width: 0px; font-size: 30px; font-weight: bolder" value="David Navarro Mora"/>
+                    <br/>
+                    <h:outputText style="color: #aaa" value="dnavarro@close-upinternational.com" />
+                    <br/><br/>
+
+                    <p:commandButton id="profile_name_edit_button" value="Edit" styleClass="bordered"/>
+
+                    <h:panelGrid columns="2" style="vertical-align: top" rendered="false">
+                        <h:outputText value="#{msg['profile.name.label']}"/>
+                        <p:inputText />
+
+                        <h:outputText value="#{msg['profile.lastname.label']}"/>
+                        <p:inputText />
+
+                    </h:panelGrid>
+                </h:panelGroup>
+            </h:panelGrid>
+            
+            <br/><br/><br/>
+            
+            <h:outputText escape="false" value="#{profileBean.dynamicFields}"/>
+            
+            <p:panel id="panel1" widgetVar="widget_panel1" />
+            
+            <br/><br/>
+            <h:panelGroup binding="#{profileBean.profileDynamicInformationPanels}">
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

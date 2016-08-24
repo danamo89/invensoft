@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>IvenSoft</title>
+    </h:head>
+    <h:body>
+        <div align="center">
+            <br/><br/><br/><br/><br/>
+
+            <h:outputText value="Modulo de Personas" class="loginTitleFont"/>
+            <!--<h:outputText value="#{msg['login.title.label']}" class="loginTitleFont"/>-->
+
+            <br/><br/><br/><br/>
+
+            <h:form id="loginForm" prependId="false">
+                <p:panel style="width: 22%; text-align: left">
+                    <h:panelGrid columns="1" style="width: 100%">
+                        <h:outputText value="#{msg['login.username.label']}" class="loginSubTitleFont"/>
+                        <h:panelGroup>
+                            <p:inputText id="j_username" value="#{userDataForAuthentication.userName}" required="true" requiredMessage="* Usuario required" style="width: 97%; height: 20px"/>
+                            <br/> 
+                            <h:message for="j_username" />
+                        </h:panelGroup>
+
+                        <br/>
+
+                        <h:outputText value="#{msg['login.password.label']}" class="loginSubTitleFont"/>
+                        <h:panelGroup>
+                            <p:password id="j_password" value="#{userDataForAuthentication.password}" required="true" requiredMessage="* Password required" style="width: 97%; height: 20px"/>
+                            <br/>
+                            <h:message for="j_password" />
+                        </h:panelGroup>
+
+                        <br/><br/>
+                        <!--<h:commandButton id="login" type="submit" action="#{authenticationBean.doLogin()}" value="#{msg['login.loginButton.label']}" class="loginButton"/>-->
+                        <h:commandButton id="login" type="submit" action="#{loginController.loginUsingSpringAuthenticationManager()}" value="#{msg['login.loginButton.label']}" class="loginButton"/>
+                    </h:panelGrid>
+                    <p:messages autoUpdate="true" showDetail="true" closable="true" escape="false"/>
+                </p:panel>
+                <br/><br/>
+            </h:form>            
+        </div>
+
+        <f:facet name="last">
+            <h:outputStylesheet library="css" name="invensoft.css" />
+        </f:facet>
+    </h:body>
+</html>
