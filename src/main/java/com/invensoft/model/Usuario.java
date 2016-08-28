@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -72,8 +73,12 @@ public class Usuario implements Serializable {
     @JoinColumn(name = "ID_PERSONA", referencedColumnName = "ID_PERSONA", nullable = false)
     @OneToOne(optional = false)
     private Persona persona;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<UsuarioRol> usuarioRolList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioAlta")
+    private List<Activo> activoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    private List<TipoActivo> tipoActivoList;
 
     public Usuario() {
     }
@@ -169,6 +174,24 @@ public class Usuario implements Serializable {
     @Override
     public String toString() {
         return "com.splinter.model.Usuario[ idUsuario=" + idUsuario + " ]";
+    }
+
+    @XmlTransient
+    public List<Activo> getActivoList() {
+        return activoList;
+    }
+
+    public void setActivoList(List<Activo> activoList) {
+        this.activoList = activoList;
+    }
+
+    @XmlTransient
+    public List<TipoActivo> getTipoActivoList() {
+        return tipoActivoList;
+    }
+
+    public void setTipoActivoList(List<TipoActivo> tipoActivoList) {
+        this.tipoActivoList = tipoActivoList;
     }
     
 }
