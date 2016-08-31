@@ -16,4 +16,5 @@ public interface IFamiliarDao {
     
     List<Familiar> findAll() throws Exception;
     void save(Familiar familiar) throws Exception;
+    
 }
