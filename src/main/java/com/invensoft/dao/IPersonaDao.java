@@ -16,4 +16,5 @@ public interface IPersonaDao {
     
     List<Persona> findAll() throws Exception;
     void save(Persona persona) throws Exception;
+    
 }
