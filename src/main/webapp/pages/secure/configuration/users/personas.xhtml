@@ -10,7 +10,7 @@
         <h:form id="personasForm" >
             <h:panelGroup id="generalPanelGroup" rendered="#{!personasController.showPersonasTable}">
                 <p:tabView id="generalTabView" cache="false" >
-                    <p:tab title="Informacion personal">
+                    <p:tab title="Personal">
                         <p:panelGrid style="width: 100%">
                             <f:facet name="header">
                                 <p:row>
@@ -21,7 +21,7 @@
                             </f:facet>
                         </p:panelGrid>
                         <br/>
-                        <p:panelGrid style="width: 100%">
+                        <p:panelGrid style="width: 100%; height: 100%">
                             <p:row>
                                 <p:column style="width: 5%">
                                     <p:graphicImage name="images/broken.png" width="150" height="200"/>
@@ -139,7 +139,7 @@
                             </p:row>
                         </p:panelGrid>
                     </p:tab>
-                    <p:tab title="Informacion de Contacto">
+                    <p:tab title="Contacto">
                         <p:panelGrid id="personasInformacionDeContactoForm" style="width: 100%; vertical-align: top">
                             <p:row>
                                 <p:column colspan="2">
@@ -250,7 +250,7 @@
                             </p:row>
                         </p:panelGrid>
                     </p:tab>
-                    <p:tab id="informacionFamiliarTab" title="Información Familiar">
+                    <p:tab id="informacionFamiliarTab" title="Familiar">
                         <p:panelGrid style="width: 100%">
                             <f:facet name="header">
                                 <p:row>
@@ -352,6 +352,10 @@
                             <p:column headerText="Parentesco" style="width: 15%">
                                 <p:outputLabel value="#{familiar.parentesco}" />
                             </p:column>
+                            <p:column style="width: 3%">
+                                <p:commandButton icon="ui-icon-search" title="View" actionListener="#{personasController.onViewFamiliarDetailedInfo(familiar)}" 
+                                                 update=":personasForm:generalTabView"/>
+                            </p:column>
                         </p:dataTable>
                     </p:tab>
                     <p:tab title="Educacion Formal">
@@ -438,6 +442,10 @@
                             <p:column headerText="Año de Egreso" style="width: 10%">
                                 <p:outputLabel value="#{educacionFormal.anioEgreso}" />
                             </p:column>
+                            <p:column style="width: 3%">
+                                <p:commandButton icon="ui-icon-search" title="View" actionListener="#{personasController.onViewEducacionFormalDetail(educacionFormal)}" 
+                                                 update=":personasForm:generalTabView"/>
+                            </p:column>
                         </p:dataTable>
                     </p:tab>
                     <p:tab title="Educacion No Formal">
@@ -522,7 +530,86 @@
                                     <f:convertDateTime pattern="dd/MM/yyyy" />
                                 </p:outputLabel>
                             </p:column>
+                            <p:column style="width: 3%">
+                                <p:commandButton icon="ui-icon-search" title="View" actionListener="#{personasController.onViewEducacionNoFormalDetail(educacionNoFormal)}" 
+                                                 update=":personasForm:generalTabView"/>
+                            </p:column>
                         </p:dataTable>
+                    </p:tab>
+                    <p:tab title="Laboral">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Registro de empleos anteriores"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid style="width: 100%">
+                            
+                        </p:panelGrid>
+                    </p:tab>
+                    <p:tab title="Talles">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Información sobre talles para ropa de trabajo"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid style="width: 100%">
+                            
+                        </p:panelGrid>
+                    </p:tab>
+                    <p:tab title="Documentos">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Chequeo de documentación presentada"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid style="width: 100%">
+                            
+                        </p:panelGrid>
+                    </p:tab>
+                    <p:tab title="Salud Ocupacional">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Cuestionario"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid style="width: 100%">
+                            
+                        </p:panelGrid>
+                    </p:tab>
+                    <p:tab title="Desarrollo Profesional">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Cuestionario"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid style="width: 100%">
+                            
+                        </p:panelGrid>
                     </p:tab>
                 </p:tabView>
 
@@ -540,7 +627,7 @@
                         </p:column>
                         <p:column>
                             <p:commandButton value="Aceptar" icon="ui-icon-check" style="background-color: seagreen" actionListener="#{personasController.onSave()}" 
-                                             disabled="#{usuarioController.readOnly}"/>
+                                             disabled="#{usuarioController.readOnly}" update=":personasForm"/>
                         </p:column>
                     </p:row>
                 </p:panelGrid>

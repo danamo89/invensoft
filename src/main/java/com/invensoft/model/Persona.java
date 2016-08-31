@@ -13,6 +13,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -163,11 +164,13 @@ public class Persona implements Serializable {
     @JoinColumn(name = "ID_TIPO_IDENTIFICACION", referencedColumnName = "ID_TIPO_IDENTIFICACION", nullable = false)
     @ManyToOne(optional = false)
     private TipoIdentificacion tipoIdentificacion;
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "persona")
+    private Usuario usuario;
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
     private List<EducacionFormal> educacionesFormalesList;
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
     private List<EducacionNoFormal> educacionesNoFormalesList;
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
     private List<Familiar> familiaresList;
 
     public Persona() {
@@ -473,5 +476,13 @@ public class Persona implements Serializable {
     @Override
     public String toString() {
         return "com.invensoft.model.Persona[ idPersona=" + idPersona + " ]";
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

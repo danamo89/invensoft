@@ -8,20 +8,20 @@
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>S.C.R.I.P.</title>
-        
+
         <h:outputScript library="js" name="jquery-ui-1.11.4/jquery-ui.js" />
         <h:outputScript library="js" name="jquery-ui-1.11.4/jquery-ui.min.js" />
-        
+
         <ui:insert name="head"/>
     </h:head>
 
     <h:body>
         <p:layout fullPage="true">
-            <p:layoutUnit position="north" size="90" resizable="false" closable="false" collapsible="false">
+            <p:layoutUnit position="north" size="50" resizable="false" closable="false" collapsible="false">
                 <ui:include src="/WEB-INF/includes/header.xhtml"/>
             </p:layoutUnit>
 
-            <p:layoutUnit position="west" size="175" header="Menú" collapsible="true">
+            <p:layoutUnit position="west" size="125" header="Menú" collapsible="true">
                 <ui:include src="/WEB-INF/includes/sideNavigation.xhtml"/>
             </p:layoutUnit>
 
@@ -32,11 +32,11 @@
                 <ui:insert name="content">Content</ui:insert>
             </p:layoutUnit>
 
-            <p:layoutUnit position="south" size="40" resizable="false" closable="false" collapsible="false">
+            <p:layoutUnit position="south" size="30" resizable="false" closable="false" collapsible="false">
                 <ui:include src="/WEB-INF/includes/footer.xhtml"/>
             </p:layoutUnit>
         </p:layout>
-        
+
         <f:facet name="last">
             <h:outputStylesheet library="css" name="invensoft.css" />
         </f:facet>

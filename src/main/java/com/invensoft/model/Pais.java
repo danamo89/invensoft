@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,8 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Pais.findByIdPais", query = "SELECT p FROM Pais p WHERE p.idPais = :idPais"),
     @NamedQuery(name = "Pais.findByNombre", query = "SELECT p FROM Pais p WHERE p.nombre = :nombre")})
 public class Pais implements Serializable {
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paisOrigen")
-    private List<Persona> personaList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +47,8 @@ public class Pais implements Serializable {
     @Size(min = 1, max = 80)
     @Column(name = "NOMBRE", nullable = false, length = 80)
     private String nombre;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paisOrigen", fetch = FetchType.LAZY)
+    private List<Persona> personaList;
 
     public Pais() {
     }

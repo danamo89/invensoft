@@ -15,6 +15,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -29,49 +31,55 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author David
  */
 @Entity
-@Table(name = "roles")
+@Table(name = "menus")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r"),
-    @NamedQuery(name = "Rol.findByIdRol", query = "SELECT r FROM Rol r WHERE r.idRol = :idRol"),
-    @NamedQuery(name = "Rol.findByNombre", query = "SELECT r FROM Rol r WHERE r.nombre = :nombre"),
-    @NamedQuery(name = "Rol.findByDescripcion", query = "SELECT r FROM Rol r WHERE r.descripcion = :descripcion")})
-public class Rol implements Serializable {
+    @NamedQuery(name = "Menu.findAll", query = "SELECT m FROM Menu m"),
+    @NamedQuery(name = "Menu.findByIdMenu", query = "SELECT m FROM Menu m WHERE m.idMenu = :idMenu"),
+    @NamedQuery(name = "Menu.findByNombre", query = "SELECT m FROM Menu m WHERE m.nombre = :nombre"),
+    @NamedQuery(name = "Menu.findByUrl", query = "SELECT m FROM Menu m WHERE m.url = :url")})
+public class Menu implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "ID_ROL", nullable = false)
-    private Integer idRol;
+    @Column(name = "ID_MENU", nullable = false)
+    private Integer idMenu;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "NOMBRE", nullable = false, length = 45)
+    private String nombre;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
-    @Column(name = "NOMBRE", nullable = false, length = 100)
-    private String nombre;
-    @Size(max = 255)
-    @Column(name = "DESCRIPCION", length = 255)
-    private String descripcion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rol", fetch = FetchType.LAZY)
+    @Column(name = "URL", nullable = false, length = 100)
+    private String url;
+    @JoinColumn(name = "ID_CATEGORIA_MENU", referencedColumnName = "ID_CATEGORIA_MENU", nullable = false)
+    @ManyToOne(optional = false)
+    private CategoriaMenu categoriaMenu;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "menu", fetch = FetchType.LAZY)
     private List<RolMenu> rolMenuList;
 
-    public Rol() {
+    public Menu() {
     }
 
-    public Rol(Integer idRol) {
-        this.idRol = idRol;
+    public Menu(Integer idMenu) {
+        this.idMenu = idMenu;
     }
 
-    public Rol(Integer idRol, String nombre) {
-        this.idRol = idRol;
+    public Menu(Integer idMenu, String nombre, String url) {
+        this.idMenu = idMenu;
         this.nombre = nombre;
+        this.url = url;
     }
 
-    public Integer getIdRol() {
-        return idRol;
+    public Integer getIdMenu() {
+        return idMenu;
     }
 
-    public void setIdRol(Integer idRol) {
-        this.idRol = idRol;
+    public void setIdMenu(Integer idMenu) {
+        this.idMenu = idMenu;
     }
 
     public String getNombre() {
@@ -82,12 +90,20 @@ public class Rol implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getUrl() {
+        return url;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public CategoriaMenu getCategoriaMenu() {
+        return categoriaMenu;
+    }
+
+    public void setCategoriaMenu(CategoriaMenu categoriaMenu) {
+        this.categoriaMenu = categoriaMenu;
     }
 
     @XmlTransient
@@ -102,18 +118,18 @@ public class Rol implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idRol != null ? idRol.hashCode() : 0);
+        hash += (idMenu != null ? idMenu.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Rol)) {
+        if (!(object instanceof Menu)) {
             return false;
         }
-        Rol other = (Rol) object;
-        if ((this.idRol == null && other.idRol != null) || (this.idRol != null && !this.idRol.equals(other.idRol))) {
+        Menu other = (Menu) object;
+        if ((this.idMenu == null && other.idMenu != null) || (this.idMenu != null && !this.idMenu.equals(other.idMenu))) {
             return false;
         }
         return true;
@@ -121,7 +137,7 @@ public class Rol implements Serializable {
 
     @Override
     public String toString() {
-        return "com.invensoft.model.Rol[ idRol=" + idRol + " ]";
+        return "com.invensoft.model.Menu[ idMenu=" + idMenu + " ]";
     }
     
 }

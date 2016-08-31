@@ -1,0 +1,72 @@
+<ui:composition template="/WEB-INF/facelets/templates/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+        <h:form id="cuestionariosForm" >
+
+            <h:panelGroup style="width: 100%" rendered="#{!cuestionarioController.showCuestionariosTable}">
+                <p:panelGrid style="width: 100%">
+                    <f:facet name="header">
+                        <p:row>
+                            <p:column style="width: 33%">
+
+                            </p:column>
+                            <p:column style="width: 33%; text-align: center">
+                                <p:outputLabel value="Cuestionario"/>
+                            </p:column>
+                            <p:column style="width: 33%; text-align: right">
+                                <p:commandButton icon="ui-icon-plus" title="Agregar Bloque" actionListener="#{cuestionarioController.onAddBloque()}" update=":cuestionariosForm"/>
+                                <p:commandButton icon="ui-icon-gear" title="Configurar"/>
+                            </p:column>
+                        </p:row>
+                    </f:facet>
+                </p:panelGrid>
+
+                <br/><br/>
+                <h:panelGroup style="text-align: center" binding="#{cuestionarioController.rootPanelGroup}"/>
+
+                <!-- POPUP - CONFIGURAR OPCIONES DE RESPUESTA -->
+                <p:dialog header="Opciones de respuesta" widgetVar="opcionesDeRespuesta" modal="true" height="100">
+                    <h:outputText value="This is a Modal Dialog." />
+                </p:dialog> 
+
+            </h:panelGroup>
+
+            <h:panelGroup style="width: 100%" rendered="#{cuestionarioController.showCuestionariosTable}">
+                <h:outputText value="Cuestionarios registrados" style="font-size: 15px"/>
+
+                <br/><br/>
+
+                <p:dataTable id="cuestionariosTable" rows="10" paginator="true" paginatorPosition="bottom" style="width: 100%"
+                             var="cuestionario" rowIndexVar="index" widgetVar="widget"  >
+                    <f:facet name="header">
+                        <p:outputPanel>
+                            <table style="border: none; border-width: 0px">
+                                <tr>
+                                    <td style="border: none; border-width: 0px; text-align: left">
+<!--                                        <p:commandButton icon="ui-icon-plus" actionListener="#{personasController.onCreatePersona()}" update=":cuestionariosForm"
+                                                         disabled="#{usuarioController.readOnly}"/>-->
+                                    </td>
+                                    <td style="border: none; border-width: 0px; font-size: 15px">
+                                        <p:outputLabel value="Cuestionarios" />
+                                    </td>
+                                    <td style="border: none; border-width: 0px; text-align: right">
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column headerText="#" style="width: 3%">
+                        <p:outputLabel value="#{index+1}" />
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>

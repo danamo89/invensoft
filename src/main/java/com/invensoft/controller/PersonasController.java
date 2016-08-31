@@ -16,11 +16,11 @@ import com.invensoft.service.IEstadoCivilService;
 import com.invensoft.service.IPaisService;
 import com.invensoft.service.IPersonaService;
 import com.invensoft.service.ITipoIdentificacionService;
-import com.invensoft.util.FacesUtils;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -125,6 +125,12 @@ public class PersonasController implements Serializable {
     }
 
     public void onViewFamiliarDetailedInfo(Familiar familiar) {
+        for (Familiar familiarItem : this.persona.getFamiliaresList()) {
+            if (Objects.equals(familiarItem.getIdFamiliar(), familiar.getIdFamiliar())) {
+                this.persona.getFamiliaresList().remove(familiarItem);
+                break;
+            }
+        }
         this.familiar = familiar;
     }
     
@@ -139,6 +145,12 @@ public class PersonasController implements Serializable {
     }
     
     public void onViewEducacionFormalDetail(EducacionFormal educacionFormal) {
+        for (EducacionFormal educacionFormalItem : this.persona.getEducacionesFormalesList()) {
+            if (Objects.equals(educacionFormalItem.getIdEducacionFormal(), educacionFormal.getIdEducacionFormal())) {
+                this.persona.getEducacionesFormalesList().remove(educacionFormalItem);
+                break;
+            }
+        }
         this.educacionFormal = educacionFormal;
     }
     
@@ -153,6 +165,12 @@ public class PersonasController implements Serializable {
     }
     
     public void onViewEducacionNoFormalDetail(EducacionNoFormal educacionNoFormal) {
+        for (EducacionNoFormal educacionNoFormalItem : this.persona.getEducacionesNoFormalesList()) {
+            if (Objects.equals(educacionNoFormalItem.getIdEducacionNoFormal(), educacionNoFormal.getIdEducacionNoFormal())) {
+                this.persona.getEducacionesNoFormalesList().remove(educacionNoFormalItem);
+                break;
+            }
+        }
         this.educacionNoFormal = educacionNoFormal;
     }
 
@@ -180,6 +198,7 @@ public class PersonasController implements Serializable {
             }
 
             personasService.save(persona);
+            this.showPersonasTable = true;
         } catch (Exception e) {
             e.printStackTrace();
         }

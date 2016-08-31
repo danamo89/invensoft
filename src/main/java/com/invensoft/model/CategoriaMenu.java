@@ -29,49 +29,45 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author David
  */
 @Entity
-@Table(name = "roles")
+@Table(name = "categorias_menus")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r"),
-    @NamedQuery(name = "Rol.findByIdRol", query = "SELECT r FROM Rol r WHERE r.idRol = :idRol"),
-    @NamedQuery(name = "Rol.findByNombre", query = "SELECT r FROM Rol r WHERE r.nombre = :nombre"),
-    @NamedQuery(name = "Rol.findByDescripcion", query = "SELECT r FROM Rol r WHERE r.descripcion = :descripcion")})
-public class Rol implements Serializable {
+    @NamedQuery(name = "CategoriaMenu.findAll", query = "SELECT c FROM CategoriaMenu c"),
+    @NamedQuery(name = "CategoriaMenu.findByIdCategoriaMenu", query = "SELECT c FROM CategoriaMenu c WHERE c.idCategoriaMenu = :idCategoriaMenu"),
+    @NamedQuery(name = "CategoriaMenu.findByNombre", query = "SELECT c FROM CategoriaMenu c WHERE c.nombre = :nombre")})
+public class CategoriaMenu implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "ID_ROL", nullable = false)
-    private Integer idRol;
+    @Column(name = "ID_CATEGORIA_MENU", nullable = false)
+    private Integer idCategoriaMenu;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "NOMBRE", nullable = false, length = 100)
+    @Size(min = 1, max = 45)
+    @Column(name = "NOMBRE", nullable = false, length = 45)
     private String nombre;
-    @Size(max = 255)
-    @Column(name = "DESCRIPCION", length = 255)
-    private String descripcion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rol", fetch = FetchType.LAZY)
-    private List<RolMenu> rolMenuList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoriaMenu", fetch = FetchType.LAZY)
+    private List<Menu> menuList;
 
-    public Rol() {
+    public CategoriaMenu() {
     }
 
-    public Rol(Integer idRol) {
-        this.idRol = idRol;
+    public CategoriaMenu(Integer idCategoriaMenu) {
+        this.idCategoriaMenu = idCategoriaMenu;
     }
 
-    public Rol(Integer idRol, String nombre) {
-        this.idRol = idRol;
+    public CategoriaMenu(Integer idCategoriaMenu, String nombre) {
+        this.idCategoriaMenu = idCategoriaMenu;
         this.nombre = nombre;
     }
 
-    public Integer getIdRol() {
-        return idRol;
+    public Integer getIdCategoriaMenu() {
+        return idCategoriaMenu;
     }
 
-    public void setIdRol(Integer idRol) {
-        this.idRol = idRol;
+    public void setIdCategoriaMenu(Integer idCategoriaMenu) {
+        this.idCategoriaMenu = idCategoriaMenu;
     }
 
     public String getNombre() {
@@ -82,38 +78,30 @@ public class Rol implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
     @XmlTransient
-    public List<RolMenu> getRolMenuList() {
-        return rolMenuList;
+    public List<Menu> getMenuList() {
+        return menuList;
     }
 
-    public void setRolMenuList(List<RolMenu> rolMenuList) {
-        this.rolMenuList = rolMenuList;
+    public void setMenuList(List<Menu> menuList) {
+        this.menuList = menuList;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idRol != null ? idRol.hashCode() : 0);
+        hash += (idCategoriaMenu != null ? idCategoriaMenu.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Rol)) {
+        if (!(object instanceof CategoriaMenu)) {
             return false;
         }
-        Rol other = (Rol) object;
-        if ((this.idRol == null && other.idRol != null) || (this.idRol != null && !this.idRol.equals(other.idRol))) {
+        CategoriaMenu other = (CategoriaMenu) object;
+        if ((this.idCategoriaMenu == null && other.idCategoriaMenu != null) || (this.idCategoriaMenu != null && !this.idCategoriaMenu.equals(other.idCategoriaMenu))) {
             return false;
         }
         return true;
@@ -121,7 +109,7 @@ public class Rol implements Serializable {
 
     @Override
     public String toString() {
-        return "com.invensoft.model.Rol[ idRol=" + idRol + " ]";
+        return "com.invensoft.model.CategoriaMenu[ idCategoriaMenu=" + idCategoriaMenu + " ]";
     }
     
 }
