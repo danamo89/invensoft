@@ -5,16 +5,15 @@
  */
 package com.invensoft.service;
 
-import com.invensoft.model.Persona;
+import com.invensoft.model.Cargo;
 import java.util.List;
 
 /**
  *
  * @author David
  */
-public interface IPersonaService {
+public interface ICargoService {
     
-    List<Persona> findAll();
-    void save(Persona persona);
+    List<Cargo> findAll();
     
 }

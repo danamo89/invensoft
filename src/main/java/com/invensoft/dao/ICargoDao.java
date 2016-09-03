@@ -3,18 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.invensoft.service;
-
-import com.invensoft.model.Persona;
+package com.invensoft.dao;
+import com.invensoft.model.Cargo;
 import java.util.List;
 
 /**
  *
  * @author David
  */
-public interface IPersonaService {
+public interface ICargoDao {
     
-    List<Persona> findAll();
-    void save(Persona persona);
+    List<Cargo> findAll() throws Exception;
     
 }

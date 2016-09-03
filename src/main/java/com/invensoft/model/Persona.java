@@ -18,6 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -65,6 +66,15 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Persona.findByBanco", query = "SELECT p FROM Persona p WHERE p.banco = :banco"),
     @NamedQuery(name = "Persona.findByTieneCredencialArt", query = "SELECT p FROM Persona p WHERE p.tieneCredencialArt = :tieneCredencialArt")})
 public class Persona implements Serializable {
+
+    @Column(name = "EQ_LLUVIA")
+    private Integer eqLluvia;
+    @Lob
+    @Column(name = "FOTO")
+    private byte[] foto;
+
+    @Column(name = "CAMISA")
+    private Integer camisa;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -172,7 +182,22 @@ public class Persona implements Serializable {
     private List<EducacionNoFormal> educacionesNoFormalesList;
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
     private List<Familiar> familiaresList;
-
+    
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona")
+    private List<InformacionLaboral> informacionLaboralList;
+    
+    @Column(name="BUZO",  nullable=true)
+    private String buzo;
+    @Column(name="PANTALON",  nullable=true)
+    private Integer pantalon;
+    @Column(name="BOTINES",  nullable=true)
+    private Integer botines;
+    @Column(name="CAMPERA",  nullable=true)
+    private String campera;
+    
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona")
+    private List<DocumentoPersona> documentosPersonaList;
+    
     public Persona() {
         this.estadoCivil = new EstadoCivil();
         this.paisOrigen = new Pais();
@@ -473,6 +498,55 @@ public class Persona implements Serializable {
         return true;
     }
 
+
+    public String getBuzo() {
+        return buzo;
+    }
+
+    public void setBuzo(String buzo) {
+        this.buzo = buzo;
+    }
+
+    public Integer getPantalon() {
+        return pantalon;
+    }
+
+    public void setPantalon(Integer pantalon) {
+        this.pantalon = pantalon;
+    }
+
+    public Integer getBotines() {
+        return botines;
+    }
+
+    public void setBotines(Integer botines) {
+        this.botines = botines;
+    }
+
+    public String getCampera() {
+        return campera;
+    }
+
+    public void setCampera(String campera) {
+        this.campera = campera;
+    }
+    
+    public List<InformacionLaboral> getInformacionLaboralList() {
+        return informacionLaboralList;
+    }
+
+    public void setInformacionLaboralList(List<InformacionLaboral> informacionLaboralList) {
+        this.informacionLaboralList = informacionLaboralList;
+    }
+
+    public List<DocumentoPersona> getDocumentosPersonaList() {
+        return documentosPersonaList;
+    }
+
+    public void setDocumentosPersonaList(List<DocumentoPersona> documentosPersonaList) {
+        this.documentosPersonaList = documentosPersonaList;
+    }
+
     @Override
     public String toString() {
         return "com.invensoft.model.Persona[ idPersona=" + idPersona + " ]";
@@ -484,5 +558,29 @@ public class Persona implements Serializable {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public Integer getCamisa() {
+        return camisa;
+    }
+
+    public void setCamisa(Integer camisa) {
+        this.camisa = camisa;
+    }
+    
+    public Integer getEqLluvia() {
+        return eqLluvia;
+    }
+
+    public void setEqLluvia(Integer eqLluvia) {
+        this.eqLluvia = eqLluvia;
+    }
+
+    public byte[] getFoto() {
+        return foto;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
     }
 }

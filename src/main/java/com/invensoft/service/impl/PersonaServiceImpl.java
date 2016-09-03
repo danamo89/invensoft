@@ -26,7 +26,7 @@ public class PersonaServiceImpl implements IPersonaService {
     private MessageBean messageBean;
     
     @Override
-    public List<Persona> finAll() {
+    public List<Persona> findAll() {
         try {
             return personaDao.findAll();
         } catch (Exception e) {

@@ -4,10 +4,11 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pe="http://primefaces.org/ui/extensions">
-
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+		
     <ui:define name="content">
-        <h:form id="personasForm" >
+        <h:form id="personasForm" enctype="multipart/form-data">
             <h:panelGroup id="generalPanelGroup" rendered="#{!personasController.showPersonasTable}">
                 <p:tabView id="generalTabView" cache="false" >
                     <p:tab title="Personal">
@@ -23,8 +24,17 @@
                         <br/>
                         <p:panelGrid style="width: 100%; height: 100%">
                             <p:row>
-                                <p:column style="width: 5%">
-                                    <p:graphicImage name="images/broken.png" width="150" height="200"/>
+                                <p:column>
+                                    <p:panel id="thumbimage-container" class="thumbimage-container" style="max-width: 150px;">
+                                        <p:graphicImage class="thumbimage" id="refreshMe" value="#{personasController.fotoPersonaView}" 
+                                                  cache="false" styleClass="thumbimage">
+                                            <f:param name="image_id" value="#{personasController.persona.legajo}"/>
+                                        </p:graphicImage>
+                                    </p:panel>
+                                    <p:fileUpload auto="true" 
+                                                  update="personasForm:generalTabView:thumbimage-container" 
+                                                  fileUploadListener="#{personasController.handleFileUpload}"
+                                                  mode="advanced"/>
                                 </p:column>
                                 <p:column>
                                     <p:panelGrid style="width: 100%">
@@ -353,8 +363,15 @@
                                 <p:outputLabel value="#{familiar.parentesco}" />
                             </p:column>
                             <p:column style="width: 3%">
-                                <p:commandButton icon="ui-icon-search" title="View" actionListener="#{personasController.onViewFamiliarDetailedInfo(familiar)}" 
+                                <p:commandButton icon="ui-icon-search" title="View" 
+                                                 actionListener="#{personasController.onViewFamiliarDetailedInfo(familiar)}" 
                                                  update=":personasForm:generalTabView"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton style="width: 3%"
+                                                 icon="ui-icon-trash"
+                                                actionListener="#{personasController.onRemoveFamiliar(familiar)}"
+                                                update=":personasForm:generalTabView"/>
                             </p:column>
                         </p:dataTable>
                     </p:tab>
@@ -446,6 +463,13 @@
                                 <p:commandButton icon="ui-icon-search" title="View" actionListener="#{personasController.onViewEducacionFormalDetail(educacionFormal)}" 
                                                  update=":personasForm:generalTabView"/>
                             </p:column>
+                            <p:column>
+                                <p:commandButton icon="ui-icon-trash"
+                                    title="X"
+                                    actionListener="#{personasController.onRemoveEducacionFormal(educacionFormal)}"
+                                    ajax="true"
+                                    update="personasForm:generalTabView:tableInformacionLaboral"/>
+                            </p:column>
                         </p:dataTable>
                     </p:tab>
                     <p:tab title="Educacion No Formal">
@@ -531,8 +555,16 @@
                                 </p:outputLabel>
                             </p:column>
                             <p:column style="width: 3%">
-                                <p:commandButton icon="ui-icon-search" title="View" actionListener="#{personasController.onViewEducacionNoFormalDetail(educacionNoFormal)}" 
+                                <p:commandButton icon="ui-icon-search" title="View" 
+                                                 actionListener="#{personasController.onViewEducacionNoFormalDetail(educacionNoFormal)}" 
                                                  update=":personasForm:generalTabView"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton icon="ui-icon-trash"
+                                                title="X"
+                                                actionListener="#{personasController.onRemoveEducacionNoFormal(educacionNoFormal)}"
+                                                ajax="true"
+                                                update="personasForm:generalTabView:tableInformacionLaboral"/>
                             </p:column>
                         </p:dataTable>
                     </p:tab>
@@ -548,38 +580,98 @@
                         </p:panelGrid>
                         <br/>
                         <p:panelGrid style="width: 100%">
-                            
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel value="Tipo de Cargo"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu  value="#{personasController.cargo.idCargo}" disabled="#{usuarioController.readOnly}">
+                                        <f:selectItems var="tipoCargo" value="#{personasController.tiposCargoList}" 
+                                                       itemLabel="#{tipoCargo.descripcion}" itemValue="#{tipoCargo.idCargo}"/>
+                                    </p:selectOneMenu >
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column style="text-align: center" colspan="10">
+                                    <br/>
+                                    <p:commandButton value="Agregar" icon="ui-icon-plusthick" actionListener="#{personasController.onAddCargo()}" 
+                                                     disabled="#{usuarioController.readOnly}" update=":personasForm:generalTabView"/>
+                                </p:column>
+                            </p:row>
                         </p:panelGrid>
-                    </p:tab>
-                    <p:tab title="Talles">
-                        <p:panelGrid style="width: 100%">
+                        <br/><br/>
+                        <p:dataTable id="tableInformacionLaboral" rows="5" paginator="true" paginatorPosition="bottom" style="width: 100%"
+                                     rowIndexVar="index" widgetVar="widget" var="informacionLaboral" value="#{personasController.persona.informacionLaboralList}"
+                                     emptyMessage="No posee registros aún.">
                             <f:facet name="header">
-                                <p:row>
-                                    <p:column style="text-align: center">
-                                        <p:outputLabel value="Información sobre talles para ropa de trabajo"/>
-                                    </p:column>
-                                </p:row>
+                                <p:outputPanel>
+                                    <p:outputLabel value="Listado de Cargos" />
+                                </p:outputPanel>
                             </f:facet>
-                        </p:panelGrid>
-                        <br/>
-                        <p:panelGrid style="width: 100%">
-                            
-                        </p:panelGrid>
+                            <p:column headerText="#" style="width: 3%">
+                                <p:outputLabel value="#{index+1}" />
+                            </p:column>
+                            <p:column headerText="Cargo">
+                                <p:outputLabel value="#{informacionLaboral.cargo.descripcion}" />
+                            </p:column>
+                            <p:column>
+                                <p:commandButton icon="ui-icon-trash"
+                                    title="X"
+                                    actionListener="#{personasController.onRemoveInformacionLaboral(informacionLaboral)}"
+                                    ajax="true"
+                                    update="personasForm:generalTabView:tableInformacionLaboral"/>
+                            </p:column>
+                        </p:dataTable>
                     </p:tab>
+		    <p:tab title="Talles">
+                        <p:dataTable id="tableInformacionIndumentaria" rows="1" paginator="false" 
+                                              var="persona" value="#{personasController.persona}" style="width: 100%">
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <p:outputLabel value="Talles por Prenda" />
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column headerText="Camisa (nro)">
+                                <p:inputMask mask="99" value="#{persona.camisa}" />
+                            </p:column>
+                            <p:column headerText="Buzo (talle)">
+                                <p:inputMask mask="A" value="#{persona.buzo}" />
+                            </p:column>
+                            <p:column headerText="Pantalon (nro)">
+                                <p:inputMask mask="99" value="#{persona.pantalon}" />
+                            </p:column>
+                            <p:column headerText="Botines (nro)">
+                                <p:inputMask mask="99" value="#{persona.botines}" />
+                            </p:column>
+                            <p:column headerText="Campera (talle)">
+                                <p:inputMask mask="A" value="#{persona.campera}" />
+                            </p:column>
+                            <p:column headerText="Equipo de Lluvia (nro)">
+                                <p:inputMask mask="99" value="#{persona.eqLluvia}" />
+                            </p:column>
+                        </p:dataTable>
+                        <br/><br/>
+                    </p:tab> 
                     <p:tab title="Documentos">
                         <p:panelGrid style="width: 100%">
                             <f:facet name="header">
                                 <p:row>
                                     <p:column style="text-align: center">
-                                        <p:outputLabel value="Chequeo de documentación presentada"/>
+                                        <p:outputLabel value="Documentos etregados por el Empleado"/>
                                     </p:column>
                                 </p:row>
                             </f:facet>
                         </p:panelGrid>
-                        <br/>
-                        <p:panelGrid style="width: 100%">
-                            
+                        <p:panelGrid style="width:100%">
+                            <p:row>
+                                <p:column style="vertical-align: middle">
+                                    <p:selectManyCheckbox value="#{personasController.selectedTiposDocumentos}" layout="pageDirection" columns="1">
+                                        <f:selectItems value="#{personasController.selectTiposDocumentos}" var="tipoDocumento" itemLabel="#{tipoDocumento}" itemValue="#{tipoDocumento}" />
+                                    </p:selectManyCheckbox>
+                                </p:column>
+                             </p:row>
                         </p:panelGrid>
+                        <br/>    
                     </p:tab>
                     <p:tab title="Salud Ocupacional">
                         <p:panelGrid style="width: 100%">

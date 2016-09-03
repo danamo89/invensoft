@@ -51,7 +51,7 @@ public class PersonasChartsController implements Serializable {
     @PostConstruct
     public void postConstruct() {
         if (personasList == null) {
-            personasList = personaService.finAll();
+            personasList = personaService.findAll();
         }
 
         if (paisesList == null) {
