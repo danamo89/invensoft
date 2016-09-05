@@ -69,3 +69,7 @@ section.gradient button.active {
 .thumbimage {
     max-width: 100%;
 }
+
+.ui-fileupload-content .ui-progressbar {
+    display: none;
+}

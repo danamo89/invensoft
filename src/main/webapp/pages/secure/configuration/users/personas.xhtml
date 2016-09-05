@@ -26,13 +26,13 @@
                             <p:row>
                                 <p:column>
                                     <p:panel id="thumbimage-container" class="thumbimage-container" style="max-width: 150px;">
-                                        <p:graphicImage class="thumbimage" id="refreshMe" value="#{personasController.fotoPersonaView}" 
+                                        <p:graphicImage class="thumbimage" id="refreshMe" value="#{personasController.rutaFoto}" 
                                                   cache="false" styleClass="thumbimage">
                                             <f:param name="image_id" value="#{personasController.persona.legajo}"/>
                                         </p:graphicImage>
                                     </p:panel>
                                     <p:fileUpload auto="true" 
-                                                  update="personasForm:generalTabView:thumbimage-container" 
+                                                  update="personasForm:generalTabView:refreshMe" 
                                                   fileUploadListener="#{personasController.handleFileUpload}"
                                                   mode="advanced"/>
                                 </p:column>

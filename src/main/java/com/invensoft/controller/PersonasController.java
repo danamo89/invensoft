@@ -67,7 +67,7 @@ import org.primefaces.model.UploadedFile;
  * @author David
  */
 @ManagedBean(name = "personasController")
-@SessionScoped
+@ViewScoped
 public class PersonasController implements Serializable {
 
     private Persona persona;
@@ -92,7 +92,7 @@ public class PersonasController implements Serializable {
     private StreamedContent fotoPersonaView = null;
     
     private boolean showPersonasTable;
-    
+    private String rutaFoto;
 
     //Services
     @ManagedProperty(value = "#{personaService}")
@@ -188,27 +188,28 @@ public class PersonasController implements Serializable {
     }
 
     public void onViewPersonaDetailedInfo(Persona persona) {
+        
+        FacesContext context = FacesContext.getCurrentInstance();
         this.persona = persona;
         this.showPersonasTable = false;
         
         initDocumentosPersona();
         
         if( this.persona.getFoto() != null) {
-            this.fotoPersonaView = new DefaultStreamedContent(new ByteArrayInputStream(persona.getFoto()), "image/jpg");
-        }else {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ExternalContext externalContext = facesContext.getExternalContext();
-            ServletContext servletContext = (ServletContext) externalContext.getContext();
-            String absoluteDiskPath = servletContext.getRealPath("resources/images/broken.png");
-            
-            File file = new File(absoluteDiskPath);
-
             try {
-                this.fotoPersonaView = new DefaultStreamedContent(new FileInputStream(file), "image/png");
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(PersonasController.class.getName()).log(Level.SEVERE, null, ex);
-                this.fotoPersonaView = new DefaultStreamedContent();
+                String relativePath = "/resources/images";
+                String absolutePath = context.getExternalContext().getRealPath(relativePath);
+                String fileName = this.persona.getLegajo()+".jpg";
+                                
+                FileUtils.writeByteArrayToFile(new File(absolutePath+"/"+fileName), this.persona.getFoto());                
+                
+                this.rutaFoto = relativePath + "/" + fileName;
+                
+            } catch (IOException ex) {
+                this.rutaFoto = "/resources/images/broken.png";
             }
+        }else {          
+            this.rutaFoto = "/resources/images/broken.png";
         }
     }
     
@@ -394,8 +395,6 @@ public class PersonasController implements Serializable {
             
             updateDocumentosPersona();
             
-            persona.setFoto(IOUtils.toByteArray(this.fotoPersonaView.getStream()));
-            
             personasService.save(persona);
             this.showPersonasTable = true;
             
@@ -452,8 +451,16 @@ public class PersonasController implements Serializable {
         try {
             final UploadedFile uploadedFile = event.getFile();
             
-            File tempFile = new File(FileUtils.getTempDirectory().getAbsoluteFile()+"/"+this.persona.getLegajo()+".jpg");
-            FileUtils.copyInputStreamToFile(new ByteArrayInputStream(uploadedFile.getContents()), tempFile);
+            FacesContext context = FacesContext.getCurrentInstance();
+            ExternalContext externalContext = context.getExternalContext();
+
+            this.persona.setFoto(IOUtils.toByteArray(uploadedFile.getInputstream()));
+            
+            String relativeWebPath = "/resources/images";
+            String absoluteDiskPath = externalContext.getRealPath(relativeWebPath);
+            
+            File tempFile = new File(absoluteDiskPath+"/"+this.persona.getLegajo()+".jpg");
+            FileUtils.writeByteArrayToFile(tempFile, uploadedFile.getContents());
         } catch (IOException ex) {
             Logger.getLogger(PersonasController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -690,9 +697,13 @@ public class PersonasController implements Serializable {
     public void setSelectTiposDocumentos(List<SelectItem> selectTiposDocumentos) {
         this.selectTiposDocumentos = selectTiposDocumentos;
     }
-    
-    
-    
-    
+
+    public String getRutaFoto() {
+        return rutaFoto;
+    }
+
+    public void setRutaFoto(String rutaFoto) {
+        this.rutaFoto = rutaFoto;
+    }
     
 }
