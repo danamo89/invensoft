@@ -6,14 +6,11 @@
 package com.invensoft.dao;
 
 import com.invensoft.model.Pais;
-import java.util.List;
 
 /**
  *
  * @author David
  */
-public interface IPaisDao {
-    
-    List<Pais> findAll() throws Exception;
+public interface IPaisDao extends IGenericDao<Pais, Integer>{
     
 }

@@ -7,6 +7,8 @@ package com.invensoft.controller;
 
 import com.invensoft.model.custom.BloqueViewItem;
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -20,6 +22,7 @@ import javax.faces.component.html.HtmlPanelGroup;
 @ViewScoped
 public class CuestionarioController implements Serializable {
     
+    private List<String> lista;
     private HtmlPanelGroup rootPanelGroup;
     private boolean showCuestionariosTable;
 
@@ -28,12 +31,18 @@ public class CuestionarioController implements Serializable {
      */
     public CuestionarioController() {
     }
-
+    
     @PostConstruct
     public void postConstruct() {
         try {
             showCuestionariosTable = false;
             rootPanelGroup = new HtmlPanelGroup();
+            
+            lista = new LinkedList<>();
+            lista.add("David");
+            lista.add("Navarro");
+            lista.add("Mora");
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -60,5 +69,13 @@ public class CuestionarioController implements Serializable {
         this.rootPanelGroup = rootPanelGroup;
     }
     //</editor-fold>
+
+    public List<String> getLista() {
+        return lista;
+    }
+
+    public void setLista(List<String> lista) {
+        this.lista = lista;
+    }
 
 }

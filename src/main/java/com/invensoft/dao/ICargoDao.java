@@ -5,14 +5,11 @@
  */
 package com.invensoft.dao;
 import com.invensoft.model.Cargo;
-import java.util.List;
 
 /**
  *
  * @author David
  */
-public interface ICargoDao {
-    
-    List<Cargo> findAll() throws Exception;
+public interface ICargoDao extends IGenericDao<Cargo, Integer>{
     
 }

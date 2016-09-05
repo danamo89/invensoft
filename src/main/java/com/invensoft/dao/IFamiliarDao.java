@@ -6,15 +6,11 @@
 package com.invensoft.dao;
 
 import com.invensoft.model.Familiar;
-import java.util.List;
 
 /**
  *
  * @author David
  */
-public interface IFamiliarDao {
-    
-    List<Familiar> findAll() throws Exception;
-    void save(Familiar familiar) throws Exception;
+public interface IFamiliarDao extends IGenericDao<Familiar, Integer>{
     
 }

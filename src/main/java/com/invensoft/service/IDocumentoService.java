@@ -13,10 +13,7 @@ import java.util.List;
  * @author Nanchy_2
  */
 public interface IDocumentoService {
-    public List<Documento> findAll();
-    public List<Documento> findDocumentosTipoRRHH();
-    public List<Documento> findDocumentosTipoPersonales();
-    public List<Documento> findDocumentosTipoFamiliares();
     
+    public List<Documento> findAll();
     
 }

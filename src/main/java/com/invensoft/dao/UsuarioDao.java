@@ -10,9 +10,9 @@ import com.invensoft.model.Usuario;
  *
  * @author Admin
  */
-public interface UsuarioDao {
+public interface UsuarioDao extends IGenericDao<Usuario, Integer>{
     
-    boolean save(Usuario usuario);
+//    void save(Usuario ussuario);
     Usuario findByUserName(String userName);
     void update(Usuario usuario) throws Exception;
     

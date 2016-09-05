@@ -1,10 +1,7 @@
 package com.invensoft.dao.impl;
 
-import com.invensoft.dao.impl.GenericDao;
 import com.invensoft.model.Usuario;
 import com.invensoft.dao.UsuarioDao;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -16,26 +13,26 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Scope("singleton")
 @Component("usuarioDao")
-public class UsuarioDaoImpl extends GenericDao implements UsuarioDao {
+public class UsuarioDaoImpl extends GenericDaoImpl<Usuario, Integer> implements UsuarioDao {
 
-    @Override
-    @Transactional
-    public synchronized boolean save(Usuario usuario) {
-        boolean procesoOk = false;
-        try {
-            getEntityManager().merge(usuario);
-            procesoOk = true;
-        } catch (Exception ex) {
+//    @Override
+//    @Transactional
+//    public synchronized void save(Usuario usuario) {
+//        boolean procesoOk = false;
+//        try {
+//            getEntityManager().merge(usuario);
+//            procesoOk = true;
+//        } catch (Exception ex) {
 //            Logger.getLogger(this.getClass().toString()).error("Error al guardar información del usuario ", ex);
-        }
-        return procesoOk;
-    }
+//        }
+//        return procesoOk;
+//    }
 
     @Override
     public Usuario findByUserName(String userName) {
         Query query = getEntityManager().createNamedQuery("Usuario.findByUsername");
         query.setParameter("username", userName);
-        
+         
         try {
             return (Usuario) query.getSingleResult();
         } catch (Exception ex) {

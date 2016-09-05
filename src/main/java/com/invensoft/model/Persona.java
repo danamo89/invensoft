@@ -66,15 +66,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Persona.findByBanco", query = "SELECT p FROM Persona p WHERE p.banco = :banco"),
     @NamedQuery(name = "Persona.findByTieneCredencialArt", query = "SELECT p FROM Persona p WHERE p.tieneCredencialArt = :tieneCredencialArt")})
 public class Persona implements Serializable {
-
-    @Column(name = "EQ_LLUVIA")
-    private Integer eqLluvia;
-    @Lob
-    @Column(name = "FOTO")
-    private byte[] foto;
-
-    @Column(name = "CAMISA")
-    private Integer camisa;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -165,6 +156,22 @@ public class Persona implements Serializable {
     @Size(max = 100)
     @Column(name = "LUGAR_DE_TRABAJO", length = 100)
     private String lugarDeTrabajo;
+    @Column(name="BUZO", nullable = true)
+    private String buzo;
+    @Column(name="PANTALON", nullable = true)
+    private Integer pantalon;
+    @Column(name="BOTINES", nullable = true)
+    private Integer botines;
+    @Column(name="CAMPERA", nullable = true)
+    private String campera;
+    @Column(name = "EQ_LLUVIA")
+    private Integer eqLluvia;
+    @Column(name = "CAMISA")
+    private Integer camisa;
+    @Lob
+    @Size(max = 16777215)
+    @Column(name = "FOTO", length = 16777215)
+    private String foto;
     @JoinColumn(name = "ID_ESTADO_CIVIL", referencedColumnName = "ID_ESTADO_CIVIL", nullable = false)
     @ManyToOne(optional = false)
     private EstadoCivil estadoCivil;
@@ -182,20 +189,9 @@ public class Persona implements Serializable {
     private List<EducacionNoFormal> educacionesNoFormalesList;
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
     private List<Familiar> familiaresList;
-    
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
     private List<InformacionLaboral> informacionLaboralList;
-    
-    @Column(name="BUZO",  nullable=true)
-    private String buzo;
-    @Column(name="PANTALON",  nullable=true)
-    private Integer pantalon;
-    @Column(name="BOTINES",  nullable=true)
-    private Integer botines;
-    @Column(name="CAMPERA",  nullable=true)
-    private String campera;
-    
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
     private List<DocumentoPersona> documentosPersonaList;
     
     public Persona() {
@@ -205,6 +201,8 @@ public class Persona implements Serializable {
         this.educacionesFormalesList = new LinkedList<>();
         this.educacionesNoFormalesList = new LinkedList<>();
         this.familiaresList = new LinkedList<>();
+        this.informacionLaboralList = new LinkedList<>();
+        this.documentosPersonaList = new LinkedList<>();
     }
 
     public Persona(Integer idPersona) {
@@ -478,27 +476,6 @@ public class Persona implements Serializable {
         this.educacionesNoFormalesList = educacionesNoFormalesList;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idPersona != null ? idPersona.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Persona)) {
-            return false;
-        }
-        Persona other = (Persona) object;
-        if ((this.idPersona == null && other.idPersona != null) || (this.idPersona != null && !this.idPersona.equals(other.idPersona))) {
-            return false;
-        }
-        return true;
-    }
-
-
     public String getBuzo() {
         return buzo;
     }
@@ -547,11 +524,6 @@ public class Persona implements Serializable {
         this.documentosPersonaList = documentosPersonaList;
     }
 
-    @Override
-    public String toString() {
-        return "com.invensoft.model.Persona[ idPersona=" + idPersona + " ]";
-    }
-
     public Usuario getUsuario() {
         return usuario;
     }
@@ -576,11 +548,36 @@ public class Persona implements Serializable {
         this.eqLluvia = eqLluvia;
     }
 
-    public byte[] getFoto() {
+    public String getFoto() {
         return foto;
     }
 
-    public void setFoto(byte[] foto) {
+    public void setFoto(String foto) {
         this.foto = foto;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idPersona != null ? idPersona.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Persona)) {
+            return false;
+        }
+        Persona other = (Persona) object;
+        if ((this.idPersona == null && other.idPersona != null) || (this.idPersona != null && !this.idPersona.equals(other.idPersona))) {
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
+    public String toString() {
+        return "com.invensoft.model.Persona[ idPersona=" + idPersona + " ]";
     }
 }

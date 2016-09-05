@@ -6,14 +6,11 @@
 package com.invensoft.dao;
 
 import com.invensoft.model.EstadoCivil;
-import java.util.List;
 
 /**
  *
  * @author David
  */
-public interface IEstadoCivilDao {
-    
-    List<EstadoCivil> findAll() throws Exception;
+public interface IEstadoCivilDao extends IGenericDao<EstadoCivil, Integer>{
     
 }

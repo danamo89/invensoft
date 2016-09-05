@@ -7,8 +7,6 @@ package com.invensoft.dao.impl;
 
 import com.invensoft.dao.IPaisDao;
 import com.invensoft.model.Pais;
-import java.util.List;
-import javax.persistence.Query;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +16,6 @@ import org.springframework.stereotype.Component;
  */
 @Scope(value = "singleton")
 @Component("paisDao")
-public class PaisDaoImpl extends GenericDao implements IPaisDao {
-
-    @Override
-    public List<Pais> findAll() throws Exception {
-        Query q = getEntityManager().createNamedQuery("Pais.findAll");
-        return (List<Pais>) q.getResultList();
-    }
+public class PaisDaoImpl extends GenericDaoImpl<Pais, Integer> implements IPaisDao {
     
 }

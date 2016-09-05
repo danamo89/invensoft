@@ -6,14 +6,11 @@
 package com.invensoft.dao;
 
 import com.invensoft.model.TipoIdentificacion;
-import java.util.List;
 
 /**
  *
  * @author David
  */
-public interface ITipoIdentificacionDao {
-    
-    List<TipoIdentificacion> findAll() throws Exception;
+public interface ITipoIdentificacionDao extends IGenericDao<TipoIdentificacion, Integer>{
     
 }

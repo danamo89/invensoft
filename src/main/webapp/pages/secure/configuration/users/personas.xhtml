@@ -6,7 +6,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-		
+
     <ui:define name="content">
         <h:form id="personasForm" enctype="multipart/form-data">
             <h:panelGroup id="generalPanelGroup" rendered="#{!personasController.showPersonasTable}">
@@ -27,7 +27,7 @@
                                 <p:column>
                                     <p:panel id="thumbimage-container" class="thumbimage-container" style="max-width: 150px;">
                                         <p:graphicImage class="thumbimage" id="refreshMe" value="#{personasController.fotoPersonaView}" 
-                                                  cache="false" styleClass="thumbimage">
+                                                        cache="false" styleClass="thumbimage">
                                             <f:param name="image_id" value="#{personasController.persona.legajo}"/>
                                         </p:graphicImage>
                                     </p:panel>
@@ -370,8 +370,8 @@
                             <p:column>
                                 <p:commandButton style="width: 3%"
                                                  icon="ui-icon-trash"
-                                                actionListener="#{personasController.onRemoveFamiliar(familiar)}"
-                                                update=":personasForm:generalTabView"/>
+                                                 actionListener="#{personasController.onRemoveFamiliar(familiar)}"
+                                                 update=":personasForm:generalTabView"/>
                             </p:column>
                         </p:dataTable>
                     </p:tab>
@@ -465,10 +465,10 @@
                             </p:column>
                             <p:column>
                                 <p:commandButton icon="ui-icon-trash"
-                                    title="X"
-                                    actionListener="#{personasController.onRemoveEducacionFormal(educacionFormal)}"
-                                    ajax="true"
-                                    update="personasForm:generalTabView:tableInformacionLaboral"/>
+                                                 title="X"
+                                                 actionListener="#{personasController.onRemoveEducacionFormal(educacionFormal)}"
+                                                 ajax="true"
+                                                 update="personasForm:generalTabView:tableInformacionLaboral"/>
                             </p:column>
                         </p:dataTable>
                     </p:tab>
@@ -561,10 +561,10 @@
                             </p:column>
                             <p:column>
                                 <p:commandButton icon="ui-icon-trash"
-                                                title="X"
-                                                actionListener="#{personasController.onRemoveEducacionNoFormal(educacionNoFormal)}"
-                                                ajax="true"
-                                                update="personasForm:generalTabView:tableInformacionLaboral"/>
+                                                 title="X"
+                                                 actionListener="#{personasController.onRemoveEducacionNoFormal(educacionNoFormal)}"
+                                                 ajax="true"
+                                                 update="personasForm:generalTabView:tableInformacionLaboral"/>
                             </p:column>
                         </p:dataTable>
                     </p:tab>
@@ -616,16 +616,16 @@
                             </p:column>
                             <p:column>
                                 <p:commandButton icon="ui-icon-trash"
-                                    title="X"
-                                    actionListener="#{personasController.onRemoveInformacionLaboral(informacionLaboral)}"
-                                    ajax="true"
-                                    update="personasForm:generalTabView:tableInformacionLaboral"/>
+                                                 title="X"
+                                                 actionListener="#{personasController.onRemoveInformacionLaboral(informacionLaboral)}"
+                                                 ajax="true"
+                                                 update="personasForm:generalTabView:tableInformacionLaboral"/>
                             </p:column>
                         </p:dataTable>
                     </p:tab>
-		    <p:tab title="Talles">
+                    <p:tab title="Talles">
                         <p:dataTable id="tableInformacionIndumentaria" rows="1" paginator="false" 
-                                              var="persona" value="#{personasController.persona}" style="width: 100%">
+                                     var="persona" value="#{personasController.persona}" style="width: 100%">
                             <f:facet name="header">
                                 <p:outputPanel>
                                     <p:outputLabel value="Talles por Prenda" />
@@ -657,20 +657,36 @@
                             <f:facet name="header">
                                 <p:row>
                                     <p:column style="text-align: center">
-                                        <p:outputLabel value="Documentos etregados por el Empleado"/>
+                                        <p:outputLabel value="Documentos entregados por el Empleado"/>
                                     </p:column>
                                 </p:row>
                             </f:facet>
                         </p:panelGrid>
-                        <p:panelGrid style="width:100%">
-                            <p:row>
-                                <p:column style="vertical-align: middle">
-                                    <p:selectManyCheckbox value="#{personasController.selectedTiposDocumentos}" layout="pageDirection" columns="1">
-                                        <f:selectItems value="#{personasController.selectTiposDocumentos}" var="tipoDocumento" itemLabel="#{tipoDocumento}" itemValue="#{tipoDocumento}" />
-                                    </p:selectManyCheckbox>
-                                </p:column>
-                             </p:row>
-                        </p:panelGrid>
+                        <!--                        <p:panelGrid style="width:100%">
+                                                    <p:row>
+                                                        <p:column style="vertical-align: middle">
+                                                            <p:selectManyCheckbox value="#{personasController.selectedTiposDocumentos}" layout="pageDirection" columns="1">
+                                                                <f:selectItems value="#{personasController.selectTiposDocumentos}" var="tipoDocumento" itemLabel="#{tipoDocumento}" itemValue="#{tipoDocumento}" />
+                                                            </p:selectManyCheckbox>
+                                                        </p:column>
+                                                    </p:row>
+                                                </p:panelGrid>-->
+                        <br/>
+                        <center>
+                            <p:dataTable var="tipoDocumento" value="#{personasController.tiposDocumentosList}" style="width: 40%">
+                                <p:subTable var="documento" value="#{tipoDocumento.documentosList}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{tipoDocumento.descripcion}" />
+                                    </f:facet>
+                                    <p:column style="width: 1%">
+                                        <p:selectBooleanCheckbox value="#{documento.selected}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{documento.descripcion}" />
+                                    </p:column>
+                                </p:subTable>
+                            </p:dataTable>
+                        </center>
                         <br/>    
                     </p:tab>
                     <p:tab title="Salud Ocupacional">
@@ -685,7 +701,7 @@
                         </p:panelGrid>
                         <br/>
                         <p:panelGrid style="width: 100%">
-                            
+
                         </p:panelGrid>
                     </p:tab>
                     <p:tab title="Desarrollo Profesional">
@@ -700,7 +716,7 @@
                         </p:panelGrid>
                         <br/>
                         <p:panelGrid style="width: 100%">
-                            
+
                         </p:panelGrid>
                     </p:tab>
                 </p:tabView>

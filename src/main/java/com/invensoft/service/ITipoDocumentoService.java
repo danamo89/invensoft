@@ -3,14 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.invensoft.dao;
+package com.invensoft.service;
 
-import com.invensoft.model.Documento;
+import com.invensoft.model.TipoDocumento;
+import java.util.List;
 
 /**
  *
- * @author Nanchy_2
+ * @author David
  */
-public interface IDocumentoDao extends IGenericDao<Documento, Integer>{
+public interface ITipoDocumentoService {
+    
+    List<TipoDocumento> findAll();
     
 }

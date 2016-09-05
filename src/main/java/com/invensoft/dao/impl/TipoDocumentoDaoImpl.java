@@ -5,8 +5,8 @@
  */
 package com.invensoft.dao.impl;
 
-import com.invensoft.dao.ITipoIdentificacionDao;
-import com.invensoft.model.TipoIdentificacion;
+import com.invensoft.dao.ITipoDocumentoDao;
+import com.invensoft.model.TipoDocumento;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author David
  */
 @Scope(value = "singleton")
-@Component("tipoIdentificacionDao")
-public class TipoIdentificacionDaoImpl extends GenericDaoImpl<TipoIdentificacion, Integer> implements ITipoIdentificacionDao {
+@Component("tipoDocumentoDao")
+public class TipoDocumentoDaoImpl extends GenericDaoImpl<TipoDocumento, Integer> implements ITipoDocumentoDao {
     
 }

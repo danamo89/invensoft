@@ -35,35 +35,5 @@ public class DocumentoServiceImpl implements IDocumentoService {
             return null;
         }
     }
-
-    @Override
-    public List<Documento> findDocumentosTipoRRHH() {
-        try {
-            return documentoDao.findDocumentosTipoRRHH();
-        }catch(Exception e) {
-            messageBean.addError("Ha ocurrido un error", e.getMessage());
-            return null;
-        }
-    }
-
-    @Override
-    public List<Documento> findDocumentosTipoPersonales() {
-        try {
-            return documentoDao.findDocumentosTipoPersonales();
-        }catch(Exception e) {
-            messageBean.addError("Ha ocurrido un error", e.getMessage());
-            return null;
-        }
-    }
-
-    @Override
-    public List<Documento> findDocumentosTipoFamiliares() {
-        try {
-            return documentoDao.findDocumentosTipoFamiliares();
-        }catch(Exception e) {
-            messageBean.addError("Ha ocurrido un error", e.getMessage());
-            return null;
-        }
-    }
     
 }

@@ -35,6 +35,36 @@
                     <h:outputText value="This is a Modal Dialog." />
                 </p:dialog> 
 
+                <p:dataTable var="string" value="#{cuestionarioController.lista}" draggableRows="true">
+                    <f:facet name="header">
+                        Expand rows to see detailed information
+                    </f:facet>
+                    <p:column style="width:16px">
+                        <p:rowToggler />
+                    </p:column>
+                    <p:column headerText="Titulo">
+                        <h:outputText value="#{string}" />
+                    </p:column>
+                    <p:column headerText="Opciones" width="8%">
+                        <p:commandButton icon="ui-icon-plus" title="Agregar Bloque"/>
+                        <p:commandButton icon="ui-icon-gear" title="Configurar"/>
+                    </p:column>
+                    <p:rowExpansion>
+                        <p:dataTable var="string" value="#{cuestionarioController.lista}" draggableRows="true">
+                            <f:facet name="header">
+                                Expand rows to see detailed information
+                            </f:facet>
+                            <p:column headerText="Titulo">
+                                <h:outputText value="#{string}" />
+                            </p:column>
+                            <p:column headerText="Opciones" width="8%">
+                                <p:commandButton icon="ui-icon-plus" title="Agregar Bloque"/>
+                                <p:commandButton icon="ui-icon-gear" title="Configurar"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:rowExpansion>
+                </p:dataTable>
+
             </h:panelGroup>
 
             <h:panelGroup style="width: 100%" rendered="#{cuestionarioController.showCuestionariosTable}">

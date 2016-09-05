@@ -5,12 +5,12 @@
  */
 package com.invensoft.dao;
 
-import com.invensoft.model.Documento;
+import com.invensoft.model.TipoDocumento;
 
 /**
  *
- * @author Nanchy_2
+ * @author David
  */
-public interface IDocumentoDao extends IGenericDao<Documento, Integer>{
+public interface ITipoDocumentoDao extends IGenericDao<TipoDocumento, Integer>{
     
 }

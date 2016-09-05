@@ -6,15 +6,11 @@
 package com.invensoft.dao;
 
 import com.invensoft.model.Persona;
-import java.util.List;
 
 /**
  *
  * @author David
  */
-public interface IPersonaDao {
-    
-    List<Persona> findAll() throws Exception;
-    void save(Persona persona) throws Exception;
+public interface IPersonaDao extends IGenericDao<Persona, Integer>{
     
 }

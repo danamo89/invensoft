@@ -7,8 +7,6 @@ package com.invensoft.dao.impl;
 
 import com.invensoft.dao.IEstadoCivilDao;
 import com.invensoft.model.EstadoCivil;
-import java.util.List;
-import javax.persistence.Query;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +16,6 @@ import org.springframework.stereotype.Component;
  */
 @Scope(value = "singleton")
 @Component(value = "estadoCivilDao")
-public class EstadoCivilDaoImpl extends GenericDao implements IEstadoCivilDao {
-
-    @Override
-    public List<EstadoCivil> findAll() throws Exception {
-        Query q = getEntityManager().createNamedQuery("EstadoCivil.findAll");
-        return (List<EstadoCivil>) q.getResultList();
-    }
+public class EstadoCivilDaoImpl extends GenericDaoImpl<EstadoCivil, Integer> implements IEstadoCivilDao {
     
 }
