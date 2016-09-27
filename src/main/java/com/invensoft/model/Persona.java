@@ -18,7 +18,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -66,6 +65,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Persona.findByBanco", query = "SELECT p FROM Persona p WHERE p.banco = :banco"),
     @NamedQuery(name = "Persona.findByTieneCredencialArt", query = "SELECT p FROM Persona p WHERE p.tieneCredencialArt = :tieneCredencialArt")})
 public class Persona implements Serializable {
+
+    @JoinColumn(name = "ID_FOTO_PERSONA", referencedColumnName = "id_foto_persona")
+    @ManyToOne
+    private FotoPersona fotoPersona;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -100,7 +103,7 @@ public class Persona implements Serializable {
     @Size(max = 255)
     @Column(name = "DOMICILIO", length = 255)
     private String domicilio;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    //@Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 150)
     @Column(name = "EMAIL", length = 150)
     private String email;
@@ -132,9 +135,6 @@ public class Persona implements Serializable {
     @NotNull
     @Column(name = "CUIL", nullable = false, length = 45)
     private String cuil;
-    @Size(max = 100)
-    @Column(name = "SECTOR", length = 100)
-    private String sector;
     @Size(max = 45)
     @Column(name = "CATEGORIA_LABORAL", length = 45)
     private String categoriaLaboral;
@@ -168,10 +168,6 @@ public class Persona implements Serializable {
     private Integer eqLluvia;
     @Column(name = "CAMISA")
     private Integer camisa;
-    @Lob
-    @Size(max = 16777215)
-    @Column(name = "FOTO", length = 16777215)
-    private String foto;
     @JoinColumn(name = "ID_ESTADO_CIVIL", referencedColumnName = "ID_ESTADO_CIVIL", nullable = false)
     @ManyToOne(optional = false)
     private EstadoCivil estadoCivil;
@@ -181,6 +177,12 @@ public class Persona implements Serializable {
     @JoinColumn(name = "ID_TIPO_IDENTIFICACION", referencedColumnName = "ID_TIPO_IDENTIFICACION", nullable = false)
     @ManyToOne(optional = false)
     private TipoIdentificacion tipoIdentificacion;
+    @JoinColumn(name = "ID_SECTOR", referencedColumnName = "ID_SECTOR", nullable = false)
+    @ManyToOne(optional = false)
+    private Sector sector;
+    @JoinColumn(name = "ID_PUESTO", referencedColumnName = "ID_PUESTO", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Puesto puesto;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "persona")
     private Usuario usuario;
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
@@ -198,6 +200,8 @@ public class Persona implements Serializable {
         this.estadoCivil = new EstadoCivil();
         this.paisOrigen = new Pais();
         this.tipoIdentificacion = new TipoIdentificacion();
+        this.sector = new Sector();
+        this.puesto = new Puesto();
         this.educacionesFormalesList = new LinkedList<>();
         this.educacionesNoFormalesList = new LinkedList<>();
         this.familiaresList = new LinkedList<>();
@@ -354,11 +358,11 @@ public class Persona implements Serializable {
         this.cuil = cuil;
     }
 
-    public String getSector() {
+    public Sector getSector() {
         return sector;
     }
 
-    public void setSector(String sector) {
+    public void setSector(Sector sector) {
         this.sector = sector;
     }
 
@@ -547,14 +551,6 @@ public class Persona implements Serializable {
     public void setEqLluvia(Integer eqLluvia) {
         this.eqLluvia = eqLluvia;
     }
-
-    public String getFoto() {
-        return foto;
-    }
-
-    public void setFoto(String foto) {
-        this.foto = foto;
-    }
     
     @Override
     public int hashCode() {
@@ -579,5 +575,21 @@ public class Persona implements Serializable {
     @Override
     public String toString() {
         return "com.invensoft.model.Persona[ idPersona=" + idPersona + " ]";
+    }
+
+    public FotoPersona getFotoPersona() {
+        return fotoPersona;
+    }
+
+    public void setFotoPersona(FotoPersona fotoPersona) {
+        this.fotoPersona = fotoPersona;
+    }
+
+    public Puesto getPuesto() {
+        return puesto;
+    }
+
+    public void setPuesto(Puesto puesto) {
+        this.puesto = puesto;
     }
 }
