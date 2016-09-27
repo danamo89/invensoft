@@ -5,25 +5,21 @@
  */
 package com.invensoft.model.custom;
 
+import com.invensoft.controller.CuestionarioController;
 import com.invensoft.model.GrupoPreguntas;
+import com.invensoft.model.Pregunta;
 import com.invensoft.util.Utilities;
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
-import javax.faces.component.UISelectItem;
-import javax.faces.component.html.HtmlOutputText;
-import javax.faces.component.html.HtmlPanelGrid;
-import javax.faces.component.html.HtmlPanelGroup;
+import java.util.Collections;
+import javax.faces.component.UIComponent;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import org.primefaces.component.column.Column;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
-import org.primefaces.component.outputlabel.OutputLabel;
 import org.primefaces.component.panelgrid.PanelGrid;
 import org.primefaces.component.row.Row;
-import org.primefaces.component.selectmanycheckbox.SelectManyCheckbox;
 
 /**
  *
@@ -31,34 +27,33 @@ import org.primefaces.component.selectmanycheckbox.SelectManyCheckbox;
  */
 public class GrupoPreguntasViewItem extends PanelGrid implements Serializable {
 
-    private BloqueViewItem bloquePadre;
     private GrupoPreguntas grupoPreguntas;
-    private List<HtmlOutputText> preguntasList;
+    private final CuestionarioController cuestionarioController;
+    private InputText titulo;
 
-    public GrupoPreguntasViewItem(BloqueViewItem bloquePadre, GrupoPreguntas grupoPreguntas) {
-        this.bloquePadre = bloquePadre;
-        this.grupoPreguntas = grupoPreguntas;
-        this.preguntasList = new LinkedList<>();
-
+    public GrupoPreguntasViewItem(CuestionarioController cuestionarioController, GrupoPreguntas grupoPreguntas) {
         setStyle("width: 100%; padding-left: 20px: padding-right: 20px");
         
-        this.constructHeader();
-        this.constructPreguntasList();
+        this.cuestionarioController = cuestionarioController;
+        if (grupoPreguntas != null) {
+            this.grupoPreguntas = grupoPreguntas;
+            this.addHeader();
+            
+            Collections.sort(this.grupoPreguntas.getPreguntaList());
+            for (Pregunta pregunta : this.grupoPreguntas.getPreguntaList()) {
+                onAddPregunta(pregunta);
+            }
+        } else {
+            this.grupoPreguntas = new GrupoPreguntas(this.cuestionarioController.getCuestionario());
+            this.grupoPreguntas.setOrden(this.cuestionarioController.getRootPanelGroup().getChildCount()+1);
+            this.addHeader();
+        }
     }
 
-    private void constructHeader() {
-        InputText title = new InputText();
-        title.setValue("Titulo de las preguntas");
-        
-        CommandButton configurarOpcionesDeRespuestaButton = new CommandButton();
-        configurarOpcionesDeRespuestaButton.setIcon(Utilities.GEAR_ICON);
-        configurarOpcionesDeRespuestaButton.setUpdate(Utilities.CUESTIONARIOS_FORM);
-        configurarOpcionesDeRespuestaButton.addActionListener(new ActionListener() {
-            @Override
-            public void processAction(ActionEvent event) throws AbortProcessingException {
-                
-            }
-        });
+    private void addHeader() {
+        titulo = new InputText();
+        titulo.setPlaceholder("Titulo del grupo de preguntas");
+        titulo.setValue(grupoPreguntas.getTitulo());
 
         CommandButton addPreguntaButton = new CommandButton();
         addPreguntaButton.setIcon(Utilities.PLUS_ICON);
@@ -67,10 +62,9 @@ public class GrupoPreguntasViewItem extends PanelGrid implements Serializable {
             @Override
             public void processAction(ActionEvent event) throws AbortProcessingException {
                 onAddPregunta();
-                constructPreguntasList();
             }
         });
-        
+
         CommandButton removeGrupoPreguntaButton = new CommandButton();
         removeGrupoPreguntaButton.setIcon(Utilities.TRASH_ICON);
         removeGrupoPreguntaButton.setUpdate(Utilities.CUESTIONARIOS_FORM);
@@ -85,7 +79,7 @@ public class GrupoPreguntasViewItem extends PanelGrid implements Serializable {
         Column rightColumn = new Column();
 
         leftColumn.setStyle("width: 90%");
-        leftColumn.getChildren().add(title);
+        leftColumn.getChildren().add(titulo);
         rightColumn.setStyle("width: 10%; text-align: right");
         rightColumn.getChildren().add(addPreguntaButton);
         rightColumn.getChildren().add(removeGrupoPreguntaButton);
@@ -97,75 +91,39 @@ public class GrupoPreguntasViewItem extends PanelGrid implements Serializable {
         this.getFacets().put("header", row);
     }
 
-    private void constructPreguntasList() {
-        //Limpiamos el listado y las cargamos de nuevo
-        getChildren().clear();
-
-        HtmlPanelGrid gridDePreguntas = new HtmlPanelGrid();
-        gridDePreguntas.setColumns(2);
-
-        for (final HtmlOutputText pregunta : preguntasList) {
-            HtmlPanelGrid grupoPreguntaYRespuestas = new HtmlPanelGrid();
-            grupoPreguntaYRespuestas.setColumns(1);
-
-            // Aqui debe venir un FOR con un SWITCH para cada posible respuesta
-            // por ahora queda en un comentario.
-            // Ejemplo para el caso de opciones en forma de check
-            SelectManyCheckbox checkBoxOptions = new SelectManyCheckbox();
-            checkBoxOptions.setStyle("text-align: left; padding-left: 20px");
-            checkBoxOptions.setLayout("grid");
-            checkBoxOptions.setColumns(1);
-
-            List<String> listaDeOpciones = new LinkedList<>();
-            listaDeOpciones.add("Bombas de Vapor");
-            listaDeOpciones.add("Condensadores");
-            listaDeOpciones.add("Purgas");
-            listaDeOpciones.add("Ventilador");
-
-            for (String opcion : listaDeOpciones) {
-                UISelectItem selectItem = new UISelectItem();
-                selectItem.setItemLabel(opcion);
-                selectItem.setItemValue(opcion);
-                checkBoxOptions.getChildren().add(selectItem);
-            }
-
-            grupoPreguntaYRespuestas.getChildren().add(pregunta);
-            grupoPreguntaYRespuestas.getChildren().add(checkBoxOptions);
-            
-            CommandButton removePreguntaButton = new CommandButton();
-            removePreguntaButton.setIcon(Utilities.TRASH_ICON);
-            removePreguntaButton.setUpdate(Utilities.CUESTIONARIOS_FORM);
-            removePreguntaButton.addActionListener(new ActionListener() {
-                @Override
-                public void processAction(ActionEvent event) throws AbortProcessingException {
-                    onRemovePregunta(pregunta);
-                }
-            });
-
-            gridDePreguntas.getChildren().add(grupoPreguntaYRespuestas);
-            gridDePreguntas.getChildren().add(removePreguntaButton);
-        }
-
-        getChildren().add(getChildCount(), gridDePreguntas);
-    }
-
     private void onAddPregunta() {
-        HtmlOutputText pregunta = new HtmlOutputText();
-        pregunta.setValue(this.preguntasList.size()+1 + ") ¿Que elementos corresponden a una locomotora?");
+        onAddPregunta(null);
+    }
+    
+    private void onAddPregunta(Pregunta pregunta) {
+        this.getChildren().add(new PreguntaViewItem(this,pregunta));
+    }
 
-        this.preguntasList.add(pregunta);
-    }
-    
-    private void onRemovePregunta(HtmlOutputText pregunta) {
-        this.preguntasList.remove(pregunta);
-        constructPreguntasList();
-    }
-    
     private void onRemoveGrupoPregunta() {
-        this.bloquePadre.getChildren().remove(this);
+        this.cuestionarioController.getRootPanelGroup().getChildren().remove(this);
+    }
+    
+    public void onSave() {
+        //Guardamos las preguntas con sus opciones
+        for (int i = 0; i < this.getChildren().size(); i++) {
+            PreguntaViewItem preguntaViewItem = (PreguntaViewItem) this.getChildren().get(i);
+            preguntaViewItem.getPregunta().setOrden(i+1);
+            preguntaViewItem.onSave();
+        }
+        
+        this.cuestionarioController.getCuestionario().getGrupoPreguntasList().add(this.grupoPreguntas);
+        grupoPreguntas.setTitulo(titulo.getValue().toString());
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getter && Setter">
+    public InputText getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(InputText titulo) {
+        this.titulo = titulo;
+    }
+
     public GrupoPreguntas getGrupoPreguntas() {
         return grupoPreguntas;
     }
