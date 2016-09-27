@@ -13,58 +13,34 @@
                 <p:panelGrid style="width: 100%">
                     <f:facet name="header">
                         <p:row>
-                            <p:column style="width: 33%">
-
+                            <p:column style="width: 90%; text-align: center">
+                                <p:inputText placeholder="Titulo del cuestionario..." value="#{cuestionarioController.cuestionario.titulo}" style="width: 80%;text-align: center"/>
                             </p:column>
-                            <p:column style="width: 33%; text-align: center">
-                                <p:outputLabel value="Cuestionario"/>
-                            </p:column>
-                            <p:column style="width: 33%; text-align: right">
-                                <p:commandButton icon="ui-icon-plus" title="Agregar Bloque" actionListener="#{cuestionarioController.onAddBloque()}" update=":cuestionariosForm"/>
-                                <p:commandButton icon="ui-icon-gear" title="Configurar"/>
+                            <p:column style="width: 10%; text-align: right">
+                                <p:commandButton icon="ui-icon-plus" title="Agregar Grupo de preguntas" actionListener="#{cuestionarioController.onAddGrupoPreguntas()}" update=":cuestionariosForm"/>
                             </p:column>
                         </p:row>
                     </f:facet>
+                    <!--<p:inputTextarea value="#{cuestionarioController.cuestionario.descripcion}"/>-->
                 </p:panelGrid>
-
+                
                 <br/><br/>
                 <h:panelGroup style="text-align: center" binding="#{cuestionarioController.rootPanelGroup}"/>
-
-                <!-- POPUP - CONFIGURAR OPCIONES DE RESPUESTA -->
-                <p:dialog header="Opciones de respuesta" widgetVar="opcionesDeRespuesta" modal="true" height="100">
-                    <h:outputText value="This is a Modal Dialog." />
-                </p:dialog> 
-
-                <p:dataTable var="string" value="#{cuestionarioController.lista}" draggableRows="true">
-                    <f:facet name="header">
-                        Expand rows to see detailed information
-                    </f:facet>
-                    <p:column style="width:16px">
-                        <p:rowToggler />
-                    </p:column>
-                    <p:column headerText="Titulo">
-                        <h:outputText value="#{string}" />
-                    </p:column>
-                    <p:column headerText="Opciones" width="8%">
-                        <p:commandButton icon="ui-icon-plus" title="Agregar Bloque"/>
-                        <p:commandButton icon="ui-icon-gear" title="Configurar"/>
-                    </p:column>
-                    <p:rowExpansion>
-                        <p:dataTable var="string" value="#{cuestionarioController.lista}" draggableRows="true">
-                            <f:facet name="header">
-                                Expand rows to see detailed information
-                            </f:facet>
-                            <p:column headerText="Titulo">
-                                <h:outputText value="#{string}" />
-                            </p:column>
-                            <p:column headerText="Opciones" width="8%">
-                                <p:commandButton icon="ui-icon-plus" title="Agregar Bloque"/>
-                                <p:commandButton icon="ui-icon-gear" title="Configurar"/>
-                            </p:column>
-                        </p:dataTable>
-                    </p:rowExpansion>
-                </p:dataTable>
-
+                
+                <br/><br/>
+                <hr/>
+                <p:panelGrid style="width: 100%">
+                    <p:row>
+                        <p:column style="text-align: right">
+                            <p:commandButton value="Cancelar" icon="ui-icon-close" update=":cuestionariosForm" immediate="true">
+                                <f:setPropertyActionListener  target="#{cuestionarioController.showCuestionariosTable}" value="#{!cuestionarioController.showCuestionariosTable}"/>
+                           </p:commandButton>
+                        </p:column>
+                        <p:column style="text-align: left">
+                            <p:commandButton value="Guardar" icon="ui-icon-save" update=":cuestionariosForm" actionListener="#{cuestionarioController.onSaveCuestionario()}"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
             </h:panelGroup>
 
             <h:panelGroup style="width: 100%" rendered="#{cuestionarioController.showCuestionariosTable}">
@@ -73,14 +49,15 @@
                 <br/><br/>
 
                 <p:dataTable id="cuestionariosTable" rows="10" paginator="true" paginatorPosition="bottom" style="width: 100%"
-                             var="cuestionario" rowIndexVar="index" widgetVar="widget"  >
+                             var="cuestionario" rowIndexVar="index" widgetVar="widget" value="#{cuestionarioController.cuestionariosList}" >
                     <f:facet name="header">
                         <p:outputPanel>
                             <table style="border: none; border-width: 0px">
                                 <tr>
                                     <td style="border: none; border-width: 0px; text-align: left">
-<!--                                        <p:commandButton icon="ui-icon-plus" actionListener="#{personasController.onCreatePersona()}" update=":cuestionariosForm"
-                                                         disabled="#{usuarioController.readOnly}"/>-->
+                                        <p:commandButton icon="ui-icon-plus" actionListener="#{cuestionarioController.onCreateCuestionario()}" update=":cuestionariosForm" disabled="#{usuarioController.readOnly}">
+                                            <f:setPropertyActionListener  target="#{cuestionarioController.showCuestionariosTable}" value="#{!cuestionarioController.showCuestionariosTable}"/>
+                                        </p:commandButton>
                                     </td>
                                     <td style="border: none; border-width: 0px; font-size: 15px">
                                         <p:outputLabel value="Cuestionarios" />
@@ -94,6 +71,12 @@
                     </f:facet>
                     <p:column headerText="#" style="width: 3%">
                         <p:outputLabel value="#{index+1}" />
+                    </p:column>
+                    <p:column headerText="Titulo">
+                        <p:outputLabel value="#{cuestionario.titulo}"/>
+                    </p:column>
+                    <p:column style="width: 3%">
+                        <p:commandButton icon="ui-icon-search" actionListener="#{cuestionarioController.onViewCuestionarioDetail(cuestionario)}" update=":cuestionariosForm"/>
                     </p:column>
                 </p:dataTable>
             </h:panelGroup>
