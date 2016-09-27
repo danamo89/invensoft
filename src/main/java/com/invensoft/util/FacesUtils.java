@@ -41,4 +41,10 @@ public class FacesUtils {
         
         return isReadOnly;
     }
+    
+    public static ValueExpression createValueExpression(String expression, Class<?> expectedType) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        return context.getApplication().getExpressionFactory()
+                .createValueExpression(context.getELContext(), expression, expectedType);
+    }
 }

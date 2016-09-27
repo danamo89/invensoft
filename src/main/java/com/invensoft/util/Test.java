@@ -5,19 +5,18 @@
  */
 package com.invensoft.util;
 
-import java.util.Date;
-
 /**
  *
  * @author David
  */
 public class Test {
     
+    public enum Orientacion {
+        VERTICAL, HORIZONTAL
+    }
+    
     public static void main(String args[]) {
-        String stringDate = "12/12/2016";
-        Date date = new Date(stringDate);
-        
-        System.out.println("daaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaate: " + date);
+        System.out.println("Ordinal de la posicion = " + Orientacion.VERTICAL.ordinal());
     }
     
 }
