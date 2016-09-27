@@ -6,7 +6,6 @@
 package com.invensoft.dao.impl;
 
 import com.invensoft.dao.IGenericDao;
-import com.invensoft.model.Familiar;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
