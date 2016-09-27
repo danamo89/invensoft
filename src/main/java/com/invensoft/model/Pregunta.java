@@ -6,11 +6,13 @@
 package com.invensoft.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,8 +37,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Pregunta.findAll", query = "SELECT p FROM Pregunta p"),
     @NamedQuery(name = "Pregunta.findByIdPregunta", query = "SELECT p FROM Pregunta p WHERE p.idPregunta = :idPregunta"),
-    @NamedQuery(name = "Pregunta.findByTexto", query = "SELECT p FROM Pregunta p WHERE p.texto = :texto")})
-public class Pregunta implements Serializable {
+    @NamedQuery(name = "Pregunta.findByTexto", query = "SELECT p FROM Pregunta p WHERE p.texto = :texto"),
+    @NamedQuery(name = "Pregunta.findByEstiloOpciones", query = "SELECT p FROM Pregunta p WHERE p.estiloOpciones = :estiloOpciones")})
+public class Pregunta implements Serializable, Comparable<Pregunta> {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,22 +51,36 @@ public class Pregunta implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "TEXTO", nullable = false, length = 255)
     private String texto;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPregunta")
-    private List<RespuestaActivo> respuestaActivoList;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "ESTILO_OPCIONES", nullable = false, length = 45)
+    private String estiloOpciones;
+    @Column(name = "ORDEN")
+    private Integer orden;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "Pregunta", fetch = FetchType.LAZY)
+    private List<OpcionRespuesta> opcioneRespuestaList;
     @JoinColumn(name = "ID_GRUPO_PREGUNTAS", referencedColumnName = "ID_GRUPO_PREGUNTAS", nullable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private GrupoPreguntas grupoPreguntas;
 
     public Pregunta() {
+        opcioneRespuestaList = new ArrayList<>();
+    }
+
+    public Pregunta(GrupoPreguntas grupoPreguntas) {
+        this.grupoPreguntas = grupoPreguntas;
+        opcioneRespuestaList = new ArrayList<>();
     }
 
     public Pregunta(Integer idPregunta) {
         this.idPregunta = idPregunta;
     }
 
-    public Pregunta(Integer idPregunta, String texto) {
+    public Pregunta(Integer idPregunta, String texto, String estiloOpciones) {
         this.idPregunta = idPregunta;
         this.texto = texto;
+        this.estiloOpciones = estiloOpciones;
     }
 
     public Integer getIdPregunta() {
@@ -82,13 +99,29 @@ public class Pregunta implements Serializable {
         this.texto = texto;
     }
 
-    @XmlTransient
-    public List<RespuestaActivo> getRespuestaActivoList() {
-        return respuestaActivoList;
+    public String getEstiloOpciones() {
+        return estiloOpciones;
     }
 
-    public void setRespuestaActivoList(List<RespuestaActivo> respuestaActivoList) {
-        this.respuestaActivoList = respuestaActivoList;
+    public void setEstiloOpciones(String estiloOpciones) {
+        this.estiloOpciones = estiloOpciones;
+    }
+
+    public Integer getOrden() {
+        return orden;
+    }
+
+    public void setOrden(Integer orden) {
+        this.orden = orden;
+    }
+
+    @XmlTransient
+    public List<OpcionRespuesta> getOpcioneRespuestaList() {
+        return opcioneRespuestaList;
+    }
+
+    public void setOpcioneRespuestaList(List<OpcionRespuesta> opcioneRespuestaList) {
+        this.opcioneRespuestaList = opcioneRespuestaList;
     }
 
     public GrupoPreguntas getGrupoPreguntas() {
@@ -122,6 +155,15 @@ public class Pregunta implements Serializable {
     @Override
     public String toString() {
         return "com.invensoft.model.Pregunta[ idPregunta=" + idPregunta + " ]";
+    }
+
+    @Override
+    public int compareTo(Pregunta o) {
+        if (this.getOrden()>o.getOrden()) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
     
 }

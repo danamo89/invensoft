@@ -6,11 +6,13 @@
 package com.invensoft.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,18 +43,20 @@ public class Cuestionario implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID_CUESTIONARIO", nullable = false)
     private Integer idCuestionario;
-    @Size(max = 45)
-    @Column(name = "TITULO", length = 45)
+    @Size(max = 255)
+    @Column(name = "TITULO", length = 255)
     private String titulo;
     @Size(max = 500)
     @Column(name = "DESCRIPCION", length = 500)
     private String descripcion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCuestionario")
-    private List<Bloque> bloqueList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cuestionario")
-    private List<TipoActivo> tipoActivoList;
-
+    @OneToMany(mappedBy = "cuestionario", fetch = FetchType.LAZY)
+    private List<Sector> sectorList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cuestionario", fetch = FetchType.LAZY)
+    private List<GrupoPreguntas> grupoPreguntasList;
+    
     public Cuestionario() {
+        grupoPreguntasList = new ArrayList<>();
+        sectorList = new ArrayList<>();
     }
 
     public Cuestionario(Integer idCuestionario) {
@@ -83,24 +87,6 @@ public class Cuestionario implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @XmlTransient
-    public List<Bloque> getBloqueList() {
-        return bloqueList;
-    }
-
-    public void setBloqueList(List<Bloque> bloqueList) {
-        this.bloqueList = bloqueList;
-    }
-
-    @XmlTransient
-    public List<TipoActivo> getTipoActivoList() {
-        return tipoActivoList;
-    }
-
-    public void setTipoActivoList(List<TipoActivo> tipoActivoList) {
-        this.tipoActivoList = tipoActivoList;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -124,6 +110,24 @@ public class Cuestionario implements Serializable {
     @Override
     public String toString() {
         return "com.invensoft.model.Cuestionario[ idCuestionario=" + idCuestionario + " ]";
+    }
+
+    @XmlTransient
+    public List<Sector> getSectorList() {
+        return sectorList;
+    }
+
+    public void setSectorList(List<Sector> sectorList) {
+        this.sectorList = sectorList;
+    }
+
+    @XmlTransient
+    public List<GrupoPreguntas> getGrupoPreguntasList() {
+        return grupoPreguntasList;
+    }
+
+    public void setGrupoPreguntasList(List<GrupoPreguntas> grupoPreguntasList) {
+        this.grupoPreguntasList = grupoPreguntasList;
     }
     
 }

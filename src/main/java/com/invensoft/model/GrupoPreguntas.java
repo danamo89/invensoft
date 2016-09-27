@@ -6,11 +6,13 @@
 package com.invensoft.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,25 +37,31 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "GrupoPreguntas.findAll", query = "SELECT g FROM GrupoPreguntas g"),
     @NamedQuery(name = "GrupoPreguntas.findByIdGrupoPreguntas", query = "SELECT g FROM GrupoPreguntas g WHERE g.idGrupoPreguntas = :idGrupoPreguntas"),
     @NamedQuery(name = "GrupoPreguntas.findByTitulo", query = "SELECT g FROM GrupoPreguntas g WHERE g.titulo = :titulo")})
-public class GrupoPreguntas implements Serializable {
+public class GrupoPreguntas implements Serializable, Comparable<GrupoPreguntas> {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID_GRUPO_PREGUNTAS", nullable = false)
     private Integer idGrupoPreguntas;
-    @Size(max = 45)
-    @Column(name = "TITULO", length = 45)
+    @Size(max = 255)
+    @Column(name = "TITULO", length = 255)
     private String titulo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "grupoPreguntas")
-    private List<GrupoOpciones> grupoOpcionesList;
-    @JoinColumn(name = "ID_BLOQUE", referencedColumnName = "ID_BLOQUE", nullable = false)
-    @ManyToOne(optional = false)
-    private Bloque bloque;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "grupoPreguntas")
+    @Column(name = "ORDEN")
+    private Integer orden;
+    @JoinColumn(name = "ID_CUESTIONARIO", referencedColumnName = "ID_CUESTIONARIO", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Cuestionario cuestionario;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "grupoPreguntas", fetch = FetchType.LAZY)
     private List<Pregunta> preguntaList;
 
     public GrupoPreguntas() {
+        preguntaList = new ArrayList<>();
+    }
+
+    public GrupoPreguntas(Cuestionario cuestionario) {
+        this.cuestionario = cuestionario;
+        preguntaList = new ArrayList<>();
     }
 
     public GrupoPreguntas(Integer idGrupoPreguntas) {
@@ -76,21 +84,20 @@ public class GrupoPreguntas implements Serializable {
         this.titulo = titulo;
     }
 
-    @XmlTransient
-    public List<GrupoOpciones> getGrupoOpcionesList() {
-        return grupoOpcionesList;
+    public Cuestionario getCuestionario() {
+        return cuestionario;
     }
 
-    public void setGrupoOpcionesList(List<GrupoOpciones> grupoOpcionesList) {
-        this.grupoOpcionesList = grupoOpcionesList;
+    public void setCuestionario(Cuestionario cuestionario) {
+        this.cuestionario = cuestionario;
     }
 
-    public Bloque getBloque() {
-        return bloque;
+    public Integer getOrden() {
+        return orden;
     }
 
-    public void setBloque(Bloque bloque) {
-        this.bloque = bloque;
+    public void setOrden(Integer orden) {
+        this.orden = orden;
     }
 
     @XmlTransient
@@ -125,6 +132,15 @@ public class GrupoPreguntas implements Serializable {
     @Override
     public String toString() {
         return "com.invensoft.model.GrupoPreguntas[ idGrupoPreguntas=" + idGrupoPreguntas + " ]";
+    }
+
+    @Override
+    public int compareTo(GrupoPreguntas o) {
+        if (this.getOrden()>o.getOrden()) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
     
 }

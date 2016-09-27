@@ -75,10 +75,6 @@ public class Usuario implements Serializable {
     private Persona persona;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<UsuarioRol> usuarioRolList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioAlta")
-    private List<Activo> activoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
-    private List<TipoActivo> tipoActivoList;
 
     public Usuario() {
     }
@@ -175,23 +171,4 @@ public class Usuario implements Serializable {
     public String toString() {
         return "com.splinter.model.Usuario[ idUsuario=" + idUsuario + " ]";
     }
-
-    @XmlTransient
-    public List<Activo> getActivoList() {
-        return activoList;
-    }
-
-    public void setActivoList(List<Activo> activoList) {
-        this.activoList = activoList;
-    }
-
-    @XmlTransient
-    public List<TipoActivo> getTipoActivoList() {
-        return tipoActivoList;
-    }
-
-    public void setTipoActivoList(List<TipoActivo> tipoActivoList) {
-        this.tipoActivoList = tipoActivoList;
-    }
-    
 }
