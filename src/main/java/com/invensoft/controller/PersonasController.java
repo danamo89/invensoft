@@ -5,30 +5,35 @@
  */
 package com.invensoft.controller;
 
+import com.invensoft.controller.helper.CuestionarioPainter;
 import com.invensoft.model.EducacionFormal;
 import com.invensoft.model.EducacionNoFormal;
 import com.invensoft.model.EstadoCivil;
 import com.invensoft.model.Familiar;
 import com.invensoft.model.Pais;
 import com.invensoft.model.Persona;
-import com.invensoft.model.Cargo;
 import com.invensoft.model.Documento;
 import com.invensoft.model.DocumentoPersona;
+import com.invensoft.model.FotoPersona;
 import com.invensoft.model.InformacionLaboral;
+import com.invensoft.model.Puesto;
+import com.invensoft.model.RespuestaPregunta;
+import com.invensoft.model.Sector;
 import com.invensoft.model.TipoDocumento;
 import com.invensoft.model.TipoIdentificacion;
-import com.invensoft.service.ICargoService;
+import com.invensoft.service.ICuestionarioService;
 import com.invensoft.service.IDocumentoService;
 import com.invensoft.service.IEstadoCivilService;
 import com.invensoft.service.IPaisService;
 import com.invensoft.service.IPersonaService;
+import com.invensoft.service.IPuestoService;
+import com.invensoft.service.ISectorService;
 import com.invensoft.service.ITipoDocumentoService;
 import com.invensoft.service.ITipoIdentificacionService;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -48,14 +53,17 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
+import javax.faces.event.ValueChangeEvent;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -72,25 +80,31 @@ public class PersonasController implements Serializable {
     private Persona persona;
     private Familiar familiar;
     private InformacionLaboral informacionLaboral;
-    private Cargo cargo;
     private EducacionFormal educacionFormal;
     private EducacionNoFormal educacionNoFormal;
-
+    private Puesto puesto;
+    
     private List<Persona> personasList;
     private List<TipoIdentificacion> tiposIdentificacionList;
     private List<Pais> paisesList;
     private List<EstadoCivil> estadosCivilesList;
     private List<Integer> rangoAniosPermitidos;
-    private List<InformacionLaboral> informacionLaboralList;
-    private List<Cargo> tiposCargoList;
+    private List<Sector> sectoresList;
+    private List<Puesto> puestosList;
 
     private String[] selectedTiposDocumentos;
     private List<SelectItem> selectTiposDocumentos;
     private List<TipoDocumento> tiposDocumentosList;
-
-    private StreamedContent fotoPersonaView = null;
-
+    
+    private CuestionarioPainter cuestionarioPainter;
+    
+    private HtmlPanelGroup saludOcupacionalRootPanelGroup;
+    private List<RespuestaPregunta> listRespuestasPreguntasCuestionarioSaludOcupacional;
+    private HtmlPanelGroup desarrolloProfesionalRootPanelGroup;
+    private List<RespuestaPregunta> listRespuestasPreguntasCuestionarioDesarrolloProfesional;
+    private HtmlPanelGroup cuestionarioRootPanelGroup;
     private boolean showPersonasTable;
+    private String rutaFoto;
 
     //Services
     @ManagedProperty(value = "#{personaService}")
@@ -101,12 +115,16 @@ public class PersonasController implements Serializable {
     private IPaisService paisService;
     @ManagedProperty(value = "#{estadoCivilService}")
     private IEstadoCivilService estadoCivilService;
-    @ManagedProperty(value = "#{cargoService}")
-    private ICargoService cargoService;
     @ManagedProperty(value = "#{tipoDocumentoService}")
     private ITipoDocumentoService tipoDocumentoService;
     @ManagedProperty(value = "#{documentoService}")
     private IDocumentoService documentoService;
+    @ManagedProperty(value = "#{sectorService}")
+    private ISectorService sectorService;
+    @ManagedProperty(value = "#{puestoService}")
+    private IPuestoService puestoService;
+    @ManagedProperty(value = "#{cuestionarioService}")
+    private ICuestionarioService cuestionarioService;
 
     /**
      * Creates a new instance of PersonasController
@@ -118,11 +136,18 @@ public class PersonasController implements Serializable {
     public void initController() {
         showPersonasTable = true;
         personasList = personasService.findAll();
+        cuestionarioPainter = new CuestionarioPainter();
+        
+        saludOcupacionalRootPanelGroup = new HtmlPanelGroup();
+        desarrolloProfesionalRootPanelGroup = new HtmlPanelGroup();
+        
+        listRespuestasPreguntasCuestionarioSaludOcupacional = cuestionarioPainter.paint(saludOcupacionalRootPanelGroup, cuestionarioService.findCuestionarioSaludOcupacional());
+        listRespuestasPreguntasCuestionarioDesarrolloProfesional = cuestionarioPainter.paint(desarrolloProfesionalRootPanelGroup, cuestionarioService.findCuestionarioDesarrolloProfesional());
 
         familiar = new Familiar();
         educacionFormal = new EducacionFormal();
         educacionNoFormal = new EducacionNoFormal();
-        cargo = new Cargo();
+        informacionLaboral = new InformacionLaboral();
 
         this.loadLists();
     }
@@ -164,15 +189,6 @@ public class PersonasController implements Serializable {
             }
         }
 
-        if (tiposCargoList == null) {
-            tiposCargoList = cargoService.findAll();
-
-            // Por si no existen registros en la base de datos
-            if (tiposCargoList == null) {
-                tiposCargoList = new LinkedList<>();
-            }
-        }
-
         if (this.tiposDocumentosList == null) {
             this.tiposDocumentosList = tipoDocumentoService.findAll();
             
@@ -182,84 +198,46 @@ public class PersonasController implements Serializable {
             }
         }
         
-//        if (selectTiposDocumentos == null) {
-//            this.tiposDocumentosList = tipoDocumentoService.findAll();
-//
-//            // Por si no existen registros en la base de datos
-//            if (tiposDocumentosList == null) {
-//                tiposDocumentosList = new LinkedList<>();
-//            }
-//
-//            selectTiposDocumentos = new LinkedList<>();
-//            for (TipoDocumento tipoDocumento : tiposDocumentosList) {
-//                SelectItemGroup selectItemGroup = new SelectItemGroup(tipoDocumento.getDescripcion());
-//                
-//                SelectItem[] selectedItems = new SelectItem[tipoDocumento.getDocumentosList().size()];
-//                for (int i = 0; i < tipoDocumento.getDocumentosList().size(); i++) {
-//                    Documento documento = tipoDocumento.getDocumentosList().get(i);
-//                    SelectItem item = new SelectItem(documento.getIdDocumento(), documento.getDescripcion());
-//                    selectedItems[i] = item;
-//                }
-//                
-//                selectItemGroup.setSelectItems(selectedItems);
-//                selectTiposDocumentos.add(selectItemGroup);
-//            }
-//        }
-
-//        Integer idTipo = -1;
-//        List<SelectItem> items = new ArrayList<>();
-//        SelectItemGroup g1 = new SelectItemGroup();
-//        if (this.tiposDocumentosList == null) {
-//            this.tiposDocumentosList = new LinkedList<>();
-//        }
-//
-//        for (Documento doc : this.tiposDocumentosList) {
-//            if (idTipo.equals(-1)) {
-//                g1 = new SelectItemGroup(doc.getDocumentoTipo().getDescripcion());
-//                idTipo = doc.getDocumentoTipo().getIdDocumentoTipo();
-//            } else if (!idTipo.equals(doc.getDocumentoTipo().getIdDocumentoTipo())) {
-//                if (items.size() > 0) {
-//                    SelectItem[] selectedItems = items.toArray(new SelectItem[items.size()]);
-//                    g1.setSelectItems(selectedItems);
-//                    selectTiposDocumentos.add(g1);
-//
-//                    items = new ArrayList<>();
-//                    g1 = new SelectItemGroup(doc.getDocumentoTipo().getDescripcion());
-//                    idTipo = doc.getDocumentoTipo().getIdDocumentoTipo();
-//                }
-//            }
-//
-//            SelectItem item = new SelectItem(doc.getIdDocumento(), doc.getDescripcion());
-//            items.add(item);
-//        }
-//        SelectItem[] selectedItems = items.toArray(new SelectItem[items.size()]);
-//        g1.setSelectItems(selectedItems);
-//        selectTiposDocumentos.add(g1);
+        if (this.sectoresList == null) {
+            this.sectoresList = sectorService.findAll();
+            
+            if (sectoresList == null) {
+                sectoresList = new LinkedList<>();
+            }
+        }
+        
+        if (this.puestosList == null) {
+            this.puestosList = puestoService.findAll();
+            
+            if (puestosList == null) {
+                puestosList = new LinkedList<>();
+            }
+        }
     }
 
     public void onViewPersonaDetailedInfo(Persona persona) {
         this.persona = persona;
         this.showPersonasTable = false;
-
+        FacesContext context = FacesContext.getCurrentInstance();
+        
         initDocumentosPersona();
-
-//        if (this.persona.getFoto() != null) {
-//            this.fotoPersonaView = new DefaultStreamedContent(new ByteArrayInputStream(persona.getFoto()), "image/jpg");
-//        } else {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ExternalContext externalContext = facesContext.getExternalContext();
-            ServletContext servletContext = (ServletContext) externalContext.getContext();
-            String absoluteDiskPath = servletContext.getRealPath("resources/images/broken.png");
-
-            File file = new File(absoluteDiskPath);
-
+                
+        if (this.persona.getFotoPersona() != null) {
             try {
-                this.fotoPersonaView = new DefaultStreamedContent(new FileInputStream(file), "image/png");
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(PersonasController.class.getName()).log(Level.SEVERE, null, ex);
-                this.fotoPersonaView = new DefaultStreamedContent();
+                String relativePath = "/resources/images";
+                String absolutePath = context.getExternalContext().getRealPath(relativePath);
+                String fileExtension = this.persona.getFotoPersona().getExtension();
+                String fileName = this.persona.getLegajo()+"."+fileExtension;
+
+                FileUtils.writeByteArrayToFile(new File(absolutePath+"/"+fileName), this.persona.getFotoPersona().getFoto());
+
+                this.rutaFoto = relativePath + "/" + fileName;
+            }catch(IOException e) {
+                this.rutaFoto = "/resources/images/broken.png";
             }
-//        }
+        }else {          
+            this.rutaFoto = "/resources/images/broken.png";
+        }
     }
 
     public void initDocumentosPersona() {
@@ -274,24 +252,12 @@ public class PersonasController implements Serializable {
                 }
             }
         }
-        
-//        int idx = 0;
-//        selectedTiposDocumentos = new String[this.tiposDocumentosList.size()];
-//
-//        for (Documento tipo : this.tiposDocumentosList) {
-//            for (DocumentoPersona documento : this.persona.getDocumentosPersonaList()) {
-//                if (tipo.getIdDocumento().equals(documento.getDocumento().getIdDocumento())) {
-//                    selectedTiposDocumentos[idx] = tipo.getIdDocumento().toString();
-//                    break;
-//                }
-//            }
-//            idx++;
-//        }
     }
 
     public void onCreatePersona() {
         this.persona = new Persona();
         this.showPersonasTable = false;
+        this.rutaFoto = "/resources/images/broken.png";
     }
 
     public void onAddFamiliar() {
@@ -310,50 +276,99 @@ public class PersonasController implements Serializable {
         this.familiar = new Familiar();
     }
 
-    public void onAddCargo() {
-        boolean add = true;
+    public void onViewFamiliarDetailedInfo(Familiar familiar) {
+        for (Familiar familiarItem : this.persona.getFamiliaresList()) {
+            if (Objects.equals(familiarItem.getIdFamiliar(), familiar.getIdFamiliar())) {
+                this.persona.getFamiliaresList().remove(familiarItem);
+                break;
+            }
+        }
+        this.familiar = familiar;
+    }
+    
+    public void onRemoveFamiliar(Familiar familiar) {
+        this.persona.getFamiliaresList().remove(familiar);
+    }
+    
+    public void onAddEducacionFormal() {
+        if (this.persona.getEducacionesFormalesList() == null) {
+            this.persona.setEducacionesFormalesList(new LinkedList<EducacionFormal>());
+        }
 
+        this.educacionFormal.setPersona(this.persona);
+        this.persona.getEducacionesFormalesList().add(this.educacionFormal);
+        this.educacionFormal = new EducacionFormal();
+    }
+    
+    public void onViewEducacionFormalDetail(EducacionFormal educacionFormal) {
+        for (EducacionFormal educacionFormalItem : this.persona.getEducacionesFormalesList()) {
+            if (Objects.equals(educacionFormalItem.getIdEducacionFormal(), educacionFormal.getIdEducacionFormal())) {
+                this.persona.getEducacionesFormalesList().remove(educacionFormalItem);
+                break;
+            }
+        }
+        this.educacionFormal = educacionFormal;
+    }
+    
+    public void onRemoveEducacionFormal(EducacionFormal educacionFormal) {
+        this.persona.getEducacionesFormalesList().remove(educacionFormal);
+    }
+    
+    public void onAddEducacionNoFormal() {
+        if (this.persona.getEducacionesNoFormalesList() == null) {
+            this.persona.setEducacionesNoFormalesList(new LinkedList<EducacionNoFormal>());
+        }
+
+        this.educacionNoFormal.setPersona(this.persona);
+        this.persona.getEducacionesNoFormalesList().add(this.educacionNoFormal);
+        this.educacionNoFormal = new EducacionNoFormal();
+    }
+    
+    public void onViewEducacionNoFormalDetail(EducacionNoFormal educacionNoFormal) {
+        for (EducacionNoFormal educacionNoFormalItem : this.persona.getEducacionesNoFormalesList()) {
+            if (Objects.equals(educacionNoFormalItem.getIdEducacionNoFormal(), educacionNoFormal.getIdEducacionNoFormal())) {
+                //this.persona.getEducacionesNoFormalesList().remove(educacionNoFormalItem);
+                break;
+            }
+        }
+        this.educacionNoFormal = educacionNoFormal;
+    }
+    
+    public void onRemoveEducacionNoFormal(EducacionNoFormal educacionNoFormal) {
+        this.persona.getEducacionesNoFormalesList().remove(educacionNoFormal);
+    }
+    
+    public void onIdentificacionChange() {
+        this.persona.setLegajo(this.persona.getNumeroIdentificacion());
+    }
+    
+    public void onSectorChange(ValueChangeEvent changeEvent) {
+        Sector sector = (Sector)changeEvent.getNewValue();
+        cuestionarioPainter.paint(cuestionarioRootPanelGroup, sector.getCuestionario());
+    }
+    
+    public void onAddInformacionLaboral() {
         if (this.persona.getInformacionLaboralList() == null) {
             this.persona.setInformacionLaboralList(new LinkedList<InformacionLaboral>());
         }
-
-        for (InformacionLaboral info : this.persona.getInformacionLaboralList()) {
-            if (info.getCargo().getIdCargo().equals(this.cargo.getIdCargo())) {
-                add = false;
-            }
-        }
-
-        if (add) {
-            this.informacionLaboral = new InformacionLaboral();
-
-            for (Cargo c : tiposCargoList) {
-                if (c.getIdCargo().equals(this.cargo.getIdCargo())) {
-                    this.informacionLaboral.setCargo(c);
-                    this.informacionLaboral.setPersona(this.persona);
-                }
-            }
-
-            this.persona.getInformacionLaboralList().add(this.informacionLaboral);
-        }
-
+        
+        this.informacionLaboral.setPersona(this.persona);
+        this.persona.getInformacionLaboralList().add(this.informacionLaboral);
         this.informacionLaboral = new InformacionLaboral();
-        this.cargo = new Cargo();
+    }
+    
+    public void onViewInformacionLaboralDetail(InformacionLaboral informacionLaboral) {
+        for (InformacionLaboral informacionLaboralItem : this.persona.getInformacionLaboralList()) {
+            if (Objects.equals(informacionLaboralItem.getIdInformacionLaboral(), informacionLaboral.getIdInformacionLaboral())) {
+                //this.persona.getInformacionLaboralList().remove(informacionLaboralItem);
+                break;
+            }
+        }
+        this.informacionLaboral = informacionLaboral;
     }
 
     public void onRemoveInformacionLaboral(InformacionLaboral informacionLaboral) {
         this.persona.getInformacionLaboralList().remove(informacionLaboral);
-    }
-
-    public void onRemoveFamiliar(Familiar familiar) {
-        this.persona.getFamiliaresList().remove(familiar);
-    }
-
-    public void onRemoveEducacionFormal(EducacionFormal educacionFormal) {
-        this.persona.getEducacionesFormalesList().remove(educacionFormal);
-    }
-
-    public void onRemoveEducacionNoFormal(EducacionNoFormal educacionNoFormal) {
-        this.persona.getEducacionesNoFormalesList().remove(educacionNoFormal);
     }
 
     public void updateDocumentosPersona() {
@@ -382,56 +397,6 @@ public class PersonasController implements Serializable {
 //        }
     }
 
-    public void onViewFamiliarDetailedInfo(Familiar familiar) {
-        for (Familiar familiarItem : this.persona.getFamiliaresList()) {
-            if (Objects.equals(familiarItem.getIdFamiliar(), familiar.getIdFamiliar())) {
-                this.persona.getFamiliaresList().remove(familiarItem);
-                break;
-            }
-        }
-        this.familiar = familiar;
-    }
-
-    public void onAddEducacionFormal() {
-        if (this.persona.getEducacionesFormalesList() == null) {
-            this.persona.setEducacionesFormalesList(new LinkedList<EducacionFormal>());
-        }
-
-        this.educacionFormal.setPersona(this.persona);
-        this.persona.getEducacionesFormalesList().add(this.educacionFormal);
-        this.educacionFormal = new EducacionFormal();
-    }
-
-    public void onViewEducacionFormalDetail(EducacionFormal educacionFormal) {
-        for (EducacionFormal educacionFormalItem : this.persona.getEducacionesFormalesList()) {
-            if (Objects.equals(educacionFormalItem.getIdEducacionFormal(), educacionFormal.getIdEducacionFormal())) {
-                this.persona.getEducacionesFormalesList().remove(educacionFormalItem);
-                break;
-            }
-        }
-        this.educacionFormal = educacionFormal;
-    }
-
-    public void onAddEducacionNoFormal() {
-        if (this.persona.getEducacionesNoFormalesList() == null) {
-            this.persona.setEducacionesNoFormalesList(new LinkedList<EducacionNoFormal>());
-        }
-
-        this.educacionNoFormal.setPersona(this.persona);
-        this.persona.getEducacionesNoFormalesList().add(this.educacionNoFormal);
-        this.educacionNoFormal = new EducacionNoFormal();
-    }
-
-    public void onViewEducacionNoFormalDetail(EducacionNoFormal educacionNoFormal) {
-        for (EducacionNoFormal educacionNoFormalItem : this.persona.getEducacionesNoFormalesList()) {
-            if (Objects.equals(educacionNoFormalItem.getIdEducacionNoFormal(), educacionNoFormal.getIdEducacionNoFormal())) {
-                this.persona.getEducacionesNoFormalesList().remove(educacionNoFormalItem);
-                break;
-            }
-        }
-        this.educacionNoFormal = educacionNoFormal;
-    }
-
     public void onSave() {
         try {
             //Actualizamos el tipo de identificacion
@@ -454,12 +419,54 @@ public class PersonasController implements Serializable {
                     persona.setEstadoCivil(estadoCivil);
                 }
             }
-
+            
+            for (Puesto p : puestosList) {
+                if (p.getIdPuesto().equals(persona.getPuesto().getIdPuesto())) {
+                    persona.setPuesto(p);
+                }
+            }
+            
             updateDocumentosPersona();
 
 //            persona.setFoto(IOUtils.toByteArray(this.fotoPersonaView.getStream()));
+            /*
+            System.out.println("Salud Ocupacional");
+            System.out.println("------------------");
+            for (RespuestaPregunta respuestaPregunta : listRespuestasPreguntasCuestionarioSaludOcupacional) {
+                System.out.println("Pregunta: " + respuestaPregunta.getPregunta().getTexto());
+                
+                if (respuestaPregunta.getValue()!= null) {
+                    System.out.println("Respuesta: " + respuestaPregunta.getValue());
+                } 
+                
+            }
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("Desarrollo profesional");
+            System.out.println("-----------------------");
+            for (RespuestaPregunta respuestaPregunta : listRespuestasPreguntasCuestionarioSaludOcupacional) {
+                System.out.println("Pregunta: " + respuestaPregunta.getPregunta().getTexto());
+                
+                if (respuestaPregunta.getValue()!= null) {
+                    System.out.println("Respuesta: " + respuestaPregunta.getValue());
+                } 
+            }
+            */
+            
+            //Si la persona que vamos a guardar es nueva, la sumamos a la lista. 
+            boolean nuevaPersona = false;
+            if (persona.getIdPersona() == null || persona.getIdPersona() == 0) {
+                nuevaPersona = true;
+            }
 
             personasService.save(persona);
+            
+            //La agregacion la hacemos despues de guardar por si ocurre un error
+            if (nuevaPersona) {
+                personasList = personasService.findAll();
+            }
+//            
             this.showPersonasTable = true;
 
         } catch (Exception e) {
@@ -513,9 +520,28 @@ public class PersonasController implements Serializable {
     public void handleFileUpload(FileUploadEvent event) {
         try {
             final UploadedFile uploadedFile = event.getFile();
-
-            File tempFile = new File(FileUtils.getTempDirectory().getAbsoluteFile() + "/" + this.persona.getLegajo() + ".jpg");
-            FileUtils.copyInputStreamToFile(new ByteArrayInputStream(uploadedFile.getContents()), tempFile);
+            
+            FacesContext context = FacesContext.getCurrentInstance();
+            ExternalContext externalContext = context.getExternalContext();
+            
+            byte[] content = IOUtils.toByteArray(uploadedFile.getInputstream());
+            String extension = uploadedFile.getFileName().split("\\.")[1];
+            
+            FotoPersona foto = new FotoPersona();
+            foto.setFoto(content);
+            foto.setExtension(extension);
+            
+            this.persona.setFotoPersona(foto);
+            
+            String relativeWebPath = "/resources/images/";
+            String absoluteDiskPath = externalContext.getRealPath(relativeWebPath);
+            String tempFileName = this.persona.getLegajo()+extension;
+            
+            File tempFile = new File(absoluteDiskPath+"/"+tempFileName);
+            
+            IOUtils.write(content, new FileOutputStream(tempFile));
+            this.rutaFoto = relativeWebPath+tempFileName;
+            
         } catch (IOException ex) {
             Logger.getLogger(PersonasController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -526,11 +552,11 @@ public class PersonasController implements Serializable {
 
         UploadedFile file = (UploadedFile) value;
         int bytes = file.getContents().length;
-        /*
-         if(bytes > 15360) {
-         msgs.add(new FacesMessage("Archivo demasiado grande"));
-         }
-         */
+        
+        if(bytes > 15360) {
+            msgs.add(new FacesMessage("Archivo demasiado grande"));
+        }
+        
         if (!file.getContentType().startsWith("image")) {
             msgs.add(new FacesMessage("El archivo debe ser de tipo Imagen"));
         }
@@ -586,30 +612,6 @@ public class PersonasController implements Serializable {
 
     public void setInformacionLaboral(InformacionLaboral informacionLaboral) {
         this.informacionLaboral = informacionLaboral;
-    }
-
-    public List<InformacionLaboral> getInformacionLaboralList() {
-        return informacionLaboralList;
-    }
-
-    public void setInformacionLaboralList(List<InformacionLaboral> informacionLaboralList) {
-        this.informacionLaboralList = informacionLaboralList;
-    }
-
-    public Cargo getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(Cargo cargo) {
-        this.cargo = cargo;
-    }
-
-    public List<Cargo> getTiposCargoList() {
-        return tiposCargoList;
-    }
-
-    public void setTiposCargoList(List<Cargo> tiposCargoList) {
-        this.tiposCargoList = tiposCargoList;
     }
 
     public EducacionFormal getEducacionFormal() {
@@ -740,14 +742,6 @@ public class PersonasController implements Serializable {
         this.estadoCivilService = estadoCivilService;
     }
 
-    public ICargoService getCargoService() {
-        return cargoService;
-    }
-
-    public void setCargoService(ICargoService cargoService) {
-        this.cargoService = cargoService;
-    }
-
     public IDocumentoService getDocumentoService() {
         return documentoService;
     }
@@ -755,5 +749,94 @@ public class PersonasController implements Serializable {
     public void setDocumentoService(IDocumentoService documentoService) {
         this.documentoService = documentoService;
     }
+    
+    public ISectorService getSectorService() {
+        return sectorService;
+    }
+
+    public void setSectorService(ISectorService sectorService) {
+        this.sectorService = sectorService;
+    }
+
+    public List<Sector> getSectoresList() {
+        return sectoresList;
+    }
+
+    public IPuestoService getPuestoService() {
+        return puestoService;
+    }
+
+    public void setPuestoService(IPuestoService puestoService) {
+        this.puestoService = puestoService;
+    }
+    
+    public void setSectoresList(List<Sector> sectoresList) {
+        this.sectoresList = sectoresList;
+    }
+
+    public HtmlPanelGroup getSaludOcupacionalRootPanelGroup() {
+        return saludOcupacionalRootPanelGroup;
+    }
+
+    public void setSaludOcupacionalRootPanelGroup(HtmlPanelGroup saludOcupacionalRootPanelGroup) {
+        this.saludOcupacionalRootPanelGroup = saludOcupacionalRootPanelGroup;
+    }
+
+    public HtmlPanelGroup getDesarrolloProfesionalRootPanelGroup() {
+        return desarrolloProfesionalRootPanelGroup;
+    }
+
+    public void setDesarrolloProfesionalRootPanelGroup(HtmlPanelGroup desarrolloProfesionalRootPanelGroup) {
+        this.desarrolloProfesionalRootPanelGroup = desarrolloProfesionalRootPanelGroup;
+    }
+
+    public HtmlPanelGroup getCuestionarioRootPanelGroup() {
+        return cuestionarioRootPanelGroup;
+    }
+
+    public void setCuestionarioRootPanelGroup(HtmlPanelGroup cuestionarioRootPanelGroup) {
+        this.cuestionarioRootPanelGroup = cuestionarioRootPanelGroup;
+    }
+
+    public CuestionarioPainter getCuestionarioPainter() {
+        return cuestionarioPainter;
+    }
+
+    public void setCuestionarioPainter(CuestionarioPainter cuestionarioPainter) {
+        this.cuestionarioPainter = cuestionarioPainter;
+    }
+
+    public ICuestionarioService getCuestionarioService() {
+        return cuestionarioService;
+    }
+
+    public void setCuestionarioService(ICuestionarioService cuestionarioService) {
+        this.cuestionarioService = cuestionarioService;
+    }
+    
+    public String getRutaFoto() {
+        return rutaFoto;
+    }
+
+    public void setRutaFoto(String rutaFoto) {
+        this.rutaFoto = rutaFoto;
+    }
+    
+    public Puesto getPuesto() {
+        return puesto;
+    }
+
+    public void setPuesto(Puesto puesto) {
+        this.puesto = puesto;
+    }
+    
+    public List<Puesto> getPuestosList() {
+        return puestosList;
+    }
+
+    public void setPuestosList(List<Puesto> puestosList) {
+        this.puestosList = puestosList;
+    }
+    
     //</editor-fold>
 }
