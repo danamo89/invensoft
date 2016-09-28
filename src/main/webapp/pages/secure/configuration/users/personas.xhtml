@@ -34,8 +34,8 @@
                                     <p:fileUpload auto="true" 
                                                   update="personasForm:generalTabView:refreshMe" 
                                                   fileUploadListener="#{personasController.handleFileUpload}"
-                                                  sizeLimit="100000"
-                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                                  sizeLimit="10000000"
+                                                  allowTypes="/(\.|\/)(gif|png|jpe?g)$/"
                                                   mode="advanced"/>
                                 </p:column>
                                 <p:column>
@@ -200,18 +200,23 @@
                                                              readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                                             </p:column>
                                             <p:column>
-                                                <p:outputLabel value="Localidad"/>
-                                            </p:column>
-                                            <p:column style="width: 26%">
-                                                <p:inputText value="#{personasController.persona.localidad}"
-                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
-                                            </p:column>
-                                            <p:column>
                                                 <p:outputLabel value="Provincia"/>
                                             </p:column>
                                             <p:column style="width: 26%">
-                                                <p:inputText value="#{personasController.persona.provincia}"
-                                                             readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                                <p:selectOneMenu id="provincias" value="#{personasController.idProvinciaSelected}" style="width: 95%"
+                                                                 disabled="#{usuarioController.readOnly}">
+                                                    <p:ajax listener="#{personasController.onProvinciaChange()}" update="localidades" />
+                                                    <f:selectItems value="#{personasController.provinciasList}" var="provincia" itemLabel="#{provincia.nombre}" itemValue="#{provincia.idProvincia}"/>
+                                                </p:selectOneMenu>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel value="Localidad"/>
+                                            </p:column>
+                                            <p:column style="width: 26%">
+                                                <p:selectOneMenu id="localidades" value="#{personasController.persona.localidad.idLocalidad}" style="width: 95%"
+                                                                 disabled="#{usuarioController.readOnly}">
+                                                    <f:selectItems value="#{personasController.localidadesList}" var="localidad" itemLabel="#{localidad.nombre}" itemValue="#{localidad.idLocalidad}"/>
+                                                </p:selectOneMenu>
                                             </p:column>
                                         </p:row>
                                     </p:panelGrid>
@@ -460,8 +465,7 @@
                                                  update=":personasForm:generalTabView"/>
                                 <p:commandButton icon="ui-icon-trash"
                                                  actionListener="#{personasController.onRemoveEducacionFormal(educacionFormal)}"
-                                                 ajax="true"
-                                                 update="personasForm:generalTabView:tableEducacionesFormales"/>
+                                                 update="personasForm:generalTabView"/>
                             </p:column>
                         </p:dataTable>
                     </p:tab>
@@ -553,8 +557,7 @@
                                                  update=":personasForm:generalTabView"/>
                                 <p:commandButton icon="ui-icon-trash"
                                                  actionListener="#{personasController.onRemoveEducacionNoFormal(educacionNoFormal)}"
-                                                 ajax="true"
-                                                 update="personasForm:generalTabView:tableEducacionesNoFormales"/>
+                                                 update="personasForm:generalTabView"/>
                             </p:column>
                         </p:dataTable>
                     </p:tab>
@@ -733,7 +736,7 @@
                                                  ajax="true" update="personasForm:generalTabView:input-informacion-laboral"/>
                                 <p:commandButton icon="ui-icon-trash"
                                                  actionListener="#{personasController.onRemoveInformacionLaboral(informacionLaboral)}"
-                                                 ajax="true" update="personasForm:generalTabView:tableInformacionLaboral"/>
+                                                 update="personasForm:generalTabView"/>
                             </p:column>
                         </p:dataTable>
                     </p:tab>

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import javax.faces.component.UISelectItem;
+import java.util.Objects;
 import javax.faces.component.UISelectItems;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.component.html.HtmlPanelGroup;
@@ -37,11 +37,13 @@ public class CuestionarioPainter {
     private Cuestionario cuestionario;
     private PanelGrid bodyPanelGrid;
     private List<RespuestaPregunta> listRespuestasPreguntas;
+    private List<RespuestaPregunta> listRespuestasPreguntasExistente;
 
-    public List<RespuestaPregunta> paint(HtmlPanelGroup rootPanelGroup, Cuestionario cuestionario) {
+    public List<RespuestaPregunta> paint(HtmlPanelGroup rootPanelGroup, Cuestionario cuestionario, List<RespuestaPregunta> listRespuestasPreguntas) {
         this.rootPanelGroup = rootPanelGroup;
         this.cuestionario = cuestionario;
         this.listRespuestasPreguntas = new LinkedList<>();
+        this.listRespuestasPreguntasExistente = listRespuestasPreguntas;
 
         //Por si viene para ser re-pintado
         this.rootPanelGroup.getChildren().clear();
@@ -51,8 +53,8 @@ public class CuestionarioPainter {
 
         addHeader();
         addGruposPreguntas();
-
-        return listRespuestasPreguntas;
+        
+        return this.listRespuestasPreguntas;
     }
 
     private void addHeader() {
@@ -74,7 +76,7 @@ public class CuestionarioPainter {
 
         for (Integer orderItem : listOrders) {
             for (GrupoPreguntas grupoPreguntas : cuestionario.getGrupoPreguntasList()) {
-                if (orderItem == grupoPreguntas.getOrden()) {
+                if (Objects.equals(orderItem, grupoPreguntas.getOrden())) {
                     //Titulo del grupo de grupo de preguntas
                     if (grupoPreguntas.getTitulo() != null) {
                         HtmlOutputText outputTextH3 = new HtmlOutputText();
@@ -103,28 +105,36 @@ public class CuestionarioPainter {
         
         for (Integer orderItem : listOrders) {
             for (Pregunta pregunta : grupoPreguntas.getPreguntaList()) {
-                if (orderItem == pregunta.getOrden()) {
-                    sublistRespuestasPreguntas.add(new RespuestaPregunta(pregunta));
-                    listRespuestasPreguntas.add(new RespuestaPregunta(pregunta));
+                if (Objects.equals(orderItem, pregunta.getOrden())) {
+                    RespuestaPregunta respuestaPregunta = new RespuestaPregunta(pregunta);
+                    
+                    //Buscamos si ya existe una respuesta a la pregunta
+                    for (RespuestaPregunta respuestaPreguntaItem : listRespuestasPreguntasExistente) {
+                        if (Objects.equals(respuestaPregunta.getPregunta().getIdPregunta(), respuestaPreguntaItem.getPregunta().getIdPregunta())) {
+                            respuestaPregunta = respuestaPreguntaItem;
+                            break;
+                        }
+                    }
+                    
+                    sublistRespuestasPreguntas.add(respuestaPregunta);
+                    listRespuestasPreguntas.add(respuestaPregunta);
                     
                     List<Integer> listOpcionesOrders = new ArrayList<>();
-                    for (OpcionRespuesta opcionRespuesta : pregunta.getOpcioneRespuestaList()) {
+                    for (OpcionRespuesta opcionRespuesta : respuestaPregunta.getPregunta().getOpcioneRespuestaList()) {
                         listOpcionesOrders.add(opcionRespuesta.getOrden());
                     }
                     Collections.sort(listOpcionesOrders);
 
-                    List<OpcionRespuesta> listaOpcionRespuestaOrdenada;
-
-                    listaOpcionRespuestaOrdenada = new LinkedList<>();
+                    List<OpcionRespuesta> listaOpcionRespuestaOrdenada = new LinkedList<>();
                     for (Integer orderOpcionesItem : listOpcionesOrders) {
-                        for (OpcionRespuesta opcionRespuesta : pregunta.getOpcioneRespuestaList()) {
-                            if (orderOpcionesItem == opcionRespuesta.getOrden()) {
+                        for (OpcionRespuesta opcionRespuesta : respuestaPregunta.getPregunta().getOpcioneRespuestaList()) {
+                            if (Objects.equals(orderOpcionesItem, opcionRespuesta.getOrden())) {
                                 listaOpcionRespuestaOrdenada.add(opcionRespuesta);
                             }
                         }
                     }
 
-                    pregunta.setOpcioneRespuestaList(listaOpcionRespuestaOrdenada);
+                    respuestaPregunta.getPregunta().setOpcioneRespuestaList(listaOpcionRespuestaOrdenada);
                 }
             }
         }
@@ -141,26 +151,26 @@ public class CuestionarioPainter {
         SelectManyCheckbox selectManyCheckbox = new SelectManyCheckbox();
         selectManyCheckbox.setLayout("grid");
         selectManyCheckbox.setColumns(1);
-        selectManyCheckbox.setValueExpression("value", FacesUtils.createValueExpression("#{respuestaPregunta.opcionRespuesta.texto}", String.class));
+        selectManyCheckbox.setValueExpression("value", FacesUtils.createValueExpression("#{respuestaPregunta.opcionRespuesta.idOpcionRespuesta}", Integer.class));
         selectManyCheckbox.setValueExpression("rendered", FacesUtils.createValueExpression("#{respuestaPregunta.pregunta.estiloOpciones eq 'Check'?true:false}", Boolean.class));
         UISelectItems checkItems = new UISelectItems();
         checkItems.getAttributes().put("var", "opcionRespuesta");
         checkItems.setValueExpression("value", FacesUtils.createValueExpression("#{respuestaPregunta.pregunta.opcioneRespuestaList}", List.class));
         checkItems.setValueExpression("itemLabel", FacesUtils.createValueExpression("#{opcionRespuesta.texto}", String.class));
-        checkItems.setValueExpression("itemValue", FacesUtils.createValueExpression("#{opcionRespuesta.texto}", String.class));
+        checkItems.setValueExpression("itemValue", FacesUtils.createValueExpression("#{opcionRespuesta.idOpcionRespuesta}", Integer.class));
         selectManyCheckbox.getChildren().add(checkItems);
         uiRepeat.getChildren().add(selectManyCheckbox);
 
         SelectOneRadio selectOneRadio = new SelectOneRadio();
         selectOneRadio.setLayout("grid");
         selectOneRadio.setColumns(1);
-        selectOneRadio.setValueExpression("value", FacesUtils.createValueExpression("#{respuestaPregunta.opcionRespuesta.texto}", String.class));
+        selectOneRadio.setValueExpression("value", FacesUtils.createValueExpression("#{respuestaPregunta.opcionRespuesta.idOpcionRespuesta}", Integer.class));
         selectOneRadio.setValueExpression("rendered", FacesUtils.createValueExpression("#{respuestaPregunta.pregunta.estiloOpciones eq 'Radio'?true:false}", Boolean.class));
         UISelectItems radioItems = new UISelectItems();
         radioItems.getAttributes().put("var", "opcionRespuesta");
         radioItems.setValueExpression("value", FacesUtils.createValueExpression("#{respuestaPregunta.pregunta.opcioneRespuestaList}", List.class));
         radioItems.setValueExpression("itemLabel", FacesUtils.createValueExpression("#{opcionRespuesta.texto}", String.class));
-        radioItems.setValueExpression("itemValue", FacesUtils.createValueExpression("#{opcionRespuesta.texto}", String.class));
+        radioItems.setValueExpression("itemValue", FacesUtils.createValueExpression("#{opcionRespuesta.idOpcionRespuesta}", Integer.class));
         selectOneRadio.getChildren().add(radioItems);
         uiRepeat.getChildren().add(selectOneRadio);
 

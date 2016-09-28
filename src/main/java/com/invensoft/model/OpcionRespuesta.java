@@ -6,6 +6,7 @@
 package com.invensoft.model;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,9 +18,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -33,6 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "OpcionRespuesta.findByIdOpcionRespuesta", query = "SELECT o FROM OpcionRespuesta o WHERE o.idOpcionRespuesta = :idOpcionRespuesta"),
     @NamedQuery(name = "OpcionRespuesta.findByTexto", query = "SELECT o FROM OpcionRespuesta o WHERE o.texto = :texto")})
 public class OpcionRespuesta implements Serializable, Comparable<OpcionRespuesta> {
+    @OneToMany(mappedBy = "opcionRespuesta", fetch = FetchType.LAZY)
+    private List<RespuestaPregunta> respuestaPreguntaList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,9 +50,9 @@ public class OpcionRespuesta implements Serializable, Comparable<OpcionRespuesta
     @Column(name = "ORDEN")
     private Integer orden;
     @JoinColumn(name = "ID_PREGUNTA", referencedColumnName = "ID_PREGUNTA", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Pregunta pregunta;
-
+    
     public OpcionRespuesta() {
     }
 
@@ -123,6 +128,15 @@ public class OpcionRespuesta implements Serializable, Comparable<OpcionRespuesta
         } else {
             return -1;
         }
+    }
+
+    @XmlTransient
+    public List<RespuestaPregunta> getRespuestaPreguntaList() {
+        return respuestaPreguntaList;
+    }
+
+    public void setRespuestaPreguntaList(List<RespuestaPregunta> respuestaPreguntaList) {
+        this.respuestaPreguntaList = respuestaPreguntaList;
     }
     
 }

@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "GrupoPreguntas.findAll", query = "SELECT g FROM GrupoPreguntas g"),
     @NamedQuery(name = "GrupoPreguntas.findByIdGrupoPreguntas", query = "SELECT g FROM GrupoPreguntas g WHERE g.idGrupoPreguntas = :idGrupoPreguntas"),
     @NamedQuery(name = "GrupoPreguntas.findByTitulo", query = "SELECT g FROM GrupoPreguntas g WHERE g.titulo = :titulo")})
-public class GrupoPreguntas implements Serializable, Comparable<GrupoPreguntas> {
+public class GrupoPreguntas implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -132,15 +132,6 @@ public class GrupoPreguntas implements Serializable, Comparable<GrupoPreguntas> 
     @Override
     public String toString() {
         return "com.invensoft.model.GrupoPreguntas[ idGrupoPreguntas=" + idGrupoPreguntas + " ]";
-    }
-
-    @Override
-    public int compareTo(GrupoPreguntas o) {
-        if (this.getOrden()>o.getOrden()) {
-            return 1;
-        } else {
-            return -1;
-        }
     }
     
 }

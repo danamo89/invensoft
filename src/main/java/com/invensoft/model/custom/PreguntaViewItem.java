@@ -12,8 +12,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import javax.el.ValueExpression;
 import javax.faces.component.UIComponent;
@@ -48,7 +50,7 @@ public class PreguntaViewItem extends PanelGrid implements Serializable {
     private final GrupoPreguntasViewItem grupoPreguntasViewItemPadre;
 
     private InputText textoPregunta;
-    
+
     private Map<String, String> estiloDeOpcionesMap;
 
     private String selectedOpcion;
@@ -66,27 +68,43 @@ public class PreguntaViewItem extends PanelGrid implements Serializable {
         setStyle("width: 70%");
 
         this.grupoPreguntasViewItemPadre = grupoPreguntasViewItemPadre;
-        
+
         if (pregunta != null) {
             this.pregunta = pregunta;
         } else {
             this.pregunta = new Pregunta(this.grupoPreguntasViewItemPadre.getGrupoPreguntas());
             this.pregunta.setEstiloOpciones("Radio");
-            this.pregunta.setOrden(this.grupoPreguntasViewItemPadre.getChildCount()+1);
+            this.pregunta.setOrden(this.grupoPreguntasViewItemPadre.getChildCount() + 1);
         }
-        
+
         //En caso de que existan opciones para la pregunta.
         if (this.pregunta.getOpcioneRespuestaList() != null) {
             this.opcionesList = this.pregunta.getOpcioneRespuestaList();
-            Collections.sort(this.opcionesList);
+//            Collections.sort(this.opcionesList);
+            List<Integer> listOpcionesOrders = new ArrayList<>();
+            for (OpcionRespuesta opcionRespuesta : this.opcionesList) {
+                listOpcionesOrders.add(opcionRespuesta.getOrden());
+            }
+            Collections.sort(listOpcionesOrders);
+
+            List<OpcionRespuesta> listaOpcionRespuestaOrdenada = new LinkedList<>();
+            for (Integer orderOpcionesItem : listOpcionesOrders) {
+                for (OpcionRespuesta opcionRespuesta : this.opcionesList) {
+                    if (Objects.equals(orderOpcionesItem, opcionRespuesta.getOrden())) {
+                        listaOpcionRespuestaOrdenada.add(opcionRespuesta);
+                    }
+                }
+            }
+            
+            this.opcionesList = listaOpcionRespuestaOrdenada;
         } else {
             this.opcionesList = new ArrayList<>();
             this.pregunta.setOpcioneRespuestaList(this.opcionesList);
         }
-        
+
         this.estiloDeOpcionesMap = new HashMap<>();
         this.secondRowFirstColumn = new Column();
-        
+
         fillLists();
         configure();
     }
@@ -125,7 +143,7 @@ public class PreguntaViewItem extends PanelGrid implements Serializable {
 //        configureOpcionesDeRespuesta();
         renderResponseOption(pregunta.getEstiloOpciones());
 //        secondRowFirstColumn.getChildren().add(opcionDeRespuestaVisual);
-        
+
         Row firstRow = new Row();
         Row secondRow = new Row();
 
@@ -268,7 +286,7 @@ public class PreguntaViewItem extends PanelGrid implements Serializable {
                 renderInputTextArea = true;
                 break;
         }
-        
+
         pregunta.setEstiloOpciones(type);
         configureOpcionesDeRespuesta();
         secondRowFirstColumn.getChildren().clear();
@@ -309,18 +327,18 @@ public class PreguntaViewItem extends PanelGrid implements Serializable {
 //            checkDataTable.setRowKey(createValueExpression("#{opcion.idOpcion}", Integer.class));
             checkDataTable.getFacets().put("header", getTableOpcionesHeader());
 //            checkDataTable.getChildren().add(getTableOpcionesFirstColumn("multiple"));
-            
+
             SelectManyCheckbox selectManyCheckbox = new SelectManyCheckbox();
             selectManyCheckbox.setId("customCheck");
             checkDataTable.getChildren().add(selectManyCheckbox);
-            
+
             Column column = getTableOpcionesFirstColumn(null);
             Checkbox checkbox = new Checkbox();
             checkbox.setFor("customCheck");
             checkbox.setItemIndex(0);
             column.getChildren().add(checkbox);
             checkDataTable.getChildren().add(column);
-            
+
             checkDataTable.getChildren().add(getTableOpcionesSecondColumn());
             checkDataTable.getChildren().add(getTableOpcionesThirdColumn());
 
@@ -340,18 +358,18 @@ public class PreguntaViewItem extends PanelGrid implements Serializable {
             radioDataTable.setEditMode("cell");
             radioDataTable.setSelection(selectedOpcion);
             radioDataTable.getFacets().put("header", getTableOpcionesHeader());
-            
+
             SelectOneRadio selectOneRadio = new SelectOneRadio();
             selectOneRadio.setId("customRadio");
             radioDataTable.getChildren().add(selectOneRadio);
-            
+
             Column column = getTableOpcionesFirstColumn(null);
             RadioButton radioButton = new RadioButton();
             radioButton.setFor("customRadio");
             radioButton.setItemIndex(0);
             column.getChildren().add(radioButton);
             radioDataTable.getChildren().add(column);
-            
+
             radioDataTable.getChildren().add(getTableOpcionesSecondColumn());
             radioDataTable.getChildren().add(getTableOpcionesThirdColumn());
 
@@ -372,7 +390,7 @@ public class PreguntaViewItem extends PanelGrid implements Serializable {
             InputTextarea inputTextArea = new InputTextarea();
             inputTextArea.setRendered(renderInputTextArea);
             inputTextArea.setReadonly(true);
-            
+
             opcionDeRespuestaVisual = inputTextArea;
         }
     }
@@ -432,7 +450,7 @@ public class PreguntaViewItem extends PanelGrid implements Serializable {
 
         return secondColumn;
     }
-    
+
     private Column getTableOpcionesThirdColumn() {
         Column thirdColumn = new Column();
         CommandButton removeOpcionButton = new CommandButton();
@@ -444,10 +462,10 @@ public class PreguntaViewItem extends PanelGrid implements Serializable {
                 System.out.println("No se como se hace aqui....");
             }
         });
-        
+
         thirdColumn.setStyle("width:5%");
         thirdColumn.getChildren().add(removeOpcionButton);
-        
+
         return thirdColumn;
     }
 
@@ -456,13 +474,13 @@ public class PreguntaViewItem extends PanelGrid implements Serializable {
         return context.getApplication().getExpressionFactory()
                 .createValueExpression(context.getELContext(), expression, expectedType);
     }
-    
+
     public void onSave() {
         //Seteamos el orden de las opcones de respuesta
         for (int i = 0; i < opcionesList.size(); i++) {
-            opcionesList.get(i).setOrden(i+1);
+            opcionesList.get(i).setOrden(i + 1);
         }
-        
+
         pregunta.setTexto(textoPregunta.getValue().toString());
         pregunta.setOpcioneRespuestaList(opcionesList);
         this.grupoPreguntasViewItemPadre.getGrupoPreguntas().getPreguntaList().add(pregunta);

@@ -6,6 +6,7 @@
 package com.invensoft.controller;
 
 import com.invensoft.controller.helper.CuestionarioPainter;
+import com.invensoft.model.Cuestionario;
 import com.invensoft.model.EducacionFormal;
 import com.invensoft.model.EducacionNoFormal;
 import com.invensoft.model.EstadoCivil;
@@ -16,6 +17,9 @@ import com.invensoft.model.Documento;
 import com.invensoft.model.DocumentoPersona;
 import com.invensoft.model.FotoPersona;
 import com.invensoft.model.InformacionLaboral;
+import com.invensoft.model.Localidad;
+import com.invensoft.model.OpcionRespuesta;
+import com.invensoft.model.Provincia;
 import com.invensoft.model.Puesto;
 import com.invensoft.model.RespuestaPregunta;
 import com.invensoft.model.Sector;
@@ -24,9 +28,12 @@ import com.invensoft.model.TipoIdentificacion;
 import com.invensoft.service.ICuestionarioService;
 import com.invensoft.service.IDocumentoService;
 import com.invensoft.service.IEstadoCivilService;
+import com.invensoft.service.ILocalidadService;
 import com.invensoft.service.IPaisService;
 import com.invensoft.service.IPersonaService;
+import com.invensoft.service.IProvinciaService;
 import com.invensoft.service.IPuestoService;
+import com.invensoft.service.IRespuestaPreguntaService;
 import com.invensoft.service.ISectorService;
 import com.invensoft.service.ITipoDocumentoService;
 import com.invensoft.service.ITipoIdentificacionService;
@@ -34,6 +41,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,8 +50,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,6 +92,7 @@ public class PersonasController implements Serializable {
     private InformacionLaboral informacionLaboral;
     private EducacionFormal educacionFormal;
     private EducacionNoFormal educacionNoFormal;
+    private Integer idProvinciaSelected;
     private Puesto puesto;
     
     private List<Persona> personasList;
@@ -91,6 +102,9 @@ public class PersonasController implements Serializable {
     private List<Integer> rangoAniosPermitidos;
     private List<Sector> sectoresList;
     private List<Puesto> puestosList;
+    private List<Provincia> provinciasList;
+    private List<Localidad> localidadesList;
+    private Map<Integer, List<Localidad>> mapProvinciasLocalidades;
 
     private String[] selectedTiposDocumentos;
     private List<SelectItem> selectTiposDocumentos;
@@ -125,6 +139,12 @@ public class PersonasController implements Serializable {
     private IPuestoService puestoService;
     @ManagedProperty(value = "#{cuestionarioService}")
     private ICuestionarioService cuestionarioService;
+    @ManagedProperty(value = "#{respuestaPreguntaService}")
+    private IRespuestaPreguntaService respuestaPreguntaService;
+    @ManagedProperty(value = "#{provinciaService}")
+    private IProvinciaService provinciaService;
+    @ManagedProperty(value = "#{localidadService}")
+    private ILocalidadService localidadService;
 
     /**
      * Creates a new instance of PersonasController
@@ -140,9 +160,6 @@ public class PersonasController implements Serializable {
         
         saludOcupacionalRootPanelGroup = new HtmlPanelGroup();
         desarrolloProfesionalRootPanelGroup = new HtmlPanelGroup();
-        
-        listRespuestasPreguntasCuestionarioSaludOcupacional = cuestionarioPainter.paint(saludOcupacionalRootPanelGroup, cuestionarioService.findCuestionarioSaludOcupacional());
-        listRespuestasPreguntasCuestionarioDesarrolloProfesional = cuestionarioPainter.paint(desarrolloProfesionalRootPanelGroup, cuestionarioService.findCuestionarioDesarrolloProfesional());
 
         familiar = new Familiar();
         educacionFormal = new EducacionFormal();
@@ -205,6 +222,20 @@ public class PersonasController implements Serializable {
                 sectoresList = new LinkedList<>();
             }
         }
+		
+		if (this.provinciasList == null) {
+            this.provinciasList = provinciaService.findAllOrderBy("orden");
+            mapProvinciasLocalidades = new HashMap<>();
+            
+            for (Provincia provincia : provinciasList) {
+                Map<String,Object> fieldsAndValues = new HashMap<>();
+                fieldsAndValues.put("provincia.idProvincia", provincia.getIdProvincia());
+                mapProvinciasLocalidades.put(provincia.getIdProvincia(), localidadService.findByOrderBy(fieldsAndValues, new String[]{"orden"}));
+            }
+            
+            idProvinciaSelected = provinciasList.get(0).getIdProvincia();
+            onProvinciaChange();
+        }
         
         if (this.puestosList == null) {
             this.puestosList = puestoService.findAll();
@@ -215,12 +246,28 @@ public class PersonasController implements Serializable {
         }
     }
 
+    private void loadCuestionarios() {
+        try {
+            Cuestionario cuestionarioSaludOcupacional = cuestionarioService.findCuestionarioSaludOcupacional();
+            listRespuestasPreguntasCuestionarioSaludOcupacional = cuestionarioPainter.paint(saludOcupacionalRootPanelGroup, cuestionarioSaludOcupacional, respuestaPreguntaService.findBy(persona, cuestionarioSaludOcupacional));
+
+            Cuestionario cuestionarioDesarrolloProfesional = cuestionarioService.findCuestionarioDesarrolloProfesional();
+            listRespuestasPreguntasCuestionarioDesarrolloProfesional = cuestionarioPainter.paint(desarrolloProfesionalRootPanelGroup, cuestionarioDesarrolloProfesional, respuestaPreguntaService.findBy(persona, cuestionarioDesarrolloProfesional));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void onViewPersonaDetailedInfo(Persona persona) {
         this.persona = persona;
         this.showPersonasTable = false;
         FacesContext context = FacesContext.getCurrentInstance();
         
         initDocumentosPersona();
+		loadCuestionarios();
+		
+		idProvinciaSelected = this.persona.getLocalidad().getProvincia().getIdProvincia();
+        onProvinciaChange();
                 
         if (this.persona.getFotoPersona() != null) {
             try {
@@ -256,8 +303,17 @@ public class PersonasController implements Serializable {
 
     public void onCreatePersona() {
         this.persona = new Persona();
+        loadCuestionarios();
         this.showPersonasTable = false;
         this.rutaFoto = "/resources/images/broken.png";
+    }
+	
+	public void onProvinciaChange() {
+        if (idProvinciaSelected != null) {
+            localidadesList = mapProvinciasLocalidades.get(idProvinciaSelected);
+        } else {
+            localidadesList = new LinkedList<>();
+        }
     }
 
     public void onAddFamiliar() {
@@ -327,7 +383,7 @@ public class PersonasController implements Serializable {
     public void onViewEducacionNoFormalDetail(EducacionNoFormal educacionNoFormal) {
         for (EducacionNoFormal educacionNoFormalItem : this.persona.getEducacionesNoFormalesList()) {
             if (Objects.equals(educacionNoFormalItem.getIdEducacionNoFormal(), educacionNoFormal.getIdEducacionNoFormal())) {
-                //this.persona.getEducacionesNoFormalesList().remove(educacionNoFormalItem);
+                this.persona.getEducacionesNoFormalesList().remove(educacionNoFormalItem);
                 break;
             }
         }
@@ -343,8 +399,8 @@ public class PersonasController implements Serializable {
     }
     
     public void onSectorChange(ValueChangeEvent changeEvent) {
-        Sector sector = (Sector)changeEvent.getNewValue();
-        cuestionarioPainter.paint(cuestionarioRootPanelGroup, sector.getCuestionario());
+        Sector sector = (Sector) changeEvent.getNewValue();
+//        cuestionarioPainter.paint(cuestionarioRootPanelGroup, sector.getCuestionario());
     }
     
     public void onAddInformacionLaboral() {
@@ -360,7 +416,7 @@ public class PersonasController implements Serializable {
     public void onViewInformacionLaboralDetail(InformacionLaboral informacionLaboral) {
         for (InformacionLaboral informacionLaboralItem : this.persona.getInformacionLaboralList()) {
             if (Objects.equals(informacionLaboralItem.getIdInformacionLaboral(), informacionLaboral.getIdInformacionLaboral())) {
-                //this.persona.getInformacionLaboralList().remove(informacionLaboralItem);
+                this.persona.getInformacionLaboralList().remove(informacionLaboralItem);
                 break;
             }
         }
@@ -419,6 +475,13 @@ public class PersonasController implements Serializable {
                     persona.setEstadoCivil(estadoCivil);
                 }
             }
+			
+			//Actualizamos la localidad
+            for (Localidad localidad : localidadesList) {
+                if (localidad.getIdLocalidad().equals(persona.getLocalidad().getIdLocalidad())) {
+                    persona.setLocalidad(localidad);
+                }
+            }
             
             for (Puesto p : puestosList) {
                 if (p.getIdPuesto().equals(persona.getPuesto().getIdPuesto())) {
@@ -428,45 +491,43 @@ public class PersonasController implements Serializable {
             
             updateDocumentosPersona();
 
-//            persona.setFoto(IOUtils.toByteArray(this.fotoPersonaView.getStream()));
-            /*
-            System.out.println("Salud Ocupacional");
-            System.out.println("------------------");
+            List<RespuestaPregunta> listRespuestasPreguntasCuestionarioSaludOcupacionalToMerge = new LinkedList<>();
             for (RespuestaPregunta respuestaPregunta : listRespuestasPreguntasCuestionarioSaludOcupacional) {
-                System.out.println("Pregunta: " + respuestaPregunta.getPregunta().getTexto());
-                
-                if (respuestaPregunta.getValue()!= null) {
-                    System.out.println("Respuesta: " + respuestaPregunta.getValue());
-                } 
-                
+                respuestaPregunta.setPersona(persona);
+
+                if (respuestaPregunta.getValue() != null && !respuestaPregunta.getValue().isEmpty()) {
+
+                    if (respuestaPregunta.getOpcionRespuesta() != null && respuestaPregunta.getOpcionRespuesta().getIdOpcionRespuesta() != null) {
+                        for (OpcionRespuesta opcionRespuesta : respuestaPregunta.getPregunta().getOpcioneRespuestaList()) {
+                            if (opcionRespuesta.getIdOpcionRespuesta() == respuestaPregunta.getOpcionRespuesta().getIdOpcionRespuesta()) {
+                                respuestaPregunta.setOpcionRespuesta(null);
+                                respuestaPregunta.setOpcionRespuesta(opcionRespuesta);
+                                break;
+                            }
+                        }
+                    }
+
+                    listRespuestasPreguntasCuestionarioSaludOcupacionalToMerge.add(respuestaPregunta);
+                }
             }
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("Desarrollo profesional");
-            System.out.println("-----------------------");
-            for (RespuestaPregunta respuestaPregunta : listRespuestasPreguntasCuestionarioSaludOcupacional) {
-                System.out.println("Pregunta: " + respuestaPregunta.getPregunta().getTexto());
-                
-                if (respuestaPregunta.getValue()!= null) {
-                    System.out.println("Respuesta: " + respuestaPregunta.getValue());
-                } 
-            }
-            */
-            
-            //Si la persona que vamos a guardar es nueva, la sumamos a la lista. 
-            boolean nuevaPersona = false;
-            if (persona.getIdPersona() == null || persona.getIdPersona() == 0) {
-                nuevaPersona = true;
+
+            List<RespuestaPregunta> listRespuestasPreguntasCuestionarioDesarrolloProfesionalToMerge = new LinkedList<>();
+            for (RespuestaPregunta respuestaPregunta : listRespuestasPreguntasCuestionarioDesarrolloProfesional) {
+                respuestaPregunta.setPersona(persona);
+
+                if (respuestaPregunta.getValue() != null && !respuestaPregunta.getValue().isEmpty()) {
+                    listRespuestasPreguntasCuestionarioDesarrolloProfesionalToMerge.add(respuestaPregunta);
+                }
             }
 
             personasService.save(persona);
-            
-            //La agregacion la hacemos despues de guardar por si ocurre un error
-            if (nuevaPersona) {
-                personasList = personasService.findAll();
-            }
-//            
+            respuestaPreguntaService.save(listRespuestasPreguntasCuestionarioSaludOcupacionalToMerge);
+            respuestaPreguntaService.save(listRespuestasPreguntasCuestionarioDesarrolloProfesionalToMerge);
+
+            //Recargamos la lista de personas
+            this.personasList.clear();
+            this.personasList = personasService.findAll();
+
             this.showPersonasTable = true;
 
         } catch (Exception e) {
@@ -543,6 +604,7 @@ public class PersonasController implements Serializable {
             this.rutaFoto = relativeWebPath+tempFileName;
             
         } catch (IOException ex) {
+            ex.printStackTrace();
             Logger.getLogger(PersonasController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -812,6 +874,78 @@ public class PersonasController implements Serializable {
 
     public void setCuestionarioService(ICuestionarioService cuestionarioService) {
         this.cuestionarioService = cuestionarioService;
+    }
+	
+	public List<RespuestaPregunta> getListRespuestasPreguntasCuestionarioSaludOcupacional() {
+        return listRespuestasPreguntasCuestionarioSaludOcupacional;
+    }
+
+    public void setListRespuestasPreguntasCuestionarioSaludOcupacional(List<RespuestaPregunta> listRespuestasPreguntasCuestionarioSaludOcupacional) {
+        this.listRespuestasPreguntasCuestionarioSaludOcupacional = listRespuestasPreguntasCuestionarioSaludOcupacional;
+    }
+
+    public List<RespuestaPregunta> getListRespuestasPreguntasCuestionarioDesarrolloProfesional() {
+        return listRespuestasPreguntasCuestionarioDesarrolloProfesional;
+    }
+
+    public void setListRespuestasPreguntasCuestionarioDesarrolloProfesional(List<RespuestaPregunta> listRespuestasPreguntasCuestionarioDesarrolloProfesional) {
+        this.listRespuestasPreguntasCuestionarioDesarrolloProfesional = listRespuestasPreguntasCuestionarioDesarrolloProfesional;
+    }
+
+    public IRespuestaPreguntaService getRespuestaPreguntaService() {
+        return respuestaPreguntaService;
+    }
+
+    public void setRespuestaPreguntaService(IRespuestaPreguntaService respuestaPreguntaService) {
+        this.respuestaPreguntaService = respuestaPreguntaService;
+    }
+
+    public Integer getIdProvinciaSelected() {
+        return idProvinciaSelected;
+    }
+
+    public void setIdProvinciaSelected(Integer idProvinciaSelected) {
+        this.idProvinciaSelected = idProvinciaSelected;
+    }
+
+    public IProvinciaService getProvinciaService() {
+        return provinciaService;
+    }
+
+    public void setProvinciaService(IProvinciaService provinciaService) {
+        this.provinciaService = provinciaService;
+    }
+
+    public ILocalidadService getLocalidadService() {
+        return localidadService;
+    }
+
+    public void setLocalidadService(ILocalidadService localidadService) {
+        this.localidadService = localidadService;
+    }
+
+    public List<Provincia> getProvinciasList() {
+        return provinciasList;
+    }
+
+    public void setProvinciasList(List<Provincia> provinciasList) {
+        this.provinciasList = provinciasList;
+    }
+
+    public List<Localidad> getLocalidadesList() {
+        return localidadesList;
+    }
+
+    public void setLocalidadesList(List<Localidad> localidadesList) {
+        this.localidadesList = localidadesList;
+    }
+
+    public Map<Integer, List<Localidad>> getMapProvinciasLocalidades() {
+        return mapProvinciasLocalidades;
+    }
+
+    public void setMapProvinciasLocalidades(Map<Integer, List<Localidad>> mapProvinciasLocalidades) {
+        this.mapProvinciasLocalidades = mapProvinciasLocalidades;
     }
     
     public String getRutaFoto() {

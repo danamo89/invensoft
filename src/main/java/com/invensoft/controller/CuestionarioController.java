@@ -10,9 +10,11 @@ import com.invensoft.model.GrupoPreguntas;
 import com.invensoft.model.custom.GrupoPreguntasViewItem;
 import com.invensoft.service.ICuestionarioService;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -67,10 +69,23 @@ public class CuestionarioController implements Serializable {
         this.cuestionario = cuestionario;
         rootPanelGroup.getChildren().clear();
         
-        Collections.sort(this.cuestionario.getGrupoPreguntasList());
-        for (GrupoPreguntas grupoPreguntas : this.cuestionario.getGrupoPreguntasList()) {
-            onAddGrupoPreguntas(grupoPreguntas);
+        List<Integer> listOrders = new ArrayList<>();
+        for (GrupoPreguntas grupoPreguntas : cuestionario.getGrupoPreguntasList()) {
+            listOrders.add(grupoPreguntas.getOrden());
         }
+        Collections.sort(listOrders);
+        
+        for (Integer orderItem : listOrders) {
+            for (GrupoPreguntas grupoPreguntas : cuestionario.getGrupoPreguntasList()) {
+                if (Objects.equals(orderItem, grupoPreguntas.getOrden())) {
+                    onAddGrupoPreguntas(grupoPreguntas);
+                }
+            }
+        }
+        
+//        for (GrupoPreguntas grupoPreguntas : this.cuestionario.getGrupoPreguntasList()) {
+//            
+//        }
         
         showCuestionariosTable = false;
     }

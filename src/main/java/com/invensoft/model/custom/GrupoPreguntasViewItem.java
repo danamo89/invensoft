@@ -10,7 +10,10 @@ import com.invensoft.model.GrupoPreguntas;
 import com.invensoft.model.Pregunta;
 import com.invensoft.util.Utilities;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import javax.faces.component.UIComponent;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -39,10 +42,24 @@ public class GrupoPreguntasViewItem extends PanelGrid implements Serializable {
             this.grupoPreguntas = grupoPreguntas;
             this.addHeader();
             
-            Collections.sort(this.grupoPreguntas.getPreguntaList());
-            for (Pregunta pregunta : this.grupoPreguntas.getPreguntaList()) {
-                onAddPregunta(pregunta);
+//            Collections.sort(this.grupoPreguntas.getPreguntaList());
+            List<Integer> listOrders = new ArrayList<>();
+            for (Pregunta pregunta : grupoPreguntas.getPreguntaList()) {
+                listOrders.add(pregunta.getOrden());
             }
+            Collections.sort(listOrders);
+            
+            for (Integer orderItem : listOrders) {
+                for (Pregunta pregunta : grupoPreguntas.getPreguntaList()) {
+                    if (Objects.equals(orderItem, pregunta.getOrden())) {
+                        onAddPregunta(pregunta);
+                    }
+                }
+            }
+            
+//            for (Pregunta pregunta : this.grupoPreguntas.getPreguntaList()) {
+//                
+//            }
         } else {
             this.grupoPreguntas = new GrupoPreguntas(this.cuestionarioController.getCuestionario());
             this.grupoPreguntas.setOrden(this.cuestionarioController.getRootPanelGroup().getChildCount()+1);

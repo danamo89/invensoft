@@ -7,6 +7,7 @@ package com.invensoft.dao;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -30,6 +31,23 @@ public interface IGenericDao<T, ID extends Serializable> extends Serializable {
      * @throws java.lang.Exception 
      */
     public List<T> findAll() throws Exception;
+
+    /**
+     * 
+     * @param field
+     * @return 
+     * @throws java.lang.Exception 
+     */
+    public List<T> findAllOrderBy(String field) throws Exception;
+    
+    /**
+     * 
+     * @param fieldsAndValues
+     * @param orders
+     * @return
+     * @throws Exception 
+     */
+    public List<T> findByOrderBy(Map<String, Object> fieldsAndValues, String[] orders) throws Exception;
 
     /**
      * 

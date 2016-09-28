@@ -40,6 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Pregunta.findByTexto", query = "SELECT p FROM Pregunta p WHERE p.texto = :texto"),
     @NamedQuery(name = "Pregunta.findByEstiloOpciones", query = "SELECT p FROM Pregunta p WHERE p.estiloOpciones = :estiloOpciones")})
 public class Pregunta implements Serializable, Comparable<Pregunta> {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pregunta", fetch = FetchType.LAZY)
+    private List<RespuestaPregunta> respuestaPreguntaList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -164,6 +166,15 @@ public class Pregunta implements Serializable, Comparable<Pregunta> {
         } else {
             return -1;
         }
+    }
+
+    @XmlTransient
+    public List<RespuestaPregunta> getRespuestaPreguntaList() {
+        return respuestaPreguntaList;
+    }
+
+    public void setRespuestaPreguntaList(List<RespuestaPregunta> respuestaPreguntaList) {
+        this.respuestaPreguntaList = respuestaPreguntaList;
     }
     
 }

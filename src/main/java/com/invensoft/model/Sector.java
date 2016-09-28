@@ -37,7 +37,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Sector.findByIdSector", query = "SELECT s FROM Sector s WHERE s.idSector = :idSector"),
     @NamedQuery(name = "Sector.findByNombre", query = "SELECT s FROM Sector s WHERE s.nombre = :nombre")})
 public class Sector implements Serializable {
-
     @OneToMany(mappedBy = "sector", fetch = FetchType.LAZY)
     private List<Persona> personaList;
     private static final long serialVersionUID = 1L;

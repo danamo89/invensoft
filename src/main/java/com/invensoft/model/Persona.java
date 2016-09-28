@@ -48,8 +48,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Persona.findByFechaNacimiento", query = "SELECT p FROM Persona p WHERE p.fechaNacimiento = :fechaNacimiento"),
     @NamedQuery(name = "Persona.findByDomicilio", query = "SELECT p FROM Persona p WHERE p.domicilio = :domicilio"),
     @NamedQuery(name = "Persona.findByEmail", query = "SELECT p FROM Persona p WHERE p.email = :email"),
-    @NamedQuery(name = "Persona.findByLocalidad", query = "SELECT p FROM Persona p WHERE p.localidad = :localidad"),
-    @NamedQuery(name = "Persona.findByProvincia", query = "SELECT p FROM Persona p WHERE p.provincia = :provincia"),
     @NamedQuery(name = "Persona.findByNumeroDomicilio", query = "SELECT p FROM Persona p WHERE p.numeroDomicilio = :numeroDomicilio"),
     @NamedQuery(name = "Persona.findByPiso", query = "SELECT p FROM Persona p WHERE p.piso = :piso"),
     @NamedQuery(name = "Persona.findByDepartamento", query = "SELECT p FROM Persona p WHERE p.departamento = :departamento"),
@@ -107,12 +105,6 @@ public class Persona implements Serializable {
     @Size(max = 150)
     @Column(name = "EMAIL", length = 150)
     private String email;
-    @Size(max = 100)
-    @Column(name = "LOCALIDAD", length = 100)
-    private String localidad;
-    @Size(max = 100)
-    @Column(name = "PROVINCIA", length = 100)
-    private String provincia;
     @Size(max = 5)
     @Column(name = "NUMERO_DOMICILIO", length = 5)
     private String numeroDomicilio;
@@ -180,21 +172,26 @@ public class Persona implements Serializable {
     @JoinColumn(name = "ID_SECTOR", referencedColumnName = "ID_SECTOR", nullable = false)
     @ManyToOne(optional = false)
     private Sector sector;
+	@JoinColumn(name = "ID_LOCALIDAD", referencedColumnName = "ID_LOCALIDAD")
+    @ManyToOne
+    private Localidad localidad;
     @JoinColumn(name = "ID_PUESTO", referencedColumnName = "ID_PUESTO", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Puesto puesto;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "persona")
     private Usuario usuario;
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<EducacionFormal> educacionesFormalesList;
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<EducacionNoFormal> educacionesNoFormalesList;
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Familiar> familiaresList;
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<InformacionLaboral> informacionLaboralList;
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<DocumentoPersona> documentosPersonaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "persona", fetch = FetchType.LAZY)
+    private List<RespuestaPregunta> respuestaPreguntaList;
     
     public Persona() {
         this.estadoCivil = new EstadoCivil();
@@ -202,11 +199,14 @@ public class Persona implements Serializable {
         this.tipoIdentificacion = new TipoIdentificacion();
         this.sector = new Sector();
         this.puesto = new Puesto();
+		this.localidad = new Localidad();
+		
         this.educacionesFormalesList = new LinkedList<>();
         this.educacionesNoFormalesList = new LinkedList<>();
         this.familiaresList = new LinkedList<>();
         this.informacionLaboralList = new LinkedList<>();
         this.documentosPersonaList = new LinkedList<>();
+        this.respuestaPreguntaList = new LinkedList<>();
     }
 
     public Persona(Integer idPersona) {
@@ -284,22 +284,6 @@ public class Persona implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getLocalidad() {
-        return localidad;
-    }
-
-    public void setLocalidad(String localidad) {
-        this.localidad = localidad;
-    }
-
-    public String getProvincia() {
-        return provincia;
-    }
-
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
     }
 
     public String getNumeroDomicilio() {
@@ -591,5 +575,22 @@ public class Persona implements Serializable {
 
     public void setPuesto(Puesto puesto) {
         this.puesto = puesto;
+    }
+	
+	@XmlTransient
+    public List<RespuestaPregunta> getRespuestaPreguntaList() {
+        return respuestaPreguntaList;
+    }
+
+    public void setRespuestaPreguntaList(List<RespuestaPregunta> respuestaPreguntaList) {
+        this.respuestaPreguntaList = respuestaPreguntaList;
+    }
+
+    public Localidad getLocalidad() {
+        return localidad;
+    }
+
+    public void setLocalidad(Localidad localidad) {
+        this.localidad = localidad;
     }
 }
