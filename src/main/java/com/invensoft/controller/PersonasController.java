@@ -7,6 +7,7 @@ package com.invensoft.controller;
 
 import com.invensoft.controller.helper.CuestionarioPainter;
 import com.invensoft.model.Cuestionario;
+import com.invensoft.model.CuestionarioSector;
 import com.invensoft.model.EducacionFormal;
 import com.invensoft.model.EducacionNoFormal;
 import com.invensoft.model.EstadoCivil;
@@ -41,7 +42,6 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -67,7 +67,6 @@ import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
-import javax.faces.event.ValueChangeEvent;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.faces.model.SelectItem;
@@ -117,6 +116,7 @@ public class PersonasController implements Serializable {
     private HtmlPanelGroup desarrolloProfesionalRootPanelGroup;
     private List<RespuestaPregunta> listRespuestasPreguntasCuestionarioDesarrolloProfesional;
     private HtmlPanelGroup cuestionarioRootPanelGroup;
+    private List<RespuestaPregunta> listRespuestasPreguntasCuestionarioSector;
     private boolean showPersonasTable;
     private String rutaFoto;
 
@@ -223,7 +223,7 @@ public class PersonasController implements Serializable {
             }
         }
 		
-		if (this.provinciasList == null) {
+	if (this.provinciasList == null) {
             this.provinciasList = provinciaService.findAllOrderBy("orden");
             mapProvinciasLocalidades = new HashMap<>();
             
@@ -264,9 +264,10 @@ public class PersonasController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         
         initDocumentosPersona();
-		loadCuestionarios();
+	loadCuestionarios();
+        onSectorChange();
 		
-		idProvinciaSelected = this.persona.getLocalidad().getProvincia().getIdProvincia();
+	idProvinciaSelected = this.persona.getLocalidad().getProvincia().getIdProvincia();
         onProvinciaChange();
                 
         if (this.persona.getFotoPersona() != null) {
@@ -282,13 +283,12 @@ public class PersonasController implements Serializable {
             }catch(IOException e) {
                 this.rutaFoto = "/resources/images/broken.png";
             }
-        }else {          
+        } else {          
             this.rutaFoto = "/resources/images/broken.png";
         }
     }
 
     public void initDocumentosPersona() {
-        
         for (TipoDocumento tipoDocumento : tiposDocumentosList) {
             for (Documento documento : tipoDocumento.getDocumentosList()) {
                 documento.setSelected(false);
@@ -308,7 +308,7 @@ public class PersonasController implements Serializable {
         this.rutaFoto = "/resources/images/broken.png";
     }
 	
-	public void onProvinciaChange() {
+    public void onProvinciaChange() {
         if (idProvinciaSelected != null) {
             localidadesList = mapProvinciasLocalidades.get(idProvinciaSelected);
         } else {
@@ -398,9 +398,21 @@ public class PersonasController implements Serializable {
         this.persona.setLegajo(this.persona.getNumeroIdentificacion());
     }
     
-    public void onSectorChange(ValueChangeEvent changeEvent) {
-        Sector sector = (Sector) changeEvent.getNewValue();
-//        cuestionarioPainter.paint(cuestionarioRootPanelGroup, sector.getCuestionario());
+    public void onSectorChange() {
+        cuestionarioRootPanelGroup.getChildren().clear();
+        
+        if (listRespuestasPreguntasCuestionarioSector == null) {
+            listRespuestasPreguntasCuestionarioSector = new LinkedList<>();
+        }
+        
+        for (Sector sector : sectoresList) {
+            if (sector.getIdSector().equals(persona.getSector().getIdSector())) {
+                for (CuestionarioSector cuestionarioSector : sector.getCuestionariosSectorList()) {
+                    listRespuestasPreguntasCuestionarioSector.addAll(cuestionarioPainter.paint(cuestionarioRootPanelGroup, cuestionarioSector.getCuestionario(), respuestaPreguntaService.findBy(persona, cuestionarioSector.getCuestionario()),false));
+                }
+                break;
+            }
+        }
     }
     
     public void onAddInformacionLaboral() {
@@ -476,16 +488,17 @@ public class PersonasController implements Serializable {
                 }
             }
 			
-			//Actualizamos la localidad
+            //Actualizamos la localidad
             for (Localidad localidad : localidadesList) {
                 if (localidad.getIdLocalidad().equals(persona.getLocalidad().getIdLocalidad())) {
                     persona.setLocalidad(localidad);
                 }
             }
             
-            for (Puesto p : puestosList) {
-                if (p.getIdPuesto().equals(persona.getPuesto().getIdPuesto())) {
-                    persona.setPuesto(p);
+            //Actualizamos el puesto
+            for (Puesto puestoItem : puestosList) {
+                if (puestoItem.getIdPuesto().equals(persona.getPuesto().getIdPuesto())) {
+                    persona.setPuesto(puestoItem);
                 }
             }
             

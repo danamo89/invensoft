@@ -27,7 +27,7 @@
                                 <p:column>
                                     <p:panel id="thumbimage-container" class="thumbimage-container">
                                         <p:graphicImage class="thumbimage" id="refreshMe" value="#{personasController.rutaFoto}" 
-                                                  cache="false" styleClass="thumbimage">
+                                                        width="150" height="200" cache="false" styleClass="thumbimage">
                                             <f:param name="image_id" value="#{personasController.persona.legajo}"/>
                                         </p:graphicImage>
                                     </p:panel>
@@ -580,6 +580,16 @@
                                 <p:column>
                                     <p:inputMask mask="99-99999999-9" value="#{personasController.persona.cuil}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                                 </p:column>
+                                <p:column>
+                                    <p:outputLabel for="advanced" value="Puesto desempeñado: "  />
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu id="advanced" value="#{personasController.persona.puesto.idPuesto}" style="width: 95%"
+                                                     effect="fade" filter="true" filterMatchMode="startsWith">
+                                        <f:selectItems value="#{personasController.puestosList}" 
+                                                       var="puesto" itemLabel="#{puesto.descripcion}" itemValue="#{puesto.idPuesto}" />
+                                    </p:selectOneMenu>
+                                </p:column>
                             </p:row>
                             <p:row>
                                 <p:column style="width: 20%">
@@ -587,7 +597,7 @@
                                 </p:column>
                                 <p:column style="width: 30%">
                                     <p:selectOneMenu value="#{personasController.persona.sector.idSector}" disabled="#{usuarioController.readOnly}" style="width: 95%">
-                                        <!--<p:ajax listener="#{personasController.onSectorChange()}" update=":personasForm:generalTabView"/>-->
+                                        <p:ajax listener="#{personasController.onSectorChange()}" update="panelGroupCuestionario"/>
                                         <f:selectItems value="#{personasController.sectoresList}" var="sector" itemLabel="#{sector.nombre}" itemValue="#{sector.idSector}"/>
                                     </p:selectOneMenu>
                                 </p:column>
@@ -596,18 +606,6 @@
                                 </p:column>
                                 <p:column style="width: 30%">
                                     <p:inputText value="#{personasController.persona.categoriaLaboral}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
-                                </p:column>
-                            </p:row>
-                            <p:row>
-                                <p:column>
-                                    <p:outputLabel for="advanced" value="Puesto desempeñado: "  />
-                                </p:column>
-                                <p:column>
-                                    <p:selectOneMenu id="advanced" value="#{personasController.persona.puesto.idPuesto}" 
-                                                     effect="fade" filter="true" filterMatchMode="startsWith">
-                                        <f:selectItems value="#{personasController.puestosList}" 
-                                                       var="puesto" itemLabel="#{puesto.descripcion}" itemValue="#{puesto.idPuesto}" />
-                                    </p:selectOneMenu>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -836,7 +834,7 @@
                             </f:facet>
                         </p:panelGrid>
                         <br/>
-                        <h:panelGroup style="width: 100%" binding="#{personasController.cuestionarioRootPanelGroup}"/>
+                        <h:panelGroup id="panelGroupCuestionario" style="width: 100%" binding="#{personasController.cuestionarioRootPanelGroup}"/>
                     </p:tab>
                 </p:tabView>
 
@@ -879,8 +877,8 @@
                                         <p:outputLabel value="Personas" />
                                     </td>
                                     <td style="border: none; border-width: 0px; text-align: right">
-                                        <p:outputLabel value="Buscar: " />
-                                        <p:inputText id="globalFilter" onkeyup="PF('widget').filter()" style="width:150px" placeholder="Enter keyword"/>
+<!--                                        <p:outputLabel value="Buscar: " />
+                                        <p:inputText id="globalFilter" onkeyup="PF('widget').filter()" style="width:150px" placeholder="Enter keyword"/>-->
                                     </td>
                                 </tr>
                             </table>

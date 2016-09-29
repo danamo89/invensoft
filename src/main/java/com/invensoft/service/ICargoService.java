@@ -16,4 +16,5 @@ public interface ICargoService {
     
     List<Cargo> findAll();
     
+    
 }

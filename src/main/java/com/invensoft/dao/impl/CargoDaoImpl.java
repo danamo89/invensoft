@@ -19,4 +19,5 @@ import org.springframework.stereotype.Component;
 @Component(value = "cargoDao")
 public class CargoDaoImpl extends GenericDaoImpl<Cargo, Integer> implements ICargoDao {
     
+    
 }

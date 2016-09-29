@@ -61,4 +61,5 @@ public class Cargo implements Serializable {
         this.descripcion = descripcion;
     }
     
+    
 }

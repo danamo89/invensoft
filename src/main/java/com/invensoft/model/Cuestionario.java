@@ -49,14 +49,14 @@ public class Cuestionario implements Serializable {
     @Size(max = 500)
     @Column(name = "DESCRIPCION", length = 500)
     private String descripcion;
-    @OneToMany(mappedBy = "cuestionario", fetch = FetchType.LAZY)
-    private List<Sector> sectorList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cuestionario", fetch = FetchType.LAZY)
     private List<GrupoPreguntas> grupoPreguntasList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cuestionario", fetch = FetchType.LAZY)
+    private List<CuestionarioSector> cuestionarioSectorList;
     
     public Cuestionario() {
         grupoPreguntasList = new ArrayList<>();
-        sectorList = new ArrayList<>();
+        cuestionarioSectorList = new ArrayList<>();
     }
 
     public Cuestionario(Integer idCuestionario) {
@@ -113,21 +113,21 @@ public class Cuestionario implements Serializable {
     }
 
     @XmlTransient
-    public List<Sector> getSectorList() {
-        return sectorList;
-    }
-
-    public void setSectorList(List<Sector> sectorList) {
-        this.sectorList = sectorList;
-    }
-
-    @XmlTransient
     public List<GrupoPreguntas> getGrupoPreguntasList() {
         return grupoPreguntasList;
     }
 
     public void setGrupoPreguntasList(List<GrupoPreguntas> grupoPreguntasList) {
         this.grupoPreguntasList = grupoPreguntasList;
+    }
+
+    @XmlTransient
+    public List<CuestionarioSector> getCuestionarioSectorList() {
+        return cuestionarioSectorList;
+    }
+
+    public void setCuestionarioSectorList(List<CuestionarioSector> cuestionarioSectorList) {
+        this.cuestionarioSectorList = cuestionarioSectorList;
     }
     
 }

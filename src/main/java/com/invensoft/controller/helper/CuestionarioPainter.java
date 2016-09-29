@@ -38,15 +38,20 @@ public class CuestionarioPainter {
     private PanelGrid bodyPanelGrid;
     private List<RespuestaPregunta> listRespuestasPreguntas;
     private List<RespuestaPregunta> listRespuestasPreguntasExistente;
+    private boolean disableFields = false;
 
     public List<RespuestaPregunta> paint(HtmlPanelGroup rootPanelGroup, Cuestionario cuestionario, List<RespuestaPregunta> listRespuestasPreguntas) {
+        return paint(rootPanelGroup, cuestionario, listRespuestasPreguntas, true);
+    }
+    
+    public List<RespuestaPregunta> paint(HtmlPanelGroup rootPanelGroup, Cuestionario cuestionario, List<RespuestaPregunta> listRespuestasPreguntas, boolean rePaint) {
         this.rootPanelGroup = rootPanelGroup;
         this.cuestionario = cuestionario;
         this.listRespuestasPreguntas = new LinkedList<>();
         this.listRespuestasPreguntasExistente = listRespuestasPreguntas;
 
         //Por si viene para ser re-pintado
-        this.rootPanelGroup.getChildren().clear();
+        if (rePaint) this.rootPanelGroup.getChildren().clear(); else this.rootPanelGroup.getChildren().add(CommonViewItems.getBr());
 
         this.bodyPanelGrid = new PanelGrid();
         this.bodyPanelGrid.setColumns(1);
@@ -149,6 +154,8 @@ public class CuestionarioPainter {
         uiRepeat.getChildren().add(outputText);
 
         SelectManyCheckbox selectManyCheckbox = new SelectManyCheckbox();
+        selectManyCheckbox.setDisabled(disableFields);
+        selectManyCheckbox.setReadonly(disableFields);
         selectManyCheckbox.setLayout("grid");
         selectManyCheckbox.setColumns(1);
         selectManyCheckbox.setValueExpression("value", FacesUtils.createValueExpression("#{respuestaPregunta.opcionRespuesta.idOpcionRespuesta}", Integer.class));
@@ -162,6 +169,8 @@ public class CuestionarioPainter {
         uiRepeat.getChildren().add(selectManyCheckbox);
 
         SelectOneRadio selectOneRadio = new SelectOneRadio();
+        selectOneRadio.setDisabled(disableFields);
+        selectOneRadio.setReadonly(disableFields);
         selectOneRadio.setLayout("grid");
         selectOneRadio.setColumns(1);
         selectOneRadio.setValueExpression("value", FacesUtils.createValueExpression("#{respuestaPregunta.opcionRespuesta.idOpcionRespuesta}", Integer.class));
@@ -175,12 +184,16 @@ public class CuestionarioPainter {
         uiRepeat.getChildren().add(selectOneRadio);
 
         InputText inputText = new InputText();
+        inputText.setDisabled(disableFields);
+        inputText.setReadonly(disableFields);
         inputText.setStyle("width: 100%");
         inputText.setValueExpression("rendered", FacesUtils.createValueExpression("#{respuestaPregunta.pregunta.estiloOpciones eq 'Input'?true:false}", Boolean.class));
         inputText.setValueExpression("value", FacesUtils.createValueExpression("#{respuestaPregunta.textoRespuesta}", String.class));
         uiRepeat.getChildren().add(inputText);
 
         InputTextarea inputTextarea = new InputTextarea();
+        inputTextarea.setDisabled(disableFields);
+        inputTextarea.setReadonly(disableFields);
         inputTextarea.setStyle("width: 100%");
         inputTextarea.setValueExpression("rendered", FacesUtils.createValueExpression("#{respuestaPregunta.pregunta.estiloOpciones eq 'Area'?true:false}", Boolean.class));
         inputTextarea.setValueExpression("value", FacesUtils.createValueExpression("#{respuestaPregunta.textoRespuesta}", String.class));
@@ -188,5 +201,9 @@ public class CuestionarioPainter {
 
         uiRepeat.getChildren().add(CommonViewItems.getBr());
         bodyPanelGrid.getChildren().add(uiRepeat);
+    }
+
+    public void setDisableFields(boolean disableFields) {
+        this.disableFields = disableFields;
     }
 }

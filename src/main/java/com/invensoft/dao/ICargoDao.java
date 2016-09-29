@@ -12,4 +12,5 @@ import com.invensoft.model.Cargo;
  */
 public interface ICargoDao extends IGenericDao<Cargo, Integer>{
     
+    
 }

@@ -1,1 +1,2 @@
-<% response.sendRedirect("pages/secure/index.xhtml"); %>
+<% response.sendRedirect("pages/secure/index.xhtml"); %> 
+

@@ -1,0 +1,93 @@
+<ui:composition template="/WEB-INF/facelets/templates/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="content">
+        <h:form id="resultadosCuestionariosForm">
+            <h:panelGroup rendered="#{!resultadosCuestionariosController.showResumenTable}" style="width: 100%; text-align: center">
+                <p:tabView id="resultadosTabView" cache="false" >
+                    <p:tab title="Salud Ocupacional">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Cuestionario"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        <br/>
+                        <h:panelGroup style="width: 100%;text-align: left" binding="#{resultadosCuestionariosController.saludOcupacionalRootPanelGroup}"/>
+                    </p:tab>
+                    <p:tab title="Desarrollo Profesional">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Cuestionario"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        <br/>
+                        <h:panelGroup style="width: 100%;text-align: left" binding="#{resultadosCuestionariosController.desarrolloProfesionalRootPanelGroup}"/>
+                    </p:tab>
+                    <p:tab title="Cuestionario">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Encuesta particular por sector laboral"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        <br/>
+                        <h:panelGroup style="width: 100%;text-align: left" binding="#{resultadosCuestionariosController.cuestionarioRootPanelGroup}"/>
+                    </p:tab>
+                </p:tabView>
+                
+                <p:panelGrid style="width: 100%">
+                    <p:row>
+                        <p:column>
+                            <br/><hr/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="text-align: center">
+                            <p:commandButton value="Volver" icon="ui-icon-close" update=":resultadosCuestionariosForm" immediate="true">
+                                <f:setPropertyActionListener  target="#{resultadosCuestionariosController.showResumenTable}" 
+                                                              value="#{!resultadosCuestionariosController.showResumenTable}"/>
+                            </p:commandButton> 
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:panelGroup>
+            
+            <h:panelGroup rendered="#{resultadosCuestionariosController.showResumenTable}" style="width: 100%; text-align: center">
+                <p:dataTable id="resultadosCuestionariosTable" rows="20" paginator="true" paginatorPosition="bottom" style="width: 100%"
+                             var="persona" rowIndexVar="index" widgetVar="widget" value="#{resultadosCuestionariosController.personasList}" >
+                    <f:facet name="header">
+                        <p:outputPanel>
+                            <p:outputLabel value="Resultados" />
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column headerText="#" style="width: 3%">
+                        <p:outputLabel value="#{index+1}" />
+                    </p:column>
+                    <p:column headerText="Identificador Unico">
+                        <p:outputLabel value="#{persona.idPersona}" />
+                    </p:column>
+                    <p:column style="width:32px;text-align: center">
+                        <p:commandButton icon="ui-icon-search" title="View" actionListener="#{resultadosCuestionariosController.onViewPersonaDetailedInfo(persona)}" update=":resultadosCuestionariosForm"/>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>

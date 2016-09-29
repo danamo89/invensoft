@@ -34,4 +34,5 @@ public class CargoServiceImpl implements ICargoService {
             return null;
         }
     }
+    
 }

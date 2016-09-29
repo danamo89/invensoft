@@ -8,14 +8,13 @@ package com.invensoft.model;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -37,8 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Sector.findByIdSector", query = "SELECT s FROM Sector s WHERE s.idSector = :idSector"),
     @NamedQuery(name = "Sector.findByNombre", query = "SELECT s FROM Sector s WHERE s.nombre = :nombre")})
 public class Sector implements Serializable {
-    @OneToMany(mappedBy = "sector", fetch = FetchType.LAZY)
-    private List<Persona> personaList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,10 +47,11 @@ public class Sector implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "NOMBRE", nullable = false, length = 45)
     private String nombre;
-    @JoinColumn(name = "ID_CUESTIONARIO", referencedColumnName = "ID_CUESTIONARIO")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Cuestionario cuestionario;
-
+    @OneToMany(mappedBy = "sector", fetch = FetchType.LAZY)
+    private List<Persona> personasList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sector")
+    private List<CuestionarioSector> cuestionariosSectorList;
+    
     public Sector() {
     }
 
@@ -82,14 +80,6 @@ public class Sector implements Serializable {
         this.nombre = nombre;
     }
 
-    public Cuestionario getCuestionario() {
-        return cuestionario;
-    }
-
-    public void setCuestionario(Cuestionario cuestionario) {
-        this.cuestionario = cuestionario;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -116,12 +106,21 @@ public class Sector implements Serializable {
     }
 
     @XmlTransient
-    public List<Persona> getPersonaList() {
-        return personaList;
+    public List<Persona> getPersonasList() {
+        return personasList;
     }
 
-    public void setPersonaList(List<Persona> personaList) {
-        this.personaList = personaList;
+    public void setPersonasList(List<Persona> personasList) {
+        this.personasList = personasList;
+    }
+
+    @XmlTransient
+    public List<CuestionarioSector> getCuestionariosSectorList() {
+        return cuestionariosSectorList;
+    }
+
+    public void setCuestionariosSectorList(List<CuestionarioSector> cuestionariosSectorList) {
+        this.cuestionariosSectorList = cuestionariosSectorList;
     }
     
 }
