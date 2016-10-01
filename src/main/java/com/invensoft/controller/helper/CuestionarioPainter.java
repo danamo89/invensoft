@@ -154,7 +154,6 @@ public class CuestionarioPainter {
         uiRepeat.getChildren().add(outputText);
 
         SelectManyCheckbox selectManyCheckbox = new SelectManyCheckbox();
-        selectManyCheckbox.setDisabled(disableFields);
         selectManyCheckbox.setReadonly(disableFields);
         selectManyCheckbox.setLayout("grid");
         selectManyCheckbox.setColumns(1);
@@ -169,7 +168,6 @@ public class CuestionarioPainter {
         uiRepeat.getChildren().add(selectManyCheckbox);
 
         SelectOneRadio selectOneRadio = new SelectOneRadio();
-        selectOneRadio.setDisabled(disableFields);
         selectOneRadio.setReadonly(disableFields);
         selectOneRadio.setLayout("grid");
         selectOneRadio.setColumns(1);
@@ -184,7 +182,6 @@ public class CuestionarioPainter {
         uiRepeat.getChildren().add(selectOneRadio);
 
         InputText inputText = new InputText();
-        inputText.setDisabled(disableFields);
         inputText.setReadonly(disableFields);
         inputText.setStyle("width: 100%");
         inputText.setValueExpression("rendered", FacesUtils.createValueExpression("#{respuestaPregunta.pregunta.estiloOpciones eq 'Input'?true:false}", Boolean.class));
@@ -192,7 +189,6 @@ public class CuestionarioPainter {
         uiRepeat.getChildren().add(inputText);
 
         InputTextarea inputTextarea = new InputTextarea();
-        inputTextarea.setDisabled(disableFields);
         inputTextarea.setReadonly(disableFields);
         inputTextarea.setStyle("width: 100%");
         inputTextarea.setValueExpression("rendered", FacesUtils.createValueExpression("#{respuestaPregunta.pregunta.estiloOpciones eq 'Area'?true:false}", Boolean.class));
