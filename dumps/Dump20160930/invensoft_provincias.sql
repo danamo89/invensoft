@@ -16,27 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `paises`
+-- Table structure for table `provincias`
 --
 
-DROP TABLE IF EXISTS `paises`;
+DROP TABLE IF EXISTS `provincias`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `paises` (
-  `ID_PAIS` int(11) NOT NULL AUTO_INCREMENT,
-  `NOMBRE` varchar(80) NOT NULL,
-  PRIMARY KEY (`ID_PAIS`)
-) ENGINE=InnoDB AUTO_INCREMENT=220 DEFAULT CHARSET=utf8;
+CREATE TABLE `provincias` (
+  `ID_PROVINCIA` int(11) NOT NULL AUTO_INCREMENT,
+  `NOMBRE` varchar(100) NOT NULL,
+  `ORDEN` int(11) NOT NULL,
+  PRIMARY KEY (`ID_PROVINCIA`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `paises`
+-- Dumping data for table `provincias`
 --
 
-LOCK TABLES `paises` WRITE;
-/*!40000 ALTER TABLE `paises` DISABLE KEYS */;
-INSERT INTO `paises` VALUES (12,'ARGENTINA'),(27,'BOLIVIA'),(30,'BRASIL'),(41,'CHILE'),(44,'COLOMBIA'),(156,'PARAGUAY'),(157,'PERU'),(214,'VENEZUELA'),(219,'OTRO');
-/*!40000 ALTER TABLE `paises` ENABLE KEYS */;
+LOCK TABLES `provincias` WRITE;
+/*!40000 ALTER TABLE `provincias` DISABLE KEYS */;
+INSERT INTO `provincias` VALUES (1,'Buenos Aires',2),(2,'Buenos Aires-GBA',3),(3,'Capital Federal',1),(4,'Catamarca',4),(5,'Chaco',5),(6,'Chubut',6),(7,'Córdoba',7),(8,'Corrientes',8),(9,'Entre Ríos',9),(10,'Formosa',10),(11,'Jujuy',11),(12,'La Pampa',12),(13,'La Rioja',13),(14,'Mendoza',14),(15,'Misiones',15),(16,'Neuquén',16),(17,'Río Negro',17),(18,'Salta',18),(19,'San Juan',19),(20,'San Luis',20),(21,'Santa Cruz',21),(22,'Santa Fe',22),(23,'Santiago del Estero',23),(24,'Tierra del Fuego',24),(25,'Tucumán',25);
+/*!40000 ALTER TABLE `provincias` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -48,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23  2:48:54
+-- Dump completed on 2016-09-30 14:22:51

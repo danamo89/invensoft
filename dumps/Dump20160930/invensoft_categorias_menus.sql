@@ -16,30 +16,26 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `grupos_opciones`
+-- Table structure for table `categorias_menus`
 --
 
-DROP TABLE IF EXISTS `grupos_opciones`;
+DROP TABLE IF EXISTS `categorias_menus`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `grupos_opciones` (
-  `ID_GRUPO_OPCIONES` int(11) NOT NULL AUTO_INCREMENT,
-  `ID_GRUPO_PREGUNTAS` int(11) NOT NULL,
-  `TIPO_VISUALIZACION` varchar(45) NOT NULL COMMENT 'INPUT\nRADIO\nCHECKBOX\nLIST',
-  `TITULO` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`ID_GRUPO_OPCIONES`),
-  KEY `GRUPOS_OPCIONES_ID_GRUPO_PREGUNTAS_idx` (`ID_GRUPO_PREGUNTAS`),
-  CONSTRAINT `GRUPOS_OPCIONES_ID_GRUPO_PREGUNTAS` FOREIGN KEY (`ID_GRUPO_PREGUNTAS`) REFERENCES `grupos_preguntas` (`ID_GRUPO_PREGUNTAS`) ON DELETE NO ACTION ON UPDATE NO ACTION
+CREATE TABLE `categorias_menus` (
+  `ID_CATEGORIA_MENU` int(11) NOT NULL AUTO_INCREMENT,
+  `NOMBRE` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID_CATEGORIA_MENU`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `grupos_opciones`
+-- Dumping data for table `categorias_menus`
 --
 
-LOCK TABLES `grupos_opciones` WRITE;
-/*!40000 ALTER TABLE `grupos_opciones` DISABLE KEYS */;
-/*!40000 ALTER TABLE `grupos_opciones` ENABLE KEYS */;
+LOCK TABLES `categorias_menus` WRITE;
+/*!40000 ALTER TABLE `categorias_menus` DISABLE KEYS */;
+/*!40000 ALTER TABLE `categorias_menus` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +47,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23  2:48:54
+-- Dump completed on 2016-09-30 14:22:49

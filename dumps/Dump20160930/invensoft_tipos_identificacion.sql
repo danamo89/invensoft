@@ -16,35 +16,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `activos`
+-- Table structure for table `tipos_identificacion`
 --
 
-DROP TABLE IF EXISTS `activos`;
+DROP TABLE IF EXISTS `tipos_identificacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `activos` (
-  `ID_ACTIVO` int(11) NOT NULL AUTO_INCREMENT,
-  `ID_TIPO_ACTIVO` int(11) NOT NULL,
-  `ID_USUARIO_ALTA` int(11) NOT NULL,
-  `FECHA_ALTA` datetime NOT NULL,
-  `NOMBRE` varchar(100) NOT NULL,
-  `DESCRIPCION` varchar(300) DEFAULT NULL,
-  `CODIGO` varchar(45) NOT NULL,
-  PRIMARY KEY (`ID_ACTIVO`),
-  KEY `ACTIVOS_ID_TIPO_ACTIVO_idx` (`ID_TIPO_ACTIVO`),
-  KEY `ACTIVOS_ID_USUARIO_ALTA_idx` (`ID_USUARIO_ALTA`),
-  CONSTRAINT `ACTIVOS_ID_TIPO_ACTIVO` FOREIGN KEY (`ID_TIPO_ACTIVO`) REFERENCES `tipos_activos` (`ID_TIPO_ACTIVO`) ON UPDATE NO ACTION,
-  CONSTRAINT `ACTIVOS_ID_USUARIO_ALTA` FOREIGN KEY (`ID_USUARIO_ALTA`) REFERENCES `usuarios` (`ID_USUARIO`) ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `tipos_identificacion` (
+  `ID_TIPO_IDENTIFICACION` int(11) NOT NULL AUTO_INCREMENT,
+  `DESCRIPCION` varchar(100) NOT NULL,
+  PRIMARY KEY (`ID_TIPO_IDENTIFICACION`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `activos`
+-- Dumping data for table `tipos_identificacion`
 --
 
-LOCK TABLES `activos` WRITE;
-/*!40000 ALTER TABLE `activos` DISABLE KEYS */;
-/*!40000 ALTER TABLE `activos` ENABLE KEYS */;
+LOCK TABLES `tipos_identificacion` WRITE;
+/*!40000 ALTER TABLE `tipos_identificacion` DISABLE KEYS */;
+INSERT INTO `tipos_identificacion` VALUES (1,'DOCUMENTO NACIONAL DE IDENTIDAD (DNI)'),(2,'CÉDULA DE IDENTIDAD (CI)'),(3,'LIBRETA DE ENROLAMIENTO (LE)'),(4,'LIBRETA CÍVICA (LC)');
+/*!40000 ALTER TABLE `tipos_identificacion` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -56,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23  2:48:53
+-- Dump completed on 2016-09-30 14:22:50

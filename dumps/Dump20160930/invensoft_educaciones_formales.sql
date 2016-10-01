@@ -16,32 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `usuarios_roles`
+-- Table structure for table `educaciones_formales`
 --
 
-DROP TABLE IF EXISTS `usuarios_roles`;
+DROP TABLE IF EXISTS `educaciones_formales`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `usuarios_roles` (
-  `ID_USUARIO_ROL` int(11) NOT NULL AUTO_INCREMENT,
-  `ID_USUARIO` int(11) NOT NULL,
-  `ID_ROL` int(11) NOT NULL,
-  PRIMARY KEY (`ID_USUARIO_ROL`),
-  KEY `USUARIO_ID_idx` (`ID_USUARIO`),
-  KEY `USUARIOS_ROLES_ID_ROL_idx` (`ID_ROL`),
-  CONSTRAINT `USUARIOS_ROLES_ID_ROL` FOREIGN KEY (`ID_ROL`) REFERENCES `roles` (`ID_ROL`) ON UPDATE NO ACTION,
-  CONSTRAINT `USUARIOS_ROLES_IS_USUARIO` FOREIGN KEY (`ID_USUARIO`) REFERENCES `usuarios` (`ID_USUARIO`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+CREATE TABLE `educaciones_formales` (
+  `ID_EDUCACION_FORMAL` int(11) NOT NULL AUTO_INCREMENT,
+  `ID_PERSONA` int(11) NOT NULL,
+  `NIVEL_ESTUDIO` varchar(50) NOT NULL,
+  `ANIO_EGRESO` int(11) NOT NULL,
+  `INSTITUCION` varchar(255) NOT NULL,
+  `TITULO` varchar(100) NOT NULL,
+  PRIMARY KEY (`ID_EDUCACION_FORMAL`),
+  KEY `EDUCACIONES_FORMALES_ID_PERSONA_idx` (`ID_PERSONA`),
+  CONSTRAINT `EDUCACIONES_FORMALES_ID_PERSONA` FOREIGN KEY (`ID_PERSONA`) REFERENCES `personas` (`ID_PERSONA`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `usuarios_roles`
+-- Dumping data for table `educaciones_formales`
 --
 
-LOCK TABLES `usuarios_roles` WRITE;
-/*!40000 ALTER TABLE `usuarios_roles` DISABLE KEYS */;
-INSERT INTO `usuarios_roles` VALUES (2,2,1),(3,3,1),(4,3,2),(5,6,1);
-/*!40000 ALTER TABLE `usuarios_roles` ENABLE KEYS */;
+LOCK TABLES `educaciones_formales` WRITE;
+/*!40000 ALTER TABLE `educaciones_formales` DISABLE KEYS */;
+INSERT INTO `educaciones_formales` VALUES (3,3,'Secundario',1990,'Santa Ana y San Joaquin','Bachiller');
+/*!40000 ALTER TABLE `educaciones_formales` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23  2:48:55
+-- Dump completed on 2016-09-30 14:22:49

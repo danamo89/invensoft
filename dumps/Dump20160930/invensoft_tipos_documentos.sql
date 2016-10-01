@@ -16,29 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `opciones`
+-- Table structure for table `tipos_documentos`
 --
 
-DROP TABLE IF EXISTS `opciones`;
+DROP TABLE IF EXISTS `tipos_documentos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `opciones` (
-  `ID_OPCION` int(11) NOT NULL AUTO_INCREMENT,
-  `ID_GRUPO_OPCIONES` int(11) NOT NULL,
-  `TEXTO` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`ID_OPCION`),
-  KEY `OPCIONES_ID_GRUPO_OPCIONES_idx` (`ID_GRUPO_OPCIONES`),
-  CONSTRAINT `OPCIONES_ID_GRUPO_OPCIONES` FOREIGN KEY (`ID_GRUPO_OPCIONES`) REFERENCES `grupos_opciones` (`ID_GRUPO_OPCIONES`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `tipos_documentos` (
+  `id_tipo_documento` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(45) NOT NULL,
+  `orden` int(11) NOT NULL,
+  PRIMARY KEY (`id_tipo_documento`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `opciones`
+-- Dumping data for table `tipos_documentos`
 --
 
-LOCK TABLES `opciones` WRITE;
-/*!40000 ALTER TABLE `opciones` DISABLE KEYS */;
-/*!40000 ALTER TABLE `opciones` ENABLE KEYS */;
+LOCK TABLES `tipos_documentos` WRITE;
+/*!40000 ALTER TABLE `tipos_documentos` DISABLE KEYS */;
+INSERT INTO `tipos_documentos` VALUES (1,'Información para RRHH',1),(2,'Documentación personal',2),(3,'Documentación grupo familiar',3);
+/*!40000 ALTER TABLE `tipos_documentos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23  2:48:53
+-- Dump completed on 2016-09-30 14:22:50

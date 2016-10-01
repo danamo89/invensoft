@@ -16,29 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `preguntas`
+-- Table structure for table `grupos_preguntas`
 --
 
-DROP TABLE IF EXISTS `preguntas`;
+DROP TABLE IF EXISTS `grupos_preguntas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `preguntas` (
-  `ID_PREGUNTA` int(11) NOT NULL AUTO_INCREMENT,
-  `ID_GRUPO_PREGUNTAS` int(11) NOT NULL,
-  `TEXTO` varchar(255) NOT NULL,
-  PRIMARY KEY (`ID_PREGUNTA`),
-  KEY `PREGUNTAS_ID_GRUPO_PREGUNTAS_idx` (`ID_GRUPO_PREGUNTAS`),
-  CONSTRAINT `PREGUNTAS_ID_GRUPO_PREGUNTAS` FOREIGN KEY (`ID_GRUPO_PREGUNTAS`) REFERENCES `grupos_preguntas` (`ID_GRUPO_PREGUNTAS`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `grupos_preguntas` (
+  `ID_GRUPO_PREGUNTAS` int(11) NOT NULL AUTO_INCREMENT,
+  `ID_CUESTIONARIO` int(11) NOT NULL,
+  `TITULO` varchar(255) DEFAULT NULL,
+  `ORDEN` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID_GRUPO_PREGUNTAS`),
+  KEY `GRUPOS_PREGUNTAS_ID_CUESTIONARIO_idx` (`ID_CUESTIONARIO`),
+  CONSTRAINT `GRUPOS_PREGUNTAS_ID_CUESTIONARIO` FOREIGN KEY (`ID_CUESTIONARIO`) REFERENCES `cuestionarios` (`ID_CUESTIONARIO`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `preguntas`
+-- Dumping data for table `grupos_preguntas`
 --
 
-LOCK TABLES `preguntas` WRITE;
-/*!40000 ALTER TABLE `preguntas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `preguntas` ENABLE KEYS */;
+LOCK TABLES `grupos_preguntas` WRITE;
+/*!40000 ALTER TABLE `grupos_preguntas` DISABLE KEYS */;
+INSERT INTO `grupos_preguntas` VALUES (3,4,'ENTORNO PERSONAL',3),(4,4,'TRAYECTORIA',2),(5,4,'HISTORIA EDUCATIVA Y DE FORMACIÓN',1),(6,5,'',1),(7,6,'',1),(8,7,'',1),(9,8,'',1),(10,9,'',1),(11,10,'',1),(12,11,'',1);
+/*!40000 ALTER TABLE `grupos_preguntas` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23  2:48:55
+-- Dump completed on 2016-09-30 14:22:50

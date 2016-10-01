@@ -16,27 +16,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `plantillas`
+-- Table structure for table `estados_civiles`
 --
 
-DROP TABLE IF EXISTS `plantillas`;
+DROP TABLE IF EXISTS `estados_civiles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `plantillas` (
-  `ID_PLANTILLA` int(11) NOT NULL AUTO_INCREMENT,
-  `TITULO` varchar(45) DEFAULT NULL,
-  `DESCRIPCION` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`ID_PLANTILLA`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `estados_civiles` (
+  `ID_ESTADO_CIVIL` int(11) NOT NULL AUTO_INCREMENT,
+  `DESCRIPCION` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID_ESTADO_CIVIL`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `plantillas`
+-- Dumping data for table `estados_civiles`
 --
 
-LOCK TABLES `plantillas` WRITE;
-/*!40000 ALTER TABLE `plantillas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `plantillas` ENABLE KEYS */;
+LOCK TABLES `estados_civiles` WRITE;
+/*!40000 ALTER TABLE `estados_civiles` DISABLE KEYS */;
+INSERT INTO `estados_civiles` VALUES (1,'SOLTERO/A'),(2,'CASADO/a'),(3,'VIUDO/A'),(4,'UNION LIBRE'),(5,'DIVORCIADO/A');
+/*!40000 ALTER TABLE `estados_civiles` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -48,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23  2:48:54
+-- Dump completed on 2016-09-30 14:22:49

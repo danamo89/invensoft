@@ -16,27 +16,26 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tipos_identificacion`
+-- Table structure for table `cargos`
 --
 
-DROP TABLE IF EXISTS `tipos_identificacion`;
+DROP TABLE IF EXISTS `cargos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tipos_identificacion` (
-  `ID_TIPO_IDENTIFICACION` int(11) NOT NULL AUTO_INCREMENT,
-  `DESCRIPCION` varchar(100) NOT NULL,
-  PRIMARY KEY (`ID_TIPO_IDENTIFICACION`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+CREATE TABLE `cargos` (
+  `ID_CARGO` int(11) NOT NULL AUTO_INCREMENT,
+  `DESCRIPCION` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID_CARGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tipos_identificacion`
+-- Dumping data for table `cargos`
 --
 
-LOCK TABLES `tipos_identificacion` WRITE;
-/*!40000 ALTER TABLE `tipos_identificacion` DISABLE KEYS */;
-INSERT INTO `tipos_identificacion` VALUES (1,'DOCUMENTO NACIONAL DE IDENTIDAD (DNI)'),(2,'CÉDULA DE IDENTIDAD (CI)'),(3,'LIBRETA DE ENROLAMIENTO (LE)'),(4,'LIBRETA CÍVICA (LC)');
-/*!40000 ALTER TABLE `tipos_identificacion` ENABLE KEYS */;
+LOCK TABLES `cargos` WRITE;
+/*!40000 ALTER TABLE `cargos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cargos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -48,4 +47,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23  2:48:55
+-- Dump completed on 2016-09-30 14:22:49

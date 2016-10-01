@@ -16,35 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tipos_activos`
+-- Table structure for table `roles`
 --
 
-DROP TABLE IF EXISTS `tipos_activos`;
+DROP TABLE IF EXISTS `roles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tipos_activos` (
-  `ID_TIPO_ACTIVO` int(11) NOT NULL AUTO_INCREMENT,
-  `ID_USUARIO` int(11) NOT NULL,
-  `ID_PLANTILLA` int(11) NOT NULL,
+CREATE TABLE `roles` (
+  `ID_ROL` int(11) NOT NULL AUTO_INCREMENT,
   `NOMBRE` varchar(100) NOT NULL,
   `DESCRIPCION` varchar(255) DEFAULT NULL,
-  `ESTADO` varchar(1) NOT NULL DEFAULT '1' COMMENT '0 = INACTIVO\n1 = ACTIVO',
-  `FECHA_ALTA` datetime NOT NULL,
-  PRIMARY KEY (`ID_TIPO_ACTIVO`),
-  KEY `TIPOS_ACTIVOS_ID_USUARIO_idx` (`ID_USUARIO`),
-  KEY `TIPOS_ACTIVOS_ID_PLANTILLA_idx` (`ID_PLANTILLA`),
-  CONSTRAINT `TIPOS_ACTIVOS_ID_PLANTILLA` FOREIGN KEY (`ID_PLANTILLA`) REFERENCES `plantillas` (`ID_PLANTILLA`) ON UPDATE NO ACTION,
-  CONSTRAINT `TIPOS_ACTIVOS_ID_USUARIO` FOREIGN KEY (`ID_USUARIO`) REFERENCES `usuarios` (`ID_USUARIO`) ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`ID_ROL`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tipos_activos`
+-- Dumping data for table `roles`
 --
 
-LOCK TABLES `tipos_activos` WRITE;
-/*!40000 ALTER TABLE `tipos_activos` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tipos_activos` ENABLE KEYS */;
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` VALUES (1,'ROLE_USER','ROL DE USUARIO'),(2,'ROLE_READ_ONLY','ROL DE SOLO LECTURA');
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -56,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23  2:48:55
+-- Dump completed on 2016-09-30 14:22:50

@@ -16,28 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `roles`
+-- Table structure for table `documentos`
 --
 
-DROP TABLE IF EXISTS `roles`;
+DROP TABLE IF EXISTS `documentos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `roles` (
-  `ID_ROL` int(11) NOT NULL AUTO_INCREMENT,
-  `NOMBRE` varchar(100) NOT NULL,
-  `DESCRIPCION` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`ID_ROL`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+CREATE TABLE `documentos` (
+  `ID_DOCUMENTO` int(11) NOT NULL AUTO_INCREMENT,
+  `ID_TIPO_DOCUMENTO` int(11) NOT NULL,
+  `DESCRIPCION` varchar(100) NOT NULL,
+  PRIMARY KEY (`ID_DOCUMENTO`),
+  KEY `DOCUMENTOS_ID_TIPO_DOCUMENTO_idx` (`ID_TIPO_DOCUMENTO`),
+  CONSTRAINT `DOCUMENTOS_ID_TIPO_DOCUMENTO` FOREIGN KEY (`ID_TIPO_DOCUMENTO`) REFERENCES `tipos_documentos` (`id_tipo_documento`) ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `roles`
+-- Dumping data for table `documentos`
 --
 
-LOCK TABLES `roles` WRITE;
-/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'ROLE_USER','ROL DE USUARIO'),(2,'ROLE_READ_ONLY','ROL DE SOLO LECTURA');
-/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+LOCK TABLES `documentos` WRITE;
+/*!40000 ALTER TABLE `documentos` DISABLE KEYS */;
+INSERT INTO `documentos` VALUES (1,1,'Carga de datos'),(2,1,'DDJJ de domicilio'),(3,1,'DDJJ previsional / sindical'),(4,2,'Copia DNI'),(5,2,'Constancia de CUIL'),(6,3,'Acta de matrimonio / convivencia'),(7,3,'Actas de nacimiento'),(8,3,'Copia DNI cónyuge/conviviente'),(9,3,'Copia DNI hijos'),(10,3,'Constancia de CuIL cony/conviv'),(11,3,'Constancia de CUIL hijos');
+/*!40000 ALTER TABLE `documentos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -49,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23  2:48:55
+-- Dump completed on 2016-09-30 14:22:50

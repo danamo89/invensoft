@@ -22,7 +22,13 @@ public class FacesUtils {
     public static Usuario getSessionUser() {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) context.getRequest();
-        return (Usuario)request.getSession().getAttribute("s_obj_usuario");
+        Usuario usuario = null;
+        try {
+            usuario = (Usuario)request.getSession().getAttribute("s_obj_usuario");
+        } catch (Exception e) {
+            //ignored
+        }
+        return usuario;
     }
 
     private static String convertToElSyntax(String value) {
