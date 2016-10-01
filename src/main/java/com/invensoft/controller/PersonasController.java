@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -594,12 +595,20 @@ public class PersonasController implements Serializable {
     public void handleFileUpload(FileUploadEvent event) {
         try {
             final UploadedFile uploadedFile = event.getFile();
+            String tempFileName;
             
             FacesContext context = FacesContext.getCurrentInstance();
             ExternalContext externalContext = context.getExternalContext();
             
+            if(externalContext.getUserPrincipal() != null) {
+                String user = externalContext.getUserPrincipal().getName();
+                tempFileName = "tmp_"+user;
+            }else {
+                tempFileName = new Date().toString();
+            }
+            
             byte[] content = IOUtils.toByteArray(uploadedFile.getInputstream());
-            String extension = uploadedFile.getFileName().split("\\.")[1];
+            String extension = uploadedFile.getFileName().split("\\.")[1].toLowerCase();
             
             FotoPersona foto = new FotoPersona();
             foto.setFoto(content);
@@ -609,12 +618,12 @@ public class PersonasController implements Serializable {
             
             String relativeWebPath = "/resources/images/";
             String absoluteDiskPath = externalContext.getRealPath(relativeWebPath);
-            String tempFileName = this.persona.getLegajo()+extension;
+            String completeTempFileName = tempFileName+"."+extension;
             
-            File tempFile = new File(absoluteDiskPath+"/"+tempFileName);
+             File tempFile = new File(absoluteDiskPath+"/"+completeTempFileName);
             
             IOUtils.write(content, new FileOutputStream(tempFile));
-            this.rutaFoto = relativeWebPath+tempFileName;
+            this.rutaFoto = relativeWebPath+completeTempFileName;
             
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -663,7 +672,16 @@ public class PersonasController implements Serializable {
             }
         }
     }
-
+    
+    public void onExportarExcel() {
+        
+        try {
+            personasService.exportarExcel(persona, FileUtils.getTempDirectoryPath(), this.persona.getLegajo());
+        } catch (IOException ex) {
+            Logger.getLogger(PersonasController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     //<editor-fold defaultstate="collapsed" desc="Getter && Setter">
     public Persona getPersona() {
         return persona;
