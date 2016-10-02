@@ -67,6 +67,7 @@ section.gradient button.active {
 }
 
 .thumbimage-container {
+    text-align: center;
     width: 250px;
     height: 200px;
     max-width: 250px;
@@ -74,6 +75,7 @@ section.gradient button.active {
 }
 
 .thumbimage {
-    width: 225px;
+    width: auto;
+    max-width: 230px;
     height: 190px;
 }

@@ -10,11 +10,16 @@
         <h:form id="reportesForm" >
             <p:panelGrid style="width: 100%">
                 <p:row>
-                    <p:column style="width: 70%">
+                    <p:column style="width: 70%" colspan="3">
                         <p:chart type="bar" model="#{personasChartsController.barChartModel}" style="height:300px"/>
                     </p:column>
+                </p:row>
+                <p:row>
                     <p:column>
-                        <p:chart type="pie" model="#{personasChartsController.pieChartModel}" style="width:400px;height:300px" />
+                        <center><p:chart type="pie" model="#{personasChartsController.pieChartPersonasXFormacionFormal}" style="width:400px;height:300px" /></center>
+                    </p:column>
+                    <p:column>
+                        <center><p:chart type="pie" model="#{personasChartsController.pieChartPersonasXSector}" style="width:500px;height:300px" /></center>
                     </p:column>
                 </p:row>
             </p:panelGrid>
