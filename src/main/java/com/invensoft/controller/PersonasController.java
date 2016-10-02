@@ -5,6 +5,8 @@
  */
 package com.invensoft.controller;
 
+import com.invensoft.controller.helper.CuestionarioPainter;
+import com.invensoft.model.CategoriaLaboral;
 import com.invensoft.model.Cuestionario;
 import com.invensoft.model.CuestionarioSector;
 import com.invensoft.model.EducacionFormal;
@@ -26,6 +28,7 @@ import com.invensoft.model.RespuestaPregunta;
 import com.invensoft.model.Sector;
 import com.invensoft.model.TipoDocumento;
 import com.invensoft.model.TipoIdentificacion;
+import com.invensoft.service.ICategoriaLaboralService;
 import com.invensoft.service.ICuestionarioService;
 import com.invensoft.service.IDocumentoService;
 import com.invensoft.service.IEstadoCivilService;
@@ -93,7 +96,8 @@ public class PersonasController implements Serializable {
     private EducacionNoFormal educacionNoFormal;
     private Integer idProvinciaSelected;
     private Puesto puesto;
-
+    private CategoriaLaboral categoriaLaboral;
+    
     private List<Persona> personasList;
     private List<TipoIdentificacion> tiposIdentificacionList;
     private List<Pais> paisesList;
@@ -104,7 +108,7 @@ public class PersonasController implements Serializable {
     private List<Provincia> provinciasList;
     private List<Localidad> localidadesList;
     private Map<Integer, List<Localidad>> mapProvinciasLocalidades;
-
+    private List<CategoriaLaboral> categoriasLaboralesList;
     private String[] selectedTiposDocumentos;
     private List<SelectItem> selectTiposDocumentos;
     private List<TipoDocumento> tiposDocumentosList;
@@ -139,6 +143,8 @@ public class PersonasController implements Serializable {
     private IProvinciaService provinciaService;
     @ManagedProperty(value = "#{localidadService}")
     private ILocalidadService localidadService;
+    @ManagedProperty(value = "#{categoriaLaboralService}")
+    private ICategoriaLaboralService categoriaLaboralService;
 
     /**
      * Creates a new instance of PersonasController
@@ -155,7 +161,7 @@ public class PersonasController implements Serializable {
         educacionFormal = new EducacionFormal();
         educacionNoFormal = new EducacionNoFormal();
         informacionLaboral = new InformacionLaboral();
-
+        categoriaLaboral = new CategoriaLaboral();
         this.loadLists();
     }
 
@@ -234,6 +240,14 @@ public class PersonasController implements Serializable {
                 puestosList = new LinkedList<>();
             }
         }
+        
+        if(this.categoriasLaboralesList == null) {
+            this.categoriasLaboralesList = this.categoriaLaboralService.findAll();
+            
+            if (categoriasLaboralesList == null) {
+                categoriasLaboralesList = new LinkedList<>();
+            }
+        }
     }
 
     private void loadCuestionarios() {
@@ -254,6 +268,7 @@ public class PersonasController implements Serializable {
 
     public void onViewPersonaDetailedInfo(Persona persona) {
         this.persona = persona;
+        
         this.showPersonasTable = false;
         FacesContext context = FacesContext.getCurrentInstance();
 
@@ -490,6 +505,12 @@ public class PersonasController implements Serializable {
             for (Puesto puestoItem : puestosList) {
                 if (puestoItem.getIdPuesto().equals(persona.getPuesto().getIdPuesto())) {
                     persona.setPuesto(puestoItem);
+                }
+            }
+            
+            for (CategoriaLaboral c : categoriasLaboralesList) {
+                if (c.getIdCategoriaLaboral().equals(persona.getIdCategoriaLaboral().getIdCategoriaLaboral())) {
+                    persona.setIdCategoriaLaboral(c);
                 }
             }
 
@@ -782,6 +803,22 @@ public class PersonasController implements Serializable {
         return tipoDocumentoService;
     }
 
+    public CategoriaLaboral getCategoriaLaboral() {
+        return categoriaLaboral;
+    }
+
+    public void setCategoriaLaboral(CategoriaLaboral categoriaLaboral) {
+        this.categoriaLaboral = categoriaLaboral;
+    }
+
+    public ICategoriaLaboralService getCategoriaLaboralService() {
+        return categoriaLaboralService;
+    }
+
+    public void setCategoriaLaboralService(ICategoriaLaboralService categoriaLaboralService) {
+        this.categoriaLaboralService = categoriaLaboralService;
+    }
+    
     public void setTipoDocumentoService(ITipoDocumentoService tipoDocumentoService) {
         this.tipoDocumentoService = tipoDocumentoService;
     }
@@ -945,6 +982,15 @@ public class PersonasController implements Serializable {
     public void setPuestosList(List<Puesto> puestosList) {
         this.puestosList = puestosList;
     }
+    
+    public List<CategoriaLaboral> getCategoriasLaboralesList() {
+        return categoriasLaboralesList;
+    }
+
+    public void setCategoriasLaboralesList(List<CategoriaLaboral> categoriasLaboralesList) {
+        this.categoriasLaboralesList = categoriasLaboralesList;
+    }
+    
 
     public Cuestionario getCuestionarioSaludOcupacional() {
         return cuestionarioSaludOcupacional;
