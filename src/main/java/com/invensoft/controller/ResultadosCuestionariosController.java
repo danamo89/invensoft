@@ -5,11 +5,9 @@
  */
 package com.invensoft.controller;
 
-import com.invensoft.controller.helper.CuestionarioPainter;
 import com.invensoft.model.Cuestionario;
 import com.invensoft.model.CuestionarioSector;
 import com.invensoft.model.Persona;
-import com.invensoft.model.RespuestaPregunta;
 import com.invensoft.service.ICuestionarioService;
 import com.invensoft.service.IPersonaService;
 import com.invensoft.service.IRespuestaPreguntaService;
@@ -20,7 +18,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.component.html.HtmlPanelGroup;
 
 /**
  *
@@ -32,13 +29,8 @@ public class ResultadosCuestionariosController implements Serializable {
 
     private Persona persona;
     private List<Persona> personasList;
-    private CuestionarioPainter cuestionarioPainter;
-    private HtmlPanelGroup saludOcupacionalRootPanelGroup;
-    private List<RespuestaPregunta> listRespuestasPreguntasCuestionarioSaludOcupacional;
-    private HtmlPanelGroup desarrolloProfesionalRootPanelGroup;
-    private List<RespuestaPregunta> listRespuestasPreguntasCuestionarioDesarrolloProfesional;
-    private HtmlPanelGroup cuestionarioRootPanelGroup;
-    private List<RespuestaPregunta> listRespuestasPreguntasCuestionario;
+    private Cuestionario cuestionarioSaludOcupacional;
+    private Cuestionario cuestionarioDesarrolloProfesional;
     private boolean showResumenTable;
 
     //Services
@@ -54,14 +46,10 @@ public class ResultadosCuestionariosController implements Serializable {
      */
     public ResultadosCuestionariosController() {
     }
-    
+
     @PostConstruct
     public void postConstruct() {
         showResumenTable = true;
-        cuestionarioPainter = new CuestionarioPainter();
-        cuestionarioPainter.setDisableFields(true);
-        cuestionarioRootPanelGroup = new HtmlPanelGroup();
-
         this.loadLists();
     }
 
@@ -83,20 +71,14 @@ public class ResultadosCuestionariosController implements Serializable {
 
     private void loadCuestionarios() {
         try {
-            Cuestionario cuestionarioSaludOcupacional = cuestionarioService.findCuestionarioSaludOcupacional();
-            listRespuestasPreguntasCuestionarioSaludOcupacional = cuestionarioPainter.paint(saludOcupacionalRootPanelGroup, cuestionarioSaludOcupacional, respuestaPreguntaService.findBy(persona, cuestionarioSaludOcupacional));
-
-            Cuestionario cuestionarioDesarrolloProfesional = cuestionarioService.findCuestionarioDesarrolloProfesional();
-            listRespuestasPreguntasCuestionarioDesarrolloProfesional = cuestionarioPainter.paint(desarrolloProfesionalRootPanelGroup, cuestionarioDesarrolloProfesional, respuestaPreguntaService.findBy(persona, cuestionarioDesarrolloProfesional));
-
-            cuestionarioRootPanelGroup.getChildren().clear();
-
-            if (listRespuestasPreguntasCuestionario == null) {
-                listRespuestasPreguntasCuestionario = new LinkedList<>();
-            }
-
+            cuestionarioSaludOcupacional = cuestionarioService.findCuestionarioSaludOcupacional();
+            respuestaPreguntaService.ordernarCuestionario(cuestionarioSaludOcupacional,persona);
+            
+            cuestionarioDesarrolloProfesional = cuestionarioService.findCuestionarioDesarrolloProfesional();
+            respuestaPreguntaService.ordernarCuestionario(cuestionarioDesarrolloProfesional,persona);
+            
             for (CuestionarioSector cuestionarioSector : persona.getSector().getCuestionariosSectorList()) {
-                listRespuestasPreguntasCuestionario.addAll(cuestionarioPainter.paint(cuestionarioRootPanelGroup, cuestionarioSector.getCuestionario(), respuestaPreguntaService.findBy(persona, cuestionarioSector.getCuestionario()), false));
+                respuestaPreguntaService.ordernarCuestionario(cuestionarioSector.getCuestionario(),persona);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,30 +102,6 @@ public class ResultadosCuestionariosController implements Serializable {
         this.personasList = personasList;
     }
 
-    public CuestionarioPainter getCuestionarioPainter() {
-        return cuestionarioPainter;
-    }
-
-    public void setCuestionarioPainter(CuestionarioPainter cuestionarioPainter) {
-        this.cuestionarioPainter = cuestionarioPainter;
-    }
-
-    public HtmlPanelGroup getCuestionarioRootPanelGroup() {
-        return cuestionarioRootPanelGroup;
-    }
-
-    public void setCuestionarioRootPanelGroup(HtmlPanelGroup cuestionarioRootPanelGroup) {
-        this.cuestionarioRootPanelGroup = cuestionarioRootPanelGroup;
-    }
-
-    public List<RespuestaPregunta> getListRespuestasPreguntasCuestionario() {
-        return listRespuestasPreguntasCuestionario;
-    }
-
-    public void setListRespuestasPreguntasCuestionario(List<RespuestaPregunta> listRespuestasPreguntasCuestionario) {
-        this.listRespuestasPreguntasCuestionario = listRespuestasPreguntasCuestionario;
-    }
-
     public IPersonaService getPersonasService() {
         return personasService;
     }
@@ -160,38 +118,6 @@ public class ResultadosCuestionariosController implements Serializable {
         this.cuestionarioService = cuestionarioService;
     }
 
-    public HtmlPanelGroup getSaludOcupacionalRootPanelGroup() {
-        return saludOcupacionalRootPanelGroup;
-    }
-
-    public void setSaludOcupacionalRootPanelGroup(HtmlPanelGroup saludOcupacionalRootPanelGroup) {
-        this.saludOcupacionalRootPanelGroup = saludOcupacionalRootPanelGroup;
-    }
-
-    public List<RespuestaPregunta> getListRespuestasPreguntasCuestionarioSaludOcupacional() {
-        return listRespuestasPreguntasCuestionarioSaludOcupacional;
-    }
-
-    public void setListRespuestasPreguntasCuestionarioSaludOcupacional(List<RespuestaPregunta> listRespuestasPreguntasCuestionarioSaludOcupacional) {
-        this.listRespuestasPreguntasCuestionarioSaludOcupacional = listRespuestasPreguntasCuestionarioSaludOcupacional;
-    }
-
-    public HtmlPanelGroup getDesarrolloProfesionalRootPanelGroup() {
-        return desarrolloProfesionalRootPanelGroup;
-    }
-
-    public void setDesarrolloProfesionalRootPanelGroup(HtmlPanelGroup desarrolloProfesionalRootPanelGroup) {
-        this.desarrolloProfesionalRootPanelGroup = desarrolloProfesionalRootPanelGroup;
-    }
-
-    public List<RespuestaPregunta> getListRespuestasPreguntasCuestionarioDesarrolloProfesional() {
-        return listRespuestasPreguntasCuestionarioDesarrolloProfesional;
-    }
-
-    public void setListRespuestasPreguntasCuestionarioDesarrolloProfesional(List<RespuestaPregunta> listRespuestasPreguntasCuestionarioDesarrolloProfesional) {
-        this.listRespuestasPreguntasCuestionarioDesarrolloProfesional = listRespuestasPreguntasCuestionarioDesarrolloProfesional;
-    }
-
     public IRespuestaPreguntaService getRespuestaPreguntaService() {
         return respuestaPreguntaService;
     }
@@ -206,6 +132,22 @@ public class ResultadosCuestionariosController implements Serializable {
 
     public void setShowResumenTable(boolean showResumenTable) {
         this.showResumenTable = showResumenTable;
+    }
+
+    public Cuestionario getCuestionarioSaludOcupacional() {
+        return cuestionarioSaludOcupacional;
+    }
+
+    public void setCuestionarioSaludOcupacional(Cuestionario cuestionarioSaludOcupacional) {
+        this.cuestionarioSaludOcupacional = cuestionarioSaludOcupacional;
+    }
+
+    public Cuestionario getCuestionarioDesarrolloProfesional() {
+        return cuestionarioDesarrolloProfesional;
+    }
+
+    public void setCuestionarioDesarrolloProfesional(Cuestionario cuestionarioDesarrolloProfesional) {
+        this.cuestionarioDesarrolloProfesional = cuestionarioDesarrolloProfesional;
     }
     //</editor-fold>
 }

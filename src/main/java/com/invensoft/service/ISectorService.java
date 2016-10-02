@@ -14,6 +14,7 @@ import java.util.List;
  */
 public interface ISectorService {
     
+    Sector find(Integer sectorId);
     List<Sector> findAll();
     void save(Sector sector);
     

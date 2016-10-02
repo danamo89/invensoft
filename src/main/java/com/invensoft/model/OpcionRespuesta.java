@@ -36,8 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "OpcionRespuesta.findByIdOpcionRespuesta", query = "SELECT o FROM OpcionRespuesta o WHERE o.idOpcionRespuesta = :idOpcionRespuesta"),
     @NamedQuery(name = "OpcionRespuesta.findByTexto", query = "SELECT o FROM OpcionRespuesta o WHERE o.texto = :texto")})
 public class OpcionRespuesta implements Serializable, Comparable<OpcionRespuesta> {
-    @OneToMany(mappedBy = "opcionRespuesta", fetch = FetchType.LAZY)
-    private List<RespuestaPregunta> respuestaPreguntaList;
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +51,8 @@ public class OpcionRespuesta implements Serializable, Comparable<OpcionRespuesta
     @JoinColumn(name = "ID_PREGUNTA", referencedColumnName = "ID_PREGUNTA", nullable = false)
     @ManyToOne(optional = false)
     private Pregunta pregunta;
+    @OneToMany(mappedBy = "opcionRespuesta", fetch = FetchType.LAZY)
+    private List<RespuestaPregunta> respuestaPreguntaList;
     
     public OpcionRespuesta() {
     }
@@ -62,6 +63,11 @@ public class OpcionRespuesta implements Serializable, Comparable<OpcionRespuesta
 
     public OpcionRespuesta(Integer idOpcionRespuesta) {
         this.idOpcionRespuesta = idOpcionRespuesta;
+    }
+
+    public OpcionRespuesta(Integer idOpcionRespuesta, Pregunta pregunta) {
+        this.idOpcionRespuesta = idOpcionRespuesta;
+        this.pregunta = pregunta;
     }
 
     public Integer getIdOpcionRespuesta() {
@@ -123,11 +129,7 @@ public class OpcionRespuesta implements Serializable, Comparable<OpcionRespuesta
 
     @Override
     public int compareTo(OpcionRespuesta o) {
-        if (this.getOrden()>o.getOrden()) {
-            return 1;
-        } else {
-            return -1;
-        }
+        return orden.compareTo(o.getOrden());
     }
 
     @XmlTransient

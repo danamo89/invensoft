@@ -18,5 +18,6 @@ public interface IRespuestaPreguntaService {
     
     List<RespuestaPregunta> findBy(Persona persona, Cuestionario cuestionario);
     void save(List<RespuestaPregunta> list);
-    
+    public void ordernarCuestionario(Cuestionario cuestionario, Persona persona);
+            
 }

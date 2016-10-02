@@ -160,6 +160,15 @@ public class Persona implements Serializable {
     private Integer eqLluvia;
     @Column(name = "CAMISA")
     private Integer camisa;
+    @Size(max = 1)
+    @Column(name = "TIENE_CARNET_CONDUCTOR", length = 1)
+    private String tieneCarnetConductor;
+    @Column(name = "CARNET_CONDUCTOR_DESDE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date carnetConductorDesde;
+    @Column(name = "CARNET_CONDUCTOR_HASTA")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date carnetConductorHasta;
     @JoinColumn(name = "ID_ESTADO_CIVIL", referencedColumnName = "ID_ESTADO_CIVIL", nullable = false)
     @ManyToOne(optional = false)
     private EstadoCivil estadoCivil;
@@ -172,7 +181,7 @@ public class Persona implements Serializable {
     @JoinColumn(name = "ID_SECTOR", referencedColumnName = "ID_SECTOR", nullable = false)
     @ManyToOne(optional = false)
     private Sector sector;
-	@JoinColumn(name = "ID_LOCALIDAD", referencedColumnName = "ID_LOCALIDAD")
+    @JoinColumn(name = "ID_LOCALIDAD", referencedColumnName = "ID_LOCALIDAD")
     @ManyToOne
     private Localidad localidad;
     @JoinColumn(name = "ID_PUESTO", referencedColumnName = "ID_PUESTO", nullable = false)
@@ -199,7 +208,7 @@ public class Persona implements Serializable {
         this.tipoIdentificacion = new TipoIdentificacion();
         this.sector = new Sector();
         this.puesto = new Puesto();
-		this.localidad = new Localidad();
+	this.localidad = new Localidad();
 		
         this.educacionesFormalesList = new LinkedList<>();
         this.educacionesNoFormalesList = new LinkedList<>();
@@ -577,7 +586,7 @@ public class Persona implements Serializable {
         this.puesto = puesto;
     }
 	
-	@XmlTransient
+    @XmlTransient
     public List<RespuestaPregunta> getRespuestaPreguntaList() {
         return respuestaPreguntaList;
     }
@@ -593,4 +602,29 @@ public class Persona implements Serializable {
     public void setLocalidad(Localidad localidad) {
         this.localidad = localidad;
     }
+
+    public String getTieneCarnetConductor() {
+        return tieneCarnetConductor;
+    }
+
+    public void setTieneCarnetConductor(String tieneCarnetConductor) {
+        this.tieneCarnetConductor = tieneCarnetConductor;
+    }
+
+    public Date getCarnetConductorDesde() {
+        return carnetConductorDesde;
+    }
+
+    public void setCarnetConductorDesde(Date carnetConductorDesde) {
+        this.carnetConductorDesde = carnetConductorDesde;
+    }
+
+    public Date getCarnetConductorHasta() {
+        return carnetConductorHasta;
+    }
+
+    public void setCarnetConductorHasta(Date carnetConductorHasta) {
+        this.carnetConductorHasta = carnetConductorHasta;
+    }
+    
 }

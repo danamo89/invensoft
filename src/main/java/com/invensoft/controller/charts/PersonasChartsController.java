@@ -123,11 +123,11 @@ public class PersonasChartsController implements Serializable {
                 }
             }
             
-            pieChartModel.set("Primario",primario);
-            pieChartModel.set("Secundario",secundario);
-            pieChartModel.set("Terciario",terciario);
-            pieChartModel.set("Universitario",universitario);
-            pieChartModel.set("Postgrado",postgrado);
+            pieChartModel.set("("+primario+") Primario",primario);
+            pieChartModel.set("("+secundario+") Secundario",secundario);
+            pieChartModel.set("("+terciario+") Terciario",terciario);
+            pieChartModel.set("("+universitario+") Universitario",universitario);
+            pieChartModel.set("("+postgrado+") Postgrado",postgrado);
             
         } catch (Exception e) {
             e.printStackTrace();

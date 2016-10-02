@@ -5,7 +5,8 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:pe="http://primefaces.org/ui/extensions"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:custom="http://java.sun.com/jsf/composite/components">
 
     <ui:define name="content">
         <h:form id="personasForm" enctype="multipart/form-data">
@@ -24,10 +25,10 @@
                         <br/>
                         <p:panelGrid style="width: 100%; height: 100%">
                             <p:row>
-                                <p:column>
+                                <p:column style="width: 15%">
                                     <p:panel id="thumbimage-container" class="thumbimage-container">
                                         <p:graphicImage class="thumbimage" id="refreshMe" value="#{personasController.rutaFoto}" 
-                                                        width="150" height="200" cache="false" styleClass="thumbimage">
+                                                        width="100" height="100" cache="false" styleClass="thumbimage">
                                             <f:param name="image_id" value="#{personasController.persona.legajo}"/>
                                         </p:graphicImage>
                                     </p:panel>
@@ -142,10 +143,6 @@
                                     </p:panelGrid>
                                 </p:column>
                             </p:row>
-                        </p:panelGrid>
-                    </p:tab>
-                    <p:tab title="Contacto">
-                        <p:panelGrid id="personasInformacionDeContactoForm" style="width: 100%; vertical-align: top">
                             <p:row>
                                 <p:column colspan="2">
                                     <p:panelGrid style="width: 100%">
@@ -597,7 +594,7 @@
                                 </p:column>
                                 <p:column style="width: 30%">
                                     <p:selectOneMenu value="#{personasController.persona.sector.idSector}" disabled="#{usuarioController.readOnly}" style="width: 95%">
-                                        <p:ajax listener="#{personasController.onSectorChange()}" update="panelGroupCuestionario"/>
+                                        <p:ajax listener="#{personasController.onSectorChange()}" update="panelGroupCuestionario" process="@this"/>
                                         <f:selectItems value="#{personasController.sectoresList}" var="sector" itemLabel="#{sector.nombre}" itemValue="#{sector.idSector}"/>
                                     </p:selectOneMenu>
                                 </p:column>
@@ -648,9 +645,9 @@
                                 </p:column>
                             </p:row>
                         </p:panelGrid>
-                        
+
                         <br/><hr/><br/>
-                        
+
                         <p:panelGrid id="input-informacion-laboral" style="width: 100%">
                             <p:row>
                                 <p:column>
@@ -729,10 +726,10 @@
                                 <p:outputLabel value="#{informacionLaboral.hasta}" />
                             </p:column>
                             <p:column style="width: 3%">
-                                <p:commandButton icon="ui-icon-search"
+                                <p:commandButton icon="ui-icon-search" disabled="#{usuarioController.readOnly}"
                                                  actionListener="#{personasController.onViewInformacionLaboralDetail(informacionLaboral)}"
                                                  ajax="true" update="personasForm:generalTabView:input-informacion-laboral"/>
-                                <p:commandButton icon="ui-icon-trash"
+                                <p:commandButton icon="ui-icon-trash" disabled="#{usuarioController.readOnly}"
                                                  actionListener="#{personasController.onRemoveInformacionLaboral(informacionLaboral)}"
                                                  update="personasForm:generalTabView"/>
                             </p:column>
@@ -747,25 +744,60 @@
                                 </p:outputPanel>
                             </f:facet>
                             <p:column headerText="Camisa (nro)">
-                                <p:inputMask mask="99" value="#{persona.camisa}" />
+                                <p:inputMask mask="99" value="#{persona.camisa}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                             </p:column>
                             <p:column headerText="Buzo (talle)">
-                                <p:inputMask mask="a" value="#{persona.buzo}" />
+                                <p:inputMask mask="a" value="#{persona.buzo}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                             </p:column>
                             <p:column headerText="Pantalon (nro)">
-                                <p:inputMask mask="99" value="#{persona.pantalon}" />
+                                <p:inputMask mask="99" value="#{persona.pantalon}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                             </p:column>
                             <p:column headerText="Botines (nro)">
-                                <p:inputMask mask="99" value="#{persona.botines}" />
+                                <p:inputMask mask="99" value="#{persona.botines}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                             </p:column>
                             <p:column headerText="Campera (talle)">
-                                <p:inputMask mask="a" value="#{persona.campera}" />
+                                <p:inputMask mask="a" value="#{persona.campera}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                             </p:column>
                             <p:column headerText="Equipo de Lluvia (nro)">
-                                <p:inputMask mask="99" value="#{persona.eqLluvia}" />
+                                <p:inputMask mask="99" value="#{persona.eqLluvia}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                             </p:column>
                         </p:dataTable>
                         <br/><br/>
+                        <p:panelGrid>
+                            <p:row>
+                                <p:column colspan="2">
+                                    <p:outputLabel value="Presenta carnet de conductor de locomotora o zorra ?"/>
+                                </p:column>
+                                <p:column colspan="2">
+                                    <p:selectOneRadio value="#{personasController.persona.tieneCarnetConductor}" disabled="#{usuarioController.readOnly}">
+                                        <f:selectItem itemLabel="Si" itemValue="S"/>
+                                        <f:selectItem itemLabel="No" itemValue="N"/>
+                                        <f:selectItem itemLabel="N/A" itemValue="X"/>
+                                    </p:selectOneRadio>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="4">
+                                    <p:outputLabel value="En caso de presentar carnet indicar vigencia."/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel value="Desde: "/>
+                                </p:column>
+                                <p:column>
+                                    <p:calendar navigator="true" pattern="dd/MM/yyyy" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                                value="#{personasController.persona.carnetConductorDesde}"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel value="Hasta: "/>
+                                </p:column>
+                                <p:column>
+                                    <p:calendar navigator="true" pattern="dd/MM/yyyy" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                                value="#{personasController.persona.carnetConductorHasta}"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
                     </p:tab> 
                     <!--
                     <p:tab title="Documentos">
@@ -797,19 +829,6 @@
                         <br/>    
                     </p:tab>
                     -->
-                    <p:tab title="Salud Ocupacional">
-                        <p:panelGrid style="width: 100%">
-                            <f:facet name="header">
-                                <p:row>
-                                    <p:column style="text-align: center">
-                                        <p:outputLabel value="Cuestionario"/>
-                                    </p:column>
-                                </p:row>
-                            </f:facet>
-                        </p:panelGrid>
-                        <br/>
-                        <h:panelGroup style="width: 100%" binding="#{personasController.saludOcupacionalRootPanelGroup}"/>
-                    </p:tab>
                     <p:tab title="Desarrollo Profesional">
                         <p:panelGrid style="width: 100%">
                             <f:facet name="header">
@@ -820,8 +839,21 @@
                                 </p:row>
                             </f:facet>
                         </p:panelGrid>
-                        <br/>
-                        <h:panelGroup style="width: 100%" binding="#{personasController.desarrolloProfesionalRootPanelGroup}"/>
+                        
+                        <custom:cuestionario cuestionario="#{personasController.cuestionarioDesarrolloProfesional}" single="true"/>
+                    </p:tab>
+                    <p:tab title="Salud Ocupacional">
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column style="text-align: center">
+                                        <p:outputLabel value="Cuestionario"/>
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>
+                        
+                        <custom:cuestionario cuestionario="#{personasController.cuestionarioSaludOcupacional}" single="true"/>
                     </p:tab>
                     <p:tab title="Cuestionario">
                         <p:panelGrid style="width: 100%">
@@ -833,8 +865,10 @@
                                 </p:row>
                             </f:facet>
                         </p:panelGrid>
-                        <br/>
-                        <h:panelGroup id="panelGroupCuestionario" style="width: 100%" binding="#{personasController.cuestionarioRootPanelGroup}"/>
+
+                        <h:panelGroup id="panelGroupCuestionario">
+                            <custom:cuestionario cuestionario="#{personasController.persona.sector.cuestionariosSectorList}" single="false"/>
+                        </h:panelGroup>
                     </p:tab>
                 </p:tabView>
 
@@ -877,8 +911,8 @@
                                         <p:outputLabel value="Personas" />
                                     </td>
                                     <td style="border: none; border-width: 0px; text-align: right">
-<!--                                        <p:outputLabel value="Buscar: " />
-                                        <p:inputText id="globalFilter" onkeyup="PF('widget').filter()" style="width:150px" placeholder="Enter keyword"/>-->
+                                        <!--                                        <p:outputLabel value="Buscar: " />
+                                                                                <p:inputText id="globalFilter" onkeyup="PF('widget').filter()" style="width:150px" placeholder="Enter keyword"/>-->
                                     </td>
                                 </tr>
                             </table>

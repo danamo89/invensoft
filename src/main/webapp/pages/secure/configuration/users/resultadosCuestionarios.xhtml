@@ -5,7 +5,8 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:pe="http://primefaces.org/ui/extensions"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:custom="http://java.sun.com/jsf/composite/components">
 
     <ui:define name="content">
         <h:form id="resultadosCuestionariosForm">
@@ -21,8 +22,8 @@
                                 </p:row>
                             </f:facet>
                         </p:panelGrid>
-                        <br/>
-                        <h:panelGroup style="width: 100%;text-align: left" binding="#{resultadosCuestionariosController.saludOcupacionalRootPanelGroup}"/>
+
+                        <custom:cuestionario cuestionario="#{resultadosCuestionariosController.cuestionarioSaludOcupacional}" single="true" disabled="true"/>
                     </p:tab>
                     <p:tab title="Desarrollo Profesional">
                         <p:panelGrid style="width: 100%">
@@ -34,24 +35,24 @@
                                 </p:row>
                             </f:facet>
                         </p:panelGrid>
-                        <br/>
-                        <h:panelGroup style="width: 100%;text-align: left" binding="#{resultadosCuestionariosController.desarrolloProfesionalRootPanelGroup}"/>
+                        
+                        <custom:cuestionario cuestionario="#{resultadosCuestionariosController.cuestionarioDesarrolloProfesional}" single="true" disabled="true"/>
                     </p:tab>
                     <p:tab title="Cuestionario">
                         <p:panelGrid style="width: 100%">
                             <f:facet name="header">
                                 <p:row>
                                     <p:column style="text-align: center">
-                                        <p:outputLabel value="Encuesta particular por sector laboral"/>
+                                        <p:outputLabel value="Cuestionario"/>
                                     </p:column>
                                 </p:row>
                             </f:facet>
                         </p:panelGrid>
-                        <br/>
-                        <h:panelGroup style="width: 100%;text-align: left" binding="#{resultadosCuestionariosController.cuestionarioRootPanelGroup}"/>
+
+                        <custom:cuestionario cuestionario="#{resultadosCuestionariosController.persona.sector.cuestionariosSectorList}" single="false" disabled="true"/>
                     </p:tab>
                 </p:tabView>
-                
+
                 <p:panelGrid style="width: 100%">
                     <p:row>
                         <p:column>
@@ -68,7 +69,7 @@
                     </p:row>
                 </p:panelGrid>
             </h:panelGroup>
-            
+
             <h:panelGroup rendered="#{resultadosCuestionariosController.showResumenTable}" style="width: 100%; text-align: center">
                 <p:dataTable id="resultadosCuestionariosTable" rows="20" paginator="true" paginatorPosition="bottom" style="width: 100%"
                              var="persona" rowIndexVar="index" widgetVar="widget" value="#{resultadosCuestionariosController.personasList}" >

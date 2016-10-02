@@ -47,40 +47,42 @@ public class MenuController implements Serializable {
         System.out.println("Executing Postconstruct");
         try {
             menuBinding = new Menu();
-            
+
             Map<Integer, UISubmenu> mapaCategorias = new HashMap<>();
             Map<Integer, UIMenuItem> mapaMenu = new HashMap<>();
 
-            for (UsuarioRol usuarioRol : FacesUtils.getSessionUser().getUsuarioRolList()) {
-                for (final RolMenu rolMenu : usuarioRol.getRol().getRolMenuList()) {
+            if (FacesUtils.getSessionUser() != null) {
+                for (UsuarioRol usuarioRol : FacesUtils.getSessionUser().getUsuarioRolList()) {
+                    for (final RolMenu rolMenu : usuarioRol.getRol().getRolMenuList()) {
 
-                    UISubmenu subMenu;
-                    UIMenuItem subMenuItem;
+                        UISubmenu subMenu;
+                        UIMenuItem subMenuItem;
 
-                    if (!mapaCategorias.containsKey(rolMenu.getMenu().getCategoriaMenu().getIdCategoriaMenu())) {
-                        // Creamos el SubMenu
-                        subMenu = new UISubmenu();
-                        subMenu.setLabel(rolMenu.getMenu().getCategoriaMenu().getNombre());
-                        // Colocamos la categoria en el mapa para evitar crearla 2 veces
-                        mapaCategorias.put(rolMenu.getMenu().getCategoriaMenu().getIdCategoriaMenu(), subMenu);
-                    } else {
-                        subMenu = mapaCategorias.get(rolMenu.getMenu().getCategoriaMenu().getIdCategoriaMenu());
-                    }
+                        if (!mapaCategorias.containsKey(rolMenu.getMenu().getCategoriaMenu().getIdCategoriaMenu())) {
+                            // Creamos el SubMenu
+                            subMenu = new UISubmenu();
+                            subMenu.setLabel(rolMenu.getMenu().getCategoriaMenu().getNombre());
+                            // Colocamos la categoria en el mapa para evitar crearla 2 veces
+                            mapaCategorias.put(rolMenu.getMenu().getCategoriaMenu().getIdCategoriaMenu(), subMenu);
+                        } else {
+                            subMenu = mapaCategorias.get(rolMenu.getMenu().getCategoriaMenu().getIdCategoriaMenu());
+                        }
 
-                    if (!mapaMenu.containsKey(rolMenu.getMenu().getIdMenu())) {
-                        // Creamos el menu
-                        subMenuItem = new UIMenuItem();
-                        subMenuItem.setValue(rolMenu.getMenu().getNombre());
-                        subMenuItem.addActionListener(new ActionListener() {
-                            @Override
-                            public void processAction(ActionEvent event) throws AbortProcessingException {
-                                onRedirectTo(rolMenu.getMenu().getUrl());
-                            }
-                        });
-                        
-                        subMenu.getChildren().add(subMenuItem);
-                        // Colocamos el menu para no crearlo 2 veces
-                        mapaMenu.put(rolMenu.getMenu().getIdMenu(), subMenuItem);
+                        if (!mapaMenu.containsKey(rolMenu.getMenu().getIdMenu())) {
+                            // Creamos el menu
+                            subMenuItem = new UIMenuItem();
+                            subMenuItem.setValue(rolMenu.getMenu().getNombre());
+                            subMenuItem.addActionListener(new ActionListener() {
+                                @Override
+                                public void processAction(ActionEvent event) throws AbortProcessingException {
+                                    onRedirectTo(rolMenu.getMenu().getUrl());
+                                }
+                            });
+
+                            subMenu.getChildren().add(subMenuItem);
+                            // Colocamos el menu para no crearlo 2 veces
+                            mapaMenu.put(rolMenu.getMenu().getIdMenu(), subMenuItem);
+                        }
                     }
                 }
             }

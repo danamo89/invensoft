@@ -22,6 +22,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -37,7 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "GrupoPreguntas.findAll", query = "SELECT g FROM GrupoPreguntas g"),
     @NamedQuery(name = "GrupoPreguntas.findByIdGrupoPreguntas", query = "SELECT g FROM GrupoPreguntas g WHERE g.idGrupoPreguntas = :idGrupoPreguntas"),
     @NamedQuery(name = "GrupoPreguntas.findByTitulo", query = "SELECT g FROM GrupoPreguntas g WHERE g.titulo = :titulo")})
-public class GrupoPreguntas implements Serializable {
+public class GrupoPreguntas implements Serializable, Comparable<GrupoPreguntas> {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +55,9 @@ public class GrupoPreguntas implements Serializable {
     private Cuestionario cuestionario;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "grupoPreguntas", fetch = FetchType.LAZY)
     private List<Pregunta> preguntaList;
+    
+    @Transient
+    private List<RespuestaPregunta> respuestaPreguntasList;
 
     public GrupoPreguntas() {
         preguntaList = new ArrayList<>();
@@ -132,6 +136,19 @@ public class GrupoPreguntas implements Serializable {
     @Override
     public String toString() {
         return "com.invensoft.model.GrupoPreguntas[ idGrupoPreguntas=" + idGrupoPreguntas + " ]";
+    }
+
+    @Override
+    public int compareTo(GrupoPreguntas o) {
+        return orden.compareTo(o.getOrden());
+    }
+
+    public List<RespuestaPregunta> getRespuestaPreguntasList() {
+        return respuestaPreguntasList;
+    }
+
+    public void setRespuestaPreguntasList(List<RespuestaPregunta> respuestaPreguntasList) {
+        this.respuestaPreguntasList = respuestaPreguntasList;
     }
     
 }

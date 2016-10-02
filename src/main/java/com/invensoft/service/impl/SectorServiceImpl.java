@@ -26,11 +26,21 @@ public class SectorServiceImpl implements ISectorService {
     private MessageBean messageBean;
     
     @Override
+    public Sector find(Integer sectorId) {
+        try {
+            return sectorDao.find(sectorId);
+        } catch (Exception e) {
+            messageBean.addError("Ha ocurrido un error al consultar el sector", e.getMessage());
+            return null;
+        }
+    }
+    
+    @Override
     public List<Sector> findAll() {
         try {
             return sectorDao.findAll();
         } catch (Exception e) {
-            messageBean.addError("Ha ocurrido un error al consultar el listado de cuestionarios", e.getMessage());
+            messageBean.addError("Ha ocurrido un error al consultar el listado de sectores", e.getMessage());
             return null;
         }
     }
@@ -41,9 +51,11 @@ public class SectorServiceImpl implements ISectorService {
             sectorDao.save(sector);
             messageBean.addInfo("Datos guardados!", "Se han guardado los datos de forma correcta.");
         } catch (Exception e) {
-            messageBean.addError("Ha ocurrido un error al guardar los datos del cuestionario", e.getMessage());
+            messageBean.addError("Ha ocurrido un error al guardar los datos del sector", e.getMessage());
             e.printStackTrace();
         }
     }
+
+    
     
 }

@@ -54,6 +54,12 @@ public class RespuestaPregunta implements Serializable {
     public RespuestaPregunta() {
     }
 
+    public RespuestaPregunta(String textoRespuesta, Persona persona, Pregunta pregunta) {
+        this.textoRespuesta = textoRespuesta;
+        this.persona = persona;
+        this.pregunta = pregunta;
+    }
+
     public RespuestaPregunta(Pregunta pregunta) {
         this.pregunta = pregunta;
         this.opcionRespuesta = new OpcionRespuesta();

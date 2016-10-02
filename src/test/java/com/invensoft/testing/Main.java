@@ -5,8 +5,8 @@
  */
 package com.invensoft.testing;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -18,33 +18,22 @@ public class Main {
     
     
     public static void main(String[] arg) {
-        Carro carro = new Carro();
-        List<Partes> partesList = new ArrayList<>();
         
-        carro.setPartesList(partesList);
+        List<Carro> list = new LinkedList<>();
+        list.add(new Carro(3));
+        list.add(new Carro(1));
+        list.add(new Carro(4));
+        list.add(new Carro(2));
         
-        partesList.add(new Partes("Motor"));
-        
-        for (Partes parte : carro.getPartesList()) {
-            System.out.println("Parte: " + parte.getNombre());
-        }
-        
-        
-        List<Integer> list = new ArrayList<>();
-        list.add(1);
-        list.add(4);
-        list.add(2);
-        list.add(3);
-        
-        for (Integer integer : list) {
-            System.out.println(integer);
+        for (Carro carro : list) {
+            System.out.println(carro.getOrden());
         }
         
         System.out.println("Ordered");
         Collections.sort(list);
         
-        for (Integer integer : list) {
-            System.out.println(integer);
+        for (Carro carro : list) {
+            System.out.println(carro.getOrden());
         }
         
     }

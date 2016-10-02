@@ -7,9 +7,11 @@ package com.invensoft.dao.impl;
 
 import com.invensoft.dao.ICuestionarioDao;
 import com.invensoft.model.Cuestionario;
+import java.util.List;
 import javax.persistence.Query;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *

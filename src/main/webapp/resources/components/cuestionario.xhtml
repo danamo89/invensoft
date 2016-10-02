@@ -1,0 +1,91 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      >
+
+    <composite:interface>
+        <composite:attribute name="cuestionario" required="true" shortDescription="Cuestionario o lista de cuestionarios a renderizar"/>
+        <composite:attribute name="single" required="true" default="true" shortDescription="Renderiza uno o muchos cuestionarios. Relacionado con el parametro cuestionario"/>
+        <composite:attribute name="disabled" default="false"/>
+    </composite:interface>
+
+    <composite:implementation>
+        <!--Single cuestionario-->
+        <p:panelGrid columns="1" style="width: 65%; text-align: left !important" rendered="#{cc.attrs.single}">
+            <br/>
+            <h2>#{cc.attrs.cuestionario.titulo}</h2>
+
+            <ui:repeat value="#{cc.attrs.cuestionario.grupoPreguntasList}" var="grupoPreguntas">
+                <h:panelGroup rendered="#{grupoPreguntas.titulo eq null or grupoPreguntas.titulo eq '' ? false : true}">
+                    <br/>
+                    <h3><p:outputLabel value="#{grupoPreguntas.titulo}" style="text-align: left"/></h3>
+                </h:panelGroup>
+
+                <ui:repeat value="#{grupoPreguntas.respuestaPreguntasList}" var="respuestaPregunta" varStatus="status">
+                    <br/>
+                    <p:outputLabel value="#{status.index+1}). #{respuestaPregunta.pregunta.texto}" style="text-align: left"/>
+
+                    <p:selectManyCheckbox layout="grid" columns="1" style="text-align: left" value="#{respuestaPregunta.opcionRespuesta.idOpcionRespuesta}"
+                                          rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Check' ? true : false}" disabled="#{cc.attrs.disabled}">
+                        <f:selectItems value="#{respuestaPregunta.pregunta.opcioneRespuestaList}" var="opcionRespuesta" itemLabel="#{opcionRespuesta.texto}" itemValue="#{opcionRespuesta.idOpcionRespuesta}" />
+                    </p:selectManyCheckbox>
+
+                    <p:selectOneRadio layout="grid" columns="1" style="text-align: left" value="#{respuestaPregunta.opcionRespuesta.idOpcionRespuesta}"
+                                      rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Radio' ? true : false}" disabled="#{cc.attrs.disabled}">
+                        <f:selectItems value="#{respuestaPregunta.pregunta.opcioneRespuestaList}" var="opcionRespuesta" itemLabel="#{opcionRespuesta.texto}" itemValue="#{opcionRespuesta.idOpcionRespuesta}" />
+                    </p:selectOneRadio>
+
+                    <h:panelGroup rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Input' ? true : false}">
+                        <br/><p:inputText style="width: 100%" value="#{respuestaPregunta.textoRespuesta}" disabled="#{cc.attrs.disabled}"/><br/>
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Area' ? true : false}">
+                        <br/><p:inputTextarea style="width: 100%" value="#{respuestaPregunta.textoRespuesta}" disabled="#{cc.attrs.disabled}"/><br/>
+                    </h:panelGroup>
+                </ui:repeat>
+            </ui:repeat>
+        </p:panelGrid>
+
+        <!--Multiple cuestionario-->
+        <p:panelGrid columns="1" style="width: 65%; text-align: left !important" rendered="#{!cc.attrs.single}">
+            <ui:repeat value="#{cc.attrs.cuestionario}" var="cuestionarioSector">
+                <br/>
+                <h2><p:outputLabel value="#{cuestionarioSector.cuestionario.titulo}"/></h2>
+
+                <ui:repeat value="#{cuestionarioSector.cuestionario.grupoPreguntasList}" var="grupoPreguntas">
+                    <h:panelGroup rendered="#{grupoPreguntas.titulo eq null or grupoPreguntas.titulo eq '' ? false : true}">
+                        <br/>
+                        <h3><p:outputLabel value="#{grupoPreguntas.titulo}" style="text-align: left"/></h3>
+                    </h:panelGroup>
+
+                    <ui:repeat value="#{grupoPreguntas.respuestaPreguntasList}" var="respuestaPregunta" varStatus="status">
+                        <br/>
+                        <p:outputLabel value="#{status.index+1}). #{respuestaPregunta.pregunta.texto}" style="text-align: left"/>
+
+                        <p:selectManyCheckbox layout="grid" columns="1" style="text-align: left" value="#{respuestaPregunta.opcionRespuesta.idOpcionRespuesta}"
+                                              rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Check' ? true : false}" disabled="#{cc.attrs.disabled}">
+                            <f:selectItems value="#{respuestaPregunta.pregunta.opcioneRespuestaList}" var="opcionRespuesta" itemLabel="#{opcionRespuesta.texto}" itemValue="#{opcionRespuesta.idOpcionRespuesta}" />
+                        </p:selectManyCheckbox>
+
+                        <p:selectOneRadio layout="grid" columns="1" style="text-align: left" value="#{respuestaPregunta.opcionRespuesta.idOpcionRespuesta}"
+                                          rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Radio' ? true : false}" disabled="#{cc.attrs.disabled}">
+                            <f:selectItems value="#{respuestaPregunta.pregunta.opcioneRespuestaList}" var="opcionRespuesta" itemLabel="#{opcionRespuesta.texto}" itemValue="#{opcionRespuesta.idOpcionRespuesta}" />
+                        </p:selectOneRadio>
+
+                        <h:panelGroup rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Input' ? true : false}">
+                            <br/><p:inputText style="width: 100%" value="#{respuestaPregunta.textoRespuesta}" disabled="#{cc.attrs.disabled}"/><br/>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Area' ? true : false}">
+                            <br/><p:inputTextarea style="width: 100%" value="#{respuestaPregunta.textoRespuesta}" disabled="#{cc.attrs.disabled}"/><br/>
+                        </h:panelGroup>
+                    </ui:repeat>
+                </ui:repeat>
+            </ui:repeat>
+        </p:panelGrid>
+    </composite:implementation>
+
+</html>
