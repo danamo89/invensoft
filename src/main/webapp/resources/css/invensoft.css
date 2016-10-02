@@ -79,3 +79,8 @@ section.gradient button.active {
     max-width: 230px;
     height: 190px;
 }
+
+.categoria-laboral-select {
+    min-width: 0px !important;
+    max-width: 350px;
+}

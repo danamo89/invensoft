@@ -36,6 +36,11 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Provincia.findByIdProvincia", query = "SELECT p FROM Provincia p WHERE p.idProvincia = :idProvincia"),
     @NamedQuery(name = "Provincia.findByNombre", query = "SELECT p FROM Provincia p WHERE p.nombre = :nombre")})
 public class Provincia implements Serializable {
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ORDEN")
+    private int orden;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,10 +52,6 @@ public class Provincia implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "NOMBRE", nullable = false, length = 100)
     private String nombre;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ORDEN", nullable = false)
-    private Integer orden;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "provincia", fetch = FetchType.LAZY)
     private List<Localidad> localidadesList;
 
@@ -82,13 +83,6 @@ public class Provincia implements Serializable {
         this.nombre = nombre;
     }
 
-    public Integer getOrden() {
-        return orden;
-    }
-
-    public void setOrden(Integer orden) {
-        this.orden = orden;
-    }
 
     @XmlTransient
     public List<Localidad> getLocalidadesList() {
@@ -122,6 +116,14 @@ public class Provincia implements Serializable {
     @Override
     public String toString() {
         return "com.invensoft.model.Provincia[ idProvincia=" + idProvincia + " ]";
+    }
+
+    public int getOrden() {
+        return orden;
+    }
+
+    public void setOrden(int orden) {
+        this.orden = orden;
     }
     
 }

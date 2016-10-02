@@ -56,13 +56,22 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Persona.findByCelular", query = "SELECT p FROM Persona p WHERE p.celular = :celular"),
     @NamedQuery(name = "Persona.findByCuil", query = "SELECT p FROM Persona p WHERE p.cuil = :cuil"),
     @NamedQuery(name = "Persona.findBySector", query = "SELECT p FROM Persona p WHERE p.sector = :sector"),
-    @NamedQuery(name = "Persona.findByCategoriaLaboral", query = "SELECT p FROM Persona p WHERE p.categoriaLaboral = :categoriaLaboral"),
+    @NamedQuery(name = "Persona.findByCategoriaLaboral", query = "SELECT p FROM Persona p WHERE p.idCategoriaLaboral = :categoriaLaboral"),
     @NamedQuery(name = "Persona.findByHorario", query = "SELECT p FROM Persona p WHERE p.horario = :horario"),
     @NamedQuery(name = "Persona.findByJefeInmediato", query = "SELECT p FROM Persona p WHERE p.jefeInmediato = :jefeInmediato"),
     @NamedQuery(name = "Persona.findByObraSocial", query = "SELECT p FROM Persona p WHERE p.obraSocial = :obraSocial"),
     @NamedQuery(name = "Persona.findByBanco", query = "SELECT p FROM Persona p WHERE p.banco = :banco"),
     @NamedQuery(name = "Persona.findByTieneCredencialArt", query = "SELECT p FROM Persona p WHERE p.tieneCredencialArt = :tieneCredencialArt")})
 public class Persona implements Serializable {
+
+    @Size(max = 45)
+    @Column(name = "LINEA", length = 45)
+    private String linea;
+    @Column(name = "FECHA_INGRESO")
+    @Temporal(TemporalType.DATE)
+    private Date fechaIngreso;
+    @Column(name = "ANTIGUEDAD")
+    private Integer antiguedad;
 
     @JoinColumn(name = "ID_FOTO_PERSONA", referencedColumnName = "id_foto_persona")
     @ManyToOne
@@ -128,9 +137,6 @@ public class Persona implements Serializable {
     @Column(name = "CUIL", nullable = false, length = 45)
     private String cuil;
     @Size(max = 45)
-    @Column(name = "CATEGORIA_LABORAL", length = 45)
-    private String categoriaLaboral;
-    @Size(max = 45)
     @Column(name = "HORARIO", length = 45)
     private String horario;
     @Size(max = 255)
@@ -172,7 +178,7 @@ public class Persona implements Serializable {
     @JoinColumn(name = "ID_SECTOR", referencedColumnName = "ID_SECTOR", nullable = false)
     @ManyToOne(optional = false)
     private Sector sector;
-	@JoinColumn(name = "ID_LOCALIDAD", referencedColumnName = "ID_LOCALIDAD")
+    @JoinColumn(name = "ID_LOCALIDAD", referencedColumnName = "ID_LOCALIDAD")
     @ManyToOne
     private Localidad localidad;
     @JoinColumn(name = "ID_PUESTO", referencedColumnName = "ID_PUESTO", nullable = false)
@@ -192,6 +198,9 @@ public class Persona implements Serializable {
     private List<DocumentoPersona> documentosPersonaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "persona", fetch = FetchType.LAZY)
     private List<RespuestaPregunta> respuestaPreguntaList;
+    @JoinColumn(name = "ID_CATEGORIA_LABORAL", referencedColumnName = "id_categoria_laboral")
+    @ManyToOne
+    private CategoriaLaboral idCategoriaLaboral;
     
     public Persona() {
         this.estadoCivil = new EstadoCivil();
@@ -199,8 +208,8 @@ public class Persona implements Serializable {
         this.tipoIdentificacion = new TipoIdentificacion();
         this.sector = new Sector();
         this.puesto = new Puesto();
-		this.localidad = new Localidad();
-		
+        this.localidad = new Localidad();
+	this.idCategoriaLaboral = new CategoriaLaboral();
         this.educacionesFormalesList = new LinkedList<>();
         this.educacionesNoFormalesList = new LinkedList<>();
         this.familiaresList = new LinkedList<>();
@@ -348,14 +357,6 @@ public class Persona implements Serializable {
 
     public void setSector(Sector sector) {
         this.sector = sector;
-    }
-
-    public String getCategoriaLaboral() {
-        return categoriaLaboral;
-    }
-
-    public void setCategoriaLaboral(String categoriaLaboral) {
-        this.categoriaLaboral = categoriaLaboral;
     }
 
     public String getHorario() {
@@ -592,5 +593,37 @@ public class Persona implements Serializable {
 
     public void setLocalidad(Localidad localidad) {
         this.localidad = localidad;
+    }
+
+    public CategoriaLaboral getIdCategoriaLaboral() {
+        return idCategoriaLaboral;
+    }
+
+    public void setIdCategoriaLaboral(CategoriaLaboral idCategoriaLaboral) {
+        this.idCategoriaLaboral = idCategoriaLaboral;
+    }
+
+    public String getLinea() {
+        return linea;
+    }
+
+    public void setLinea(String linea) {
+        this.linea = linea;
+    }
+
+    public Date getFechaIngreso() {
+        return fechaIngreso;
+    }
+
+    public void setFechaIngreso(Date fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
+    }
+
+    public Integer getAntiguedad() {
+        return antiguedad;
+    }
+
+    public void setAntiguedad(Integer antiguedad) {
+        this.antiguedad = antiguedad;
     }
 }

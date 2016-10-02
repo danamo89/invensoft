@@ -581,10 +581,10 @@
                                     <p:inputMask mask="99-99999999-9" value="#{personasController.persona.cuil}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                                 </p:column>
                                 <p:column>
-                                    <p:outputLabel for="advanced" value="Puesto desempeñado: "  />
+                                    <p:outputLabel value="Puesto desempeñado: "  />
                                 </p:column>
                                 <p:column>
-                                    <p:selectOneMenu id="advanced" value="#{personasController.persona.puesto.idPuesto}" style="width: 95%"
+                                    <p:selectOneMenu value="#{personasController.persona.puesto.idPuesto}" style="width: 95%"
                                                      effect="fade" filter="true" filterMatchMode="startsWith">
                                         <f:selectItems value="#{personasController.puestosList}" 
                                                        var="puesto" itemLabel="#{puesto.descripcion}" itemValue="#{puesto.idPuesto}" />
@@ -605,9 +605,42 @@
                                     <p:outputLabel value="Categoría laboral"/>
                                 </p:column>
                                 <p:column style="width: 30%">
-                                    <p:inputText value="#{personasController.persona.categoriaLaboral}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                    <p:selectOneMenu value="#{personasController.persona.idCategoriaLaboral.idCategoriaLaboral}" styleClass="categoria-laboral-select"
+                                                     effect="fade" filter="true" filterMatchMode="contains">
+                                        <f:selectItems value="#{personasController.categoriasLaboralesList}" 
+                                                       var="categoria" itemLabel="#{categoria.esc}-#{categoria.cat} -#{categoria.descripcion} (#{categoria.idGremio.descripcion})" itemValue="#{categoria.idCategoriaLaboral}" />
+                                    </p:selectOneMenu>
                                 </p:column>
                             </p:row>
+                            <p:row>
+                                <p:column style="width: 20%">
+                                    <p:outputLabel value="Linea"/>
+                                </p:column>
+                                <p:column style="width: 30%">
+                                    <p:selectOneMenu value="#{personasController.persona.linea}" disabled="#{usuarioController.readOnly}" style="width: 95%">
+                                        <f:selectItem itemLabel="Roca" itemValue="Roca"/>
+                                        <f:selectItem itemLabel="San Martin" itemValue="San Martin"/>
+                                        <f:selectItem itemLabel="Sarmiento" itemValue="Sarmiento"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                                <p:column style="width: 20%">
+                                    <p:outputLabel value="Fecha de Ingreso"/>
+                                </p:column>
+                                <p:column style="width: 30%">
+                                    <p:calendar navigator="true" pattern="dd/MM/yyyy" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                                            value="#{personasController.persona.fechaIngreso}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column style="width: 20%">
+                                    <p:outputLabel value="Antiguedad"/>
+                                </p:column>
+                                <p:column style="width: 30%">
+                                    <p:inputNumber value="#{personasController.persona.antiguedad}"></p:inputNumber>
+                                </p:column>
+                            </p:row>
+                            <br/>
+                            
                             <p:row>
                                 <p:column>
                                     <p:outputLabel value="Horario de trabajo"/>
@@ -854,6 +887,12 @@
                             <p:commandButton value="Aceptar" icon="ui-icon-check" style="background-color: seagreen" actionListener="#{personasController.onSave()}" 
                                              disabled="#{usuarioController.readOnly}" update=":personasForm"/>
                         </p:column>
+                        <!--
+                        <p:column>
+                            <p:commandButton value="Exportar" icon="ui-icon-look" style="background-color: seagreen" actionListener="#{personasController.onExportarExcel()}" 
+                                             disabled="#{usuarioController.readOnly}" update=":personasForm"/>
+                        </p:column>
+                        -->
                     </p:row>
                 </p:panelGrid>
             </h:panelGroup>
