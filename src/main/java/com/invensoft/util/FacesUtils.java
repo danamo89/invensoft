@@ -38,14 +38,35 @@ public class FacesUtils {
     public static boolean sessionUserIsReadOnly() {
         boolean isReadOnly = false;
         
-        for (UsuarioRol usuarioRol : getSessionUser().getUsuarioRolList()) {
-            if (usuarioRol.getRol().getNombre().equals("ROLE_READ_ONLY")) {
-                isReadOnly = true;
-                break;
+        try {
+            for (UsuarioRol usuarioRol : getSessionUser().getUsuarioRolList()) {
+                if (usuarioRol.getRol().getReadOnly().equals("1")) {
+                    isReadOnly = true;
+                    break;
+                }
             }
+        } catch (Exception e) {
+            isReadOnly = false;
         }
         
         return isReadOnly;
+    }
+    
+    public static boolean sessionUserCantViewCuestionario() {
+        boolean cantViewCuestionario = false;
+        
+        try {
+            for (UsuarioRol usuarioRol : getSessionUser().getUsuarioRolList()) {
+                if (usuarioRol.getRol().getViewCuestionario().equals("0")) {
+                    cantViewCuestionario = true;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            cantViewCuestionario = false;
+        }
+        
+        return cantViewCuestionario;
     }
     
     public static ValueExpression createValueExpression(String expression, Class<?> expectedType) {

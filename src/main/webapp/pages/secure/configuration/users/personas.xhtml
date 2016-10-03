@@ -32,7 +32,7 @@
                                             <f:param name="image_id" value="#{personasController.persona.legajo}"/>
                                         </p:graphicImage>
                                     </p:panel>
-                                    <p:fileUpload auto="true" 
+                                    <p:fileUpload auto="true" disabled="#{usuarioController.readOnly}"
                                                   update="personasForm:generalTabView:refreshMe" 
                                                   fileUploadListener="#{personasController.handleFileUpload}"
                                                   sizeLimit="10000000"
@@ -364,10 +364,10 @@
                                 <p:outputLabel value="#{familiar.parentesco}" />
                             </p:column>
                             <p:column style="width: 10%">
-                                <p:commandButton icon="ui-icon-search" title="View" 
+                                <p:commandButton icon="ui-icon-search" title="View" disabled="#{usuarioController.readOnly}"
                                                  actionListener="#{personasController.onViewFamiliarDetailedInfo(familiar)}" 
                                                  update=":personasForm:generalTabView"/>
-                                <p:commandButton icon="ui-icon-trash"
+                                <p:commandButton icon="ui-icon-trash" disabled="#{usuarioController.readOnly}"
                                                  actionListener="#{personasController.onRemoveFamiliar(familiar)}"
                                                  update=":personasForm:generalTabView"/>
                             </p:column>
@@ -459,8 +459,8 @@
                             </p:column>
                             <p:column style="width: 10%">
                                 <p:commandButton icon="ui-icon-search" title="View" actionListener="#{personasController.onViewEducacionFormalDetail(educacionFormal)}" 
-                                                 update=":personasForm:generalTabView"/>
-                                <p:commandButton icon="ui-icon-trash"
+                                                 update=":personasForm:generalTabView" disabled="#{usuarioController.readOnly}"/>
+                                <p:commandButton icon="ui-icon-trash" disabled="#{usuarioController.readOnly}"
                                                  actionListener="#{personasController.onRemoveEducacionFormal(educacionFormal)}"
                                                  update="personasForm:generalTabView"/>
                             </p:column>
@@ -549,10 +549,10 @@
                                 </p:outputLabel>
                             </p:column>
                             <p:column style="width: 10%">
-                                <p:commandButton icon="ui-icon-search" title="View" 
+                                <p:commandButton icon="ui-icon-search" title="View" disabled="#{usuarioController.readOnly}"
                                                  actionListener="#{personasController.onViewEducacionNoFormalDetail(educacionNoFormal)}" 
                                                  update=":personasForm:generalTabView"/>
-                                <p:commandButton icon="ui-icon-trash"
+                                <p:commandButton icon="ui-icon-trash" disabled="#{usuarioController.readOnly}"
                                                  actionListener="#{personasController.onRemoveEducacionNoFormal(educacionNoFormal)}"
                                                  update="personasForm:generalTabView"/>
                             </p:column>
@@ -581,7 +581,7 @@
                                     <p:outputLabel value="Puesto desempeñado: "  />
                                 </p:column>
                                 <p:column>
-                                    <p:selectOneMenu value="#{personasController.persona.puesto.idPuesto}" style="width: 95%"
+                                    <p:selectOneMenu value="#{personasController.persona.puesto.idPuesto}" style="width: 95%" disabled="#{usuarioController.readOnly}"
                                                      effect="fade" filter="true" filterMatchMode="startsWith">
                                         <f:selectItems value="#{personasController.puestosList}" 
                                                        var="puesto" itemLabel="#{puesto.descripcion}" itemValue="#{puesto.idPuesto}" />
@@ -603,7 +603,7 @@
                                 </p:column>
                                 <p:column style="width: 30%">
                                     <p:selectOneMenu value="#{personasController.persona.idCategoriaLaboral.idCategoriaLaboral}" styleClass="categoria-laboral-select"
-                                                     effect="fade" filter="true" filterMatchMode="contains">
+                                                     effect="fade" filter="true" filterMatchMode="contains" disabled="#{usuarioController.readOnly}">
                                         <f:selectItems value="#{personasController.categoriasLaboralesList}" 
                                                        var="categoria" itemLabel="#{categoria.esc}-#{categoria.cat} -#{categoria.descripcion} (#{categoria.idGremio.descripcion})" itemValue="#{categoria.idCategoriaLaboral}" />
                                     </p:selectOneMenu>
@@ -633,7 +633,7 @@
                                     <p:outputLabel value="Antiguedad"/>
                                 </p:column>
                                 <p:column style="width: 30%">
-                                    <p:inputNumber value="#{personasController.persona.antiguedad}"></p:inputNumber>
+                                    <p:inputText value="#{personasController.persona.antiguedad}" disabled="#{usuarioController.readOnly}"/>
                                 </p:column>
                             </p:row>
                             <br/>
@@ -873,7 +873,7 @@
                             </f:facet>
                         </p:panelGrid>
                         
-                        <custom:cuestionario cuestionario="#{personasController.cuestionarioDesarrolloProfesional}" single="true"/>
+                        <custom:cuestionario cuestionario="#{personasController.cuestionarioDesarrolloProfesional}" single="true" disabled="#{usuarioController.readOnly}"/>
                     </p:tab>
                     <p:tab title="Salud Ocupacional">
                         <p:panelGrid style="width: 100%">
@@ -886,9 +886,9 @@
                             </f:facet>
                         </p:panelGrid>
                         
-                        <custom:cuestionario cuestionario="#{personasController.cuestionarioSaludOcupacional}" single="true"/>
+                        <custom:cuestionario cuestionario="#{personasController.cuestionarioSaludOcupacional}" single="true" disabled="#{usuarioController.readOnly}"/>
                     </p:tab>
-                    <p:tab title="Cuestionario">
+                    <p:tab title="Cuestionario" disabled="#{usuarioController.cantViewCuestionario}">
                         <p:panelGrid style="width: 100%">
                             <f:facet name="header">
                                 <p:row>
@@ -900,7 +900,7 @@
                         </p:panelGrid>
 
                         <h:panelGroup id="panelGroupCuestionario">
-                            <custom:cuestionario cuestionario="#{personasController.persona.sector.cuestionariosSectorList}" single="false"/>
+                            <custom:cuestionario cuestionario="#{personasController.persona.sector.cuestionariosSectorList}" single="false" disabled="#{usuarioController.readOnly}"/>
                         </h:panelGroup>
                     </p:tab>
                 </p:tabView>
@@ -936,7 +936,7 @@
 
                 <br/><br/>
 
-                <p:dataTable id="personasTable" rows="10" paginator="true" paginatorPosition="bottom" style="width: 100%"
+                <p:dataTable id="personasTable" rows="20" paginator="true" paginatorPosition="bottom" style="width: 100%"
                              var="persona" rowIndexVar="index" widgetVar="widget" value="#{personasController.personasList}" >
                     <f:facet name="header">
                         <p:outputPanel>

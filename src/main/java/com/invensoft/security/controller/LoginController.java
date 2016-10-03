@@ -5,6 +5,7 @@
  */
 package com.invensoft.security.controller;
 
+import com.invensoft.controller.MenuController;
 import com.invensoft.model.Usuario;
 import com.invensoft.util.FacesUtils;
 import java.io.IOException;
@@ -56,6 +57,8 @@ public class LoginController implements Serializable {
             //ok, test if authenticated, if yes reroute
             if (authenticationResponseToken.isAuthenticated()) {
                 Usuario usuario = (Usuario)request.getSession().getAttribute("s_obj_usuario");
+                
+                ((MenuController) FacesUtils.getBackingBean("menuController")).loadMenu();
 
                 try {
                     FacesContext.getCurrentInstance().getExternalContext().redirect("/InvenSoft/pages/secure/index.xhtml");

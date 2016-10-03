@@ -20,6 +20,7 @@ import javax.faces.view.ViewScoped;
 public class UsuarioController implements Serializable {
 
     private boolean readOnly;
+    private boolean cantViewCuestionario;
     
     /**
      * Creates a new instance of UsuarioController
@@ -30,6 +31,7 @@ public class UsuarioController implements Serializable {
     @PostConstruct
     public void postConstruct() {
         readOnly = FacesUtils.sessionUserIsReadOnly();
+        cantViewCuestionario = FacesUtils.sessionUserCantViewCuestionario();
     }
     
     //<editor-fold defaultstate="collapsed" desc="Getter && Setter">
@@ -40,6 +42,14 @@ public class UsuarioController implements Serializable {
 
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
+    }
+
+    public boolean isCantViewCuestionario() {
+        return cantViewCuestionario;
+    }
+
+    public void setCantViewCuestionario(boolean cantViewCuestionario) {
+        this.cantViewCuestionario = cantViewCuestionario;
     }
     //</editor-fold>
 }

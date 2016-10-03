@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Menu.findByIdMenu", query = "SELECT m FROM Menu m WHERE m.idMenu = :idMenu"),
     @NamedQuery(name = "Menu.findByNombre", query = "SELECT m FROM Menu m WHERE m.nombre = :nombre"),
     @NamedQuery(name = "Menu.findByUrl", query = "SELECT m FROM Menu m WHERE m.url = :url")})
-public class Menu implements Serializable {
+public class Menu implements Serializable, Comparable<Menu> {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,9 +55,10 @@ public class Menu implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "URL", nullable = false, length = 100)
     private String url;
-    @JoinColumn(name = "ID_CATEGORIA_MENU", referencedColumnName = "ID_CATEGORIA_MENU", nullable = false)
-    @ManyToOne(optional = false)
-    private CategoriaMenu categoriaMenu;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ORDEN", nullable = false)
+    private Integer orden;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "menu", fetch = FetchType.LAZY)
     private List<RolMenu> rolMenuList;
 
@@ -98,12 +99,12 @@ public class Menu implements Serializable {
         this.url = url;
     }
 
-    public CategoriaMenu getCategoriaMenu() {
-        return categoriaMenu;
+    public Integer getOrden() {
+        return orden;
     }
 
-    public void setCategoriaMenu(CategoriaMenu categoriaMenu) {
-        this.categoriaMenu = categoriaMenu;
+    public void setOrden(Integer orden) {
+        this.orden = orden;
     }
 
     @XmlTransient
@@ -138,6 +139,11 @@ public class Menu implements Serializable {
     @Override
     public String toString() {
         return "com.invensoft.model.Menu[ idMenu=" + idMenu + " ]";
+    }
+
+    @Override
+    public int compareTo(Menu o) {
+        return orden.compareTo(o.orden);
     }
     
 }

@@ -51,6 +51,10 @@ public class Rol implements Serializable {
     @Size(max = 255)
     @Column(name = "DESCRIPCION", length = 255)
     private String descripcion;
+    @Column(name = "READ_ONLY", nullable = false)
+    private String readOnly;
+    @Column(name = "VIEW_CUESTIONARIOS", nullable = false)
+    private String viewCuestionario;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rol", fetch = FetchType.LAZY)
     private List<RolMenu> rolMenuList;
 
@@ -88,6 +92,22 @@ public class Rol implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(String readOnly) {
+        this.readOnly = readOnly;
+    }
+
+    public String getViewCuestionario() {
+        return viewCuestionario;
+    }
+
+    public void setViewCuestionario(String viewCuestionario) {
+        this.viewCuestionario = viewCuestionario;
     }
 
     @XmlTransient

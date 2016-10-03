@@ -11,7 +11,10 @@ import com.invensoft.util.FacesUtils;
 import java.io.IOException;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +26,6 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import org.primefaces.component.menu.Menu;
 import org.primefaces.component.menuitem.UIMenuItem;
-import org.primefaces.component.submenu.UISubmenu;
 
 /**
  *
@@ -39,51 +41,40 @@ public class MenuController implements Serializable {
      * Creates a new instance of MenuController
      */
     public MenuController() {
-
+        
     }
 
-    @PostConstruct
-    public void postConstruct() {
+    public void loadMenu() {
         System.out.println("Executing Postconstruct");
         try {
             menuBinding = new Menu();
-
-            Map<Integer, UISubmenu> mapaCategorias = new HashMap<>();
-            Map<Integer, UIMenuItem> mapaMenu = new HashMap<>();
+            List<com.invensoft.model.Menu> listMenus = new LinkedList<>();
+            Map<Integer, com.invensoft.model.Menu> mapaMenu = new HashMap<>();
 
             if (FacesUtils.getSessionUser() != null) {
+                //Cargamos todos los menues disponibles para el usuario
                 for (UsuarioRol usuarioRol : FacesUtils.getSessionUser().getUsuarioRolList()) {
                     for (final RolMenu rolMenu : usuarioRol.getRol().getRolMenuList()) {
-
-                        UISubmenu subMenu;
-                        UIMenuItem subMenuItem;
-
-                        if (!mapaCategorias.containsKey(rolMenu.getMenu().getCategoriaMenu().getIdCategoriaMenu())) {
-                            // Creamos el SubMenu
-                            subMenu = new UISubmenu();
-                            subMenu.setLabel(rolMenu.getMenu().getCategoriaMenu().getNombre());
-                            // Colocamos la categoria en el mapa para evitar crearla 2 veces
-                            mapaCategorias.put(rolMenu.getMenu().getCategoriaMenu().getIdCategoriaMenu(), subMenu);
-                        } else {
-                            subMenu = mapaCategorias.get(rolMenu.getMenu().getCategoriaMenu().getIdCategoriaMenu());
-                        }
-
-                        if (!mapaMenu.containsKey(rolMenu.getMenu().getIdMenu())) {
-                            // Creamos el menu
-                            subMenuItem = new UIMenuItem();
-                            subMenuItem.setValue(rolMenu.getMenu().getNombre());
-                            subMenuItem.addActionListener(new ActionListener() {
-                                @Override
-                                public void processAction(ActionEvent event) throws AbortProcessingException {
-                                    onRedirectTo(rolMenu.getMenu().getUrl());
-                                }
-                            });
-
-                            subMenu.getChildren().add(subMenuItem);
-                            // Colocamos el menu para no crearlo 2 veces
-                            mapaMenu.put(rolMenu.getMenu().getIdMenu(), subMenuItem);
-                        }
+                        mapaMenu.put(rolMenu.getMenu().getIdMenu(), rolMenu.getMenu());
                     }
+                }
+                
+                //Ordenamos las opciones del menu
+                listMenus.addAll(mapaMenu.values());
+                Collections.sort(listMenus);
+                
+                //Agregamos las opciones al menu principal
+                for (final com.invensoft.model.Menu menu : listMenus) {
+                    UIMenuItem subMenuItem = new UIMenuItem();
+                    subMenuItem.setValue(menu.getNombre());
+                    subMenuItem.addActionListener(new ActionListener() {
+                        @Override
+                        public void processAction(ActionEvent event) throws AbortProcessingException {
+                            onRedirectTo(menu.getUrl());
+                        }
+                    });
+                    
+                    menuBinding.getChildren().add(subMenuItem);
                 }
             }
         } catch (Exception e) {

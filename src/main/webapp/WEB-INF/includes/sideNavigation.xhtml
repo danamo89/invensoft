@@ -5,12 +5,12 @@
      xmlns:p="http://primefaces.org/ui">
 
     <h:form>
-        <p:menu id="menu" style="width: 90%">
-            <p:menuitem value="#{msg['menu.option.home.label']}" actionListener="#{menuController.onRedirectTo('index')}" />
+        <p:menu id="menu" style="width: 90%" binding="#{menuController.menuBinding}">
+<!--            <p:menuitem value="#{msg['menu.option.home.label']}" actionListener="#{menuController.onRedirectTo('index')}" />
             <p:menuitem value="#{msg['menu.second.submenu.first.option']}" actionListener="#{menuController.onRedirectTo('configuration/users/personas')}"/>
             <p:menuitem value="Resultados" actionListener="#{menuController.onRedirectTo('configuration/users/resultadosCuestionarios')}"/>
             <p:menuitem value="#{msg['menu.second.submenu.second.option']}" actionListener="#{menuController.onRedirectTo('configuration/users/reportes')}" />
-            <p:menuitem value="Cuestionarios" actionListener="#{menuController.onRedirectTo('configuration/templates/cuestionarios')}" />
+            <p:menuitem value="Cuestionarios" actionListener="#{menuController.onRedirectTo('configuration/templates/cuestionarios')}" />-->
         </p:menu>
     </h:form>
 
