@@ -32,6 +32,9 @@ public class ResultadosCuestionariosController implements Serializable {
     private Cuestionario cuestionarioSaludOcupacional;
     private Cuestionario cuestionarioDesarrolloProfesional;
     private boolean showResumenTable;
+    private boolean disableNext;
+    private boolean disablePrevious;
+    private Integer actualIndex;
 
     //Services
     @ManagedProperty(value = "#{personaService}")
@@ -63,10 +66,39 @@ public class ResultadosCuestionariosController implements Serializable {
         }
     }
 
-    public void onViewPersonaDetailedInfo(Persona persona) {
-        this.persona = persona;
+//    public void onViewPersonaDetailedInfo(Persona persona) {
+//        this.persona = persona;
+//        showResumenTable = false;
+//        loadCuestionarios();
+//    }
+
+    public void onViewPersonaDetailedInfo(Integer index) {
+        this.persona = personasList.get(index);
+        actualIndex = index;
         showResumenTable = false;
+        validateButtons();
         loadCuestionarios();
+    }
+    
+    public void onNext() {
+        onViewPersonaDetailedInfo(actualIndex+1);
+    }
+    
+    public void onPrevious() {
+        onViewPersonaDetailedInfo(actualIndex-1);
+    }
+    
+    private void validateButtons() {
+        disableNext = false;
+        disablePrevious = false;
+        
+        if (actualIndex == 0) {
+            disablePrevious = true;
+        } 
+        
+        if (actualIndex == personasList.size()-1) {
+            disableNext = true;
+        }
     }
 
     private void loadCuestionarios() {
@@ -148,6 +180,30 @@ public class ResultadosCuestionariosController implements Serializable {
 
     public void setCuestionarioDesarrolloProfesional(Cuestionario cuestionarioDesarrolloProfesional) {
         this.cuestionarioDesarrolloProfesional = cuestionarioDesarrolloProfesional;
+    }
+
+    public boolean isDisableNext() {
+        return disableNext;
+    }
+
+    public void setDisableNext(boolean disableNext) {
+        this.disableNext = disableNext;
+    }
+
+    public boolean isDisablePrevious() {
+        return disablePrevious;
+    }
+
+    public void setDisablePrevious(boolean disablePrevious) {
+        this.disablePrevious = disablePrevious;
+    }
+
+    public Integer getActualIndex() {
+        return actualIndex;
+    }
+
+    public void setActualIndex(Integer actualIndex) {
+        this.actualIndex = actualIndex;
     }
     //</editor-fold>
 }

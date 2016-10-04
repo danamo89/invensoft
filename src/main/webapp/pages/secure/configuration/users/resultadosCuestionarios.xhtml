@@ -11,6 +11,21 @@
     <ui:define name="content">
         <h:form id="resultadosCuestionariosForm">
             <h:panelGroup rendered="#{!resultadosCuestionariosController.showResumenTable}" style="width: 100%; text-align: center">
+                <p:panelGrid style="width: 100%">
+                    <p:row>
+                        <p:column style="text-align: right">
+                            <p:commandButton value="Anterior" disabled="#{resultadosCuestionariosController.disablePrevious}" 
+                                             actionListener="#{resultadosCuestionariosController.onPrevious()}" update="resultadosCuestionariosForm"/>
+                        </p:column>
+                        <p:column style="width: 5%">
+                            <h:outputText value="Identificador Unico: #{resultadosCuestionariosController.persona.idPersona}"/>
+                        </p:column>
+                        <p:column style="text-align: left">
+                            <p:commandButton value="Siguiente" disabled="#{resultadosCuestionariosController.disableNext}" 
+                                             actionListener="#{resultadosCuestionariosController.onNext()}" update="resultadosCuestionariosForm"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
                 <p:tabView id="resultadosTabView" cache="false" >
                     <p:tab title="Salud Ocupacional">
                         <p:panelGrid style="width: 100%">
@@ -85,7 +100,8 @@
                         <p:outputLabel value="#{persona.idPersona}" />
                     </p:column>
                     <p:column style="width:32px;text-align: center">
-                        <p:commandButton icon="ui-icon-search" title="View" actionListener="#{resultadosCuestionariosController.onViewPersonaDetailedInfo(persona)}" update=":resultadosCuestionariosForm"/>
+                        <!--<p:commandButton icon="ui-icon-search" title="View" actionListener="#{resultadosCuestionariosController.onViewPersonaDetailedInfo(persona)}" update=":resultadosCuestionariosForm"/>-->
+                        <p:commandButton icon="ui-icon-search" title="View" actionListener="#{resultadosCuestionariosController.onViewPersonaDetailedInfo(index)}" update=":resultadosCuestionariosForm"/>
                     </p:column>
                 </p:dataTable>
             </h:panelGroup>
