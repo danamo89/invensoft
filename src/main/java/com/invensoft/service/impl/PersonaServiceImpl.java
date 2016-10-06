@@ -39,7 +39,7 @@ public class PersonaServiceImpl implements IPersonaService {
     @Override
     public List<Persona> findAll() {
         try {
-            return personaDao.findAll();
+            return personaDao.findAllOrderBy("apellidos");
         } catch (Exception e) {
             messageBean.addError("Ha ocurrido un error al consultar el listado de personas", e.getMessage());
             return null;

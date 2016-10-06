@@ -51,11 +51,11 @@ public class UserDetailsServiceImpl implements UserDetailsService, Serializable 
         } else {
             HttpSession session = request.getSession();
             
-            session.setAttribute("s_obj_persona", usuario.getPersona());
-            session.setAttribute("s_id_persona", usuario.getPersona().getIdPersona());
-            session.setAttribute("s_nombres", usuario.getPersona().getNombres());
-            session.setAttribute("s_apellidos", usuario.getPersona().getApellidos());
-            session.setAttribute("s_email", usuario.getPersona().getEmail());
+//            session.setAttribute("s_obj_persona", usuario.getPersona());
+//            session.setAttribute("s_id_persona", usuario.getPersona().getIdPersona());
+            session.setAttribute("s_nombres", usuario.getNombres());
+            session.setAttribute("s_apellidos", usuario.getApellidos());
+            session.setAttribute("s_email", usuario.getEmail());
             session.setAttribute("s_obj_usuario", usuario);
             
             return makeUser(usuario);

@@ -22,7 +22,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -63,19 +62,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Persona.findByBanco", query = "SELECT p FROM Persona p WHERE p.banco = :banco"),
     @NamedQuery(name = "Persona.findByTieneCredencialArt", query = "SELECT p FROM Persona p WHERE p.tieneCredencialArt = :tieneCredencialArt")})
 public class Persona implements Serializable {
-
-    @Size(max = 45)
-    @Column(name = "LINEA", length = 45)
-    private String linea;
-    @Column(name = "FECHA_INGRESO")
-    @Temporal(TemporalType.DATE)
-    private Date fechaIngreso;
-    @Column(name = "ANTIGUEDAD")
-    private Integer antiguedad;
-
-    @JoinColumn(name = "ID_FOTO_PERSONA", referencedColumnName = "id_foto_persona")
-    @ManyToOne
-    private FotoPersona fotoPersona;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -175,6 +161,14 @@ public class Persona implements Serializable {
     @Column(name = "CARNET_CONDUCTOR_HASTA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date carnetConductorHasta;
+    @Size(max = 45)
+    @Column(name = "LINEA", length = 45)
+    private String linea;
+    @Column(name = "FECHA_INGRESO")
+    @Temporal(TemporalType.DATE)
+    private Date fechaIngreso;
+    @Column(name = "ANTIGUEDAD")
+    private Integer antiguedad;
     @JoinColumn(name = "ID_ESTADO_CIVIL", referencedColumnName = "ID_ESTADO_CIVIL", nullable = false)
     @ManyToOne(optional = false)
     private EstadoCivil estadoCivil;
@@ -193,8 +187,15 @@ public class Persona implements Serializable {
     @JoinColumn(name = "ID_PUESTO", referencedColumnName = "ID_PUESTO", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Puesto puesto;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "persona")
-    private Usuario usuario;
+    @JoinColumn(name = "ID_CATEGORIA_LABORAL", referencedColumnName = "id_categoria_laboral")
+    @ManyToOne
+    private CategoriaLaboral idCategoriaLaboral;
+    @JoinColumn(name = "ID_GREMIO", referencedColumnName = "ID_GREMIO")
+    @ManyToOne
+    private Gremio gremio;
+    @JoinColumn(name = "ID_FOTO_PERSONA", referencedColumnName = "id_foto_persona")
+    @ManyToOne
+    private FotoPersona fotoPersona;
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<EducacionFormal> educacionesFormalesList;
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY, orphanRemoval = true)
@@ -207,9 +208,6 @@ public class Persona implements Serializable {
     private List<DocumentoPersona> documentosPersonaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "persona", fetch = FetchType.LAZY)
     private List<RespuestaPregunta> respuestaPreguntaList;
-    @JoinColumn(name = "ID_CATEGORIA_LABORAL", referencedColumnName = "id_categoria_laboral")
-    @ManyToOne
-    private CategoriaLaboral idCategoriaLaboral;
     
     public Persona() {
         this.estadoCivil = new EstadoCivil();
@@ -219,6 +217,7 @@ public class Persona implements Serializable {
         this.puesto = new Puesto();
         this.localidad = new Localidad();
 	this.idCategoriaLaboral = new CategoriaLaboral();
+        this.gremio = new Gremio();
         this.educacionesFormalesList = new LinkedList<>();
         this.educacionesNoFormalesList = new LinkedList<>();
         this.familiaresList = new LinkedList<>();
@@ -522,14 +521,6 @@ public class Persona implements Serializable {
         this.documentosPersonaList = documentosPersonaList;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
     public Integer getCamisa() {
         return camisa;
     }
@@ -657,6 +648,14 @@ public class Persona implements Serializable {
 
     public void setCarnetConductorHasta(Date carnetConductorHasta) {
         this.carnetConductorHasta = carnetConductorHasta;
+    }
+
+    public Gremio getGremio() {
+        return gremio;
+    }
+
+    public void setGremio(Gremio gremio) {
+        this.gremio = gremio;
     }
     
 }

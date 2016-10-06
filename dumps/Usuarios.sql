@@ -1,0 +1,77 @@
+ALTER TABLE `invensoft`.`usuarios` 
+DROP FOREIGN KEY `USUARIOS_ID_PERSONA`;
+ALTER TABLE `invensoft`.`usuarios` 
+DROP COLUMN `ID_PERSONA`,
+DROP INDEX `ID_PERSONA_UNIQUE` ;
+
+
+ALTER TABLE `invensoft`.`usuarios` 
+ADD COLUMN `NOMBRES` VARCHAR(100) NULL AFTER `ID_USUARIO`,
+ADD COLUMN `APELLIDOS` VARCHAR(100) NULL AFTER `NOMBRES`,
+ADD COLUMN `EMAIL` VARCHAR(100) NULL AFTER `APELLIDOS`;
+
+UPDATE `invensoft`.`USUARIOS` SET `NOMBRES`='David', `APELLIDOS`='Navarro' WHERE `ID_USUARIO`='2';
+UPDATE `invensoft`.`USUARIOS` SET `NOMBRES`='Operativo', `APELLIDOS`='Operativo' WHERE `ID_USUARIO`='7';
+UPDATE `invensoft`.`USUARIOS` SET `NOMBRES`='RRHH', `APELLIDOS`='RRHH' WHERE `ID_USUARIO`='8';
+UPDATE `invensoft`.`USUARIOS` SET `NOMBRES`='Directivo', `APELLIDOS`='Directivo' WHERE `ID_USUARIO`='9';
+UPDATE `invensoft`.`USUARIOS` SET `NOMBRES`='Data', `APELLIDOS`='Entry' WHERE `ID_USUARIO`='10';
+UPDATE `invensoft`.`USUARIOS` SET `NOMBRES`='Data', `APELLIDOS`='Entry' WHERE `ID_USUARIO`='13';
+UPDATE `invensoft`.`USUARIOS` SET `NOMBRES`='Data', `APELLIDOS`='Entry' WHERE `ID_USUARIO`='14';
+UPDATE `invensoft`.`USUARIOS` SET `NOMBRES`='Data', `APELLIDOS`='Entry' WHERE `ID_USUARIO`='15';
+UPDATE `invensoft`.`USUARIOS` SET `NOMBRES`='Data', `APELLIDOS`='Entry' WHERE `ID_USUARIO`='16';
+UPDATE `invensoft`.`USUARIOS` SET `NOMBRES`='Data', `APELLIDOS`='Entry' WHERE `ID_USUARIO`='17';
+
+ALTER TABLE `invensoft`.`usuarios` 
+CHANGE COLUMN `NOMBRES` `NOMBRES` VARCHAR(100) NOT NULL ,
+CHANGE COLUMN `APELLIDOS` `APELLIDOS` VARCHAR(100) NOT NULL ;
+
+
+USE `invensoft`;
+
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS invensoft.usuarios_BEFORE_INSERT$$
+USE `invensoft`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `invensoft`.`usuarios_BEFORE_INSERT` BEFORE INSERT ON `usuarios` FOR EACH ROW
+BEGIN
+	set NEW.password = MD5(NEW.password);
+END$$
+DELIMITER ;
+
+
+USE `invensoft`;
+
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS invensoft.usuarios_BEFORE_UPDATE$$
+USE `invensoft`$$
+CREATE DEFINER=`invensoft`@`%` TRIGGER `invensoft`.`usuarios_BEFORE_UPDATE` BEFORE UPDATE ON `usuarios` FOR EACH ROW
+BEGIN
+
+	if NEW.password != OLD.password then
+		set NEW.password = MD5(NEW.password);
+    end if;
+	
+END$$
+DELIMITER ;
+
+
+INSERT INTO `invensoft`.`MENUS` (`NOMBRE`, `URL`, `ORDEN`) VALUES ('Usuarios', 'configutarion/users/usuarios', '6');
+INSERT INTO `invensoft`.`roles_menus` (`ID_ROL`, `ID_MENU`) VALUES ('7', '6');
+
+INSERT INTO `invensoft`.`GREMIOS` (`descripcion`, `sigla`) VALUES ('OTRO', 'OTRO');
+
+
+ALTER TABLE `invensoft`.`personas` 
+ADD COLUMN `ID_GREMIO` INT NULL AFTER `ANTIGUEDAD`,
+ADD INDEX `PERSONAS_ID_GREMIO_idx` (`ID_GREMIO` ASC);
+ALTER TABLE `invensoft`.`personas` 
+ADD CONSTRAINT `PERSONAS_ID_GREMIO`
+  FOREIGN KEY (`ID_GREMIO`)
+  REFERENCES `invensoft`.`gremios` (`id_gremio`)
+  ON DELETE RESTRICT
+  ON UPDATE NO ACTION;
+
+
+UPDATE PERSONAS SET ID_GREMIO = 1 WHERE ID_GREMIO IS NULL;
+

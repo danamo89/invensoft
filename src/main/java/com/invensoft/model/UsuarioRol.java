@@ -50,6 +50,17 @@ public class UsuarioRol implements Serializable {
         this.idUsuarioRol = idUsuarioRol;
     }
 
+    public UsuarioRol(Integer idUsuarioRol, Rol rol, Usuario usuario) {
+        this.idUsuarioRol = idUsuarioRol;
+        this.rol = rol;
+        this.usuario = usuario;
+    }
+
+    public UsuarioRol(Rol rol, Usuario usuario) {
+        this.rol = rol;
+        this.usuario = usuario;
+    }
+
     public Integer getIdUsuarioRol() {
         return idUsuarioRol;
     }

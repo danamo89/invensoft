@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -45,7 +44,6 @@ public class MenuController implements Serializable {
     }
 
     public void loadMenu() {
-        System.out.println("Executing Postconstruct");
         try {
             menuBinding = new Menu();
             List<com.invensoft.model.Menu> listMenus = new LinkedList<>();

@@ -19,6 +19,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -57,6 +58,9 @@ public class Rol implements Serializable {
     private String viewCuestionario;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rol", fetch = FetchType.LAZY)
     private List<RolMenu> rolMenuList;
+    
+    @Transient
+    private boolean selected;
 
     public Rol() {
     }
@@ -117,6 +121,14 @@ public class Rol implements Serializable {
 
     public void setRolMenuList(List<RolMenu> rolMenuList) {
         this.rolMenuList = rolMenuList;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     @Override

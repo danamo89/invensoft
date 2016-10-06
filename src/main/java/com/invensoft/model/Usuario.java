@@ -16,11 +16,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -55,6 +53,18 @@ public class Usuario implements Serializable {
     private Integer idUsuario;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "NOMBRES", nullable = false, length = 100)
+    private String nombres;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "APELLIDOS", nullable = false, length = 100)
+    private String apellidos;
+    @Column(name = "EMAIL")
+    private String email;
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "USERNAME", nullable = false, length = 45)
     private String username;
@@ -70,10 +80,7 @@ public class Usuario implements Serializable {
     @Column(name = "ULTIMO_ACCESO")
     @Temporal(TemporalType.TIMESTAMP)
     private Date ultimoAcceso;
-    @JoinColumn(name = "ID_PERSONA", referencedColumnName = "ID_PERSONA", nullable = false)
-    @OneToOne(optional = false)
-    private Persona persona;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<UsuarioRol> usuarioRolList;
 
     public Usuario() {
@@ -130,12 +137,28 @@ public class Usuario implements Serializable {
         this.ultimoAcceso = ultimoAcceso;
     }
 
-    public Persona getPersona() {
-        return persona;
+    public String getNombres() {
+        return nombres;
     }
 
-    public void setPersona(Persona persona) {
-        this.persona = persona;
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @XmlTransient

@@ -4,20 +4,133 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pe="http://primefaces.org/ui/extensions">
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:define name="content">
         <h:form id="usuarioForm" >
-            <h:panelGrid columns="2">
-                <h:outputLabel value="Nombre"/>
-                <p:inputText value="#{usuarioController.usuario.persona.nombres} #{usuarioController.usuario.persona.apellidos}"/>
-                
-                <h:outputLabel value="Usuario"/>
-                <p:inputText value="#{usuarioController.usuario.username}"/>
-                
-                <h:outputLabel value="Constraseña"/>
-                <p:password value="#{usuarioController.usuario.password}" readonly="true"/>
-            </h:panelGrid>
+            <h:panelGroup id="usuarioDetailedInfo" rendered="#{!usuarioController.showUsuariosTable}">
+                <p:panelGrid style="width: 100%">
+                    <p:row>
+                        <p:column>
+                            <h3><h:outputText value="Información General"/></h3>
+                        </p:column>
+                        <p:column>
+                            <h3><h:outputText value="Roles Asociados"/></h3>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="width: 50%">
+                            <p:panelGrid style="width: 100%">
+                                <p:row>
+                                    <p:column style="width: 3%">
+                                        <h:outputLabel value="Nombres"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText value="#{usuarioController.usuario.nombres}"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <h:outputLabel value="Apellidos"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText value="#{usuarioController.usuario.apellidos}"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <h:outputLabel value="Usuario"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText value="#{usuarioController.usuario.username}"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <h:outputLabel value="Clave"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:password redisplay="true" value="#{usuarioController.usuario.password}"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column colspan="2">
+                                        <h:outputText value="Por seguridad, la clave del usuario no es revelada. En caso de querer modificarla por favor introduzca una nueva."
+                                                      style="color: red; font-weight: bolder"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:column>
+                        <p:column>
+                            <p:dataTable value="#{usuarioController.rolesList}" var="rol" rowIndexVar="index" widgetVar="widget">
+                                <p:column headerText="" style="width: 3%">
+                                    <p:selectBooleanCheckbox value="#{rol.selected}" />
+                                </p:column>
+                                <p:column headerText="Rol">
+                                    <p:outputLabel value="#{rol.nombre}" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <hr/>
+                        </p:column>
+                     </p:row>
+                    <p:row>
+                        <p:column style="text-align: right">
+                            <p:commandButton value="Cancelar" icon="ui-icon-close" update=":usuarioForm" immediate="true">
+                                <f:setPropertyActionListener  target="#{usuarioController.showUsuariosTable}" value="#{!usuarioController.showUsuariosTable}"/>
+                            </p:commandButton>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Guardar" icon="ui-icon-check" actionListener="#{usuarioController.onSave()}"
+                                             update=":usuarioForm" />
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{usuarioController.showUsuariosTable}">
+                <p:dataTable id="usuariosTable" rows="20" paginator="true" paginatorPosition="bottom" style="width: 100%"
+                             var="usuario" rowIndexVar="index" widgetVar="widget" value="#{usuarioController.usuariosList}">
+
+                    <f:facet name="header">
+                        <p:outputPanel>
+                            <table style="border: none; border-width: 0px">
+                                <tr>
+                                    <td style="border: none; border-width: 0px; text-align: left">
+                                        <p:commandButton icon="ui-icon-plus" actionListener="#{usuarioController.onCreateUsuario()}" 
+                                                         update=":usuarioForm"/>
+                                    </td>
+                                    <td style="border: none; border-width: 0px; font-size: 15px">
+                                        <p:outputLabel value="Usuarios registrados" />
+                                    </td>
+                                    <td style="border: none; border-width: 0px; text-align: right"/>
+                                </tr>
+                            </table>
+                        </p:outputPanel>
+                    </f:facet>
+                    
+                    <p:column headerText="#" style="width: 3%">
+                        <p:outputLabel value="#{index+1}" />
+                    </p:column>
+                    <p:column headerText="Nombres" >
+                        <p:outputLabel value="#{usuario.nombres}" />
+                    </p:column>
+                    <p:column headerText="Apellidos" >
+                        <p:outputLabel value="#{usuario.apellidos}" />
+                    </p:column>
+                    <p:column headerText="Email" >
+                        <p:outputLabel value="#{usuario.email}" />
+                    </p:column>
+                    <p:column style="width:3%;text-align: center">
+                        <p:commandButton icon="ui-icon-search" title="View" update=":usuarioForm"
+                                         actionListener="#{usuarioController.onViewUsuarioDetailedInfo(usuario)}" />
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
         </h:form>
     </ui:define>
 </ui:composition>

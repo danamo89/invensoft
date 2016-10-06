@@ -52,7 +52,10 @@
 
         <!--Multiple cuestionario-->
         <p:panelGrid columns="1" style="width: 65%; text-align: left !important" rendered="#{!cc.attrs.single}">
-            <ui:repeat value="#{cc.attrs.cuestionario}" var="cuestionarioSector">
+            <ui:repeat value="#{cc.attrs.cuestionario}" var="cuestionarioSector" varStatus="generalStatus">
+                <h:panelGroup rendered="#{generalStatus.index > 0}" style="width: 100%">
+                    <br/><hr/>
+                </h:panelGroup>
                 <br/>
                 <h2><p:outputLabel value="#{cuestionarioSector.cuestionario.titulo}"/></h2>
 

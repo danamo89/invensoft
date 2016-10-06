@@ -5,7 +5,6 @@
  */
 package com.invensoft.controller;
 
-import com.invensoft.controller.helper.CuestionarioPainter;
 import com.invensoft.model.CategoriaLaboral;
 import com.invensoft.model.Cuestionario;
 import com.invensoft.model.CuestionarioSector;
@@ -18,6 +17,7 @@ import com.invensoft.model.Persona;
 import com.invensoft.model.Documento;
 import com.invensoft.model.DocumentoPersona;
 import com.invensoft.model.FotoPersona;
+import com.invensoft.model.Gremio;
 import com.invensoft.model.GrupoPreguntas;
 import com.invensoft.model.InformacionLaboral;
 import com.invensoft.model.Localidad;
@@ -32,6 +32,7 @@ import com.invensoft.service.ICategoriaLaboralService;
 import com.invensoft.service.ICuestionarioService;
 import com.invensoft.service.IDocumentoService;
 import com.invensoft.service.IEstadoCivilService;
+import com.invensoft.service.IGremioService;
 import com.invensoft.service.ILocalidadService;
 import com.invensoft.service.IPaisService;
 import com.invensoft.service.IPersonaService;
@@ -112,6 +113,7 @@ public class PersonasController implements Serializable {
     private String[] selectedTiposDocumentos;
     private List<SelectItem> selectTiposDocumentos;
     private List<TipoDocumento> tiposDocumentosList;
+    private List<Gremio> gremiosList;
 
     private Cuestionario cuestionarioSaludOcupacional;
     private Cuestionario cuestionarioDesarrolloProfesional;
@@ -145,6 +147,8 @@ public class PersonasController implements Serializable {
     private ILocalidadService localidadService;
     @ManagedProperty(value = "#{categoriaLaboralService}")
     private ICategoriaLaboralService categoriaLaboralService;
+    @ManagedProperty(value = "#{gremioService}")
+    private IGremioService gremioService;
 
     /**
      * Creates a new instance of PersonasController
@@ -246,6 +250,14 @@ public class PersonasController implements Serializable {
             
             if (categoriasLaboralesList == null) {
                 categoriasLaboralesList = new LinkedList<>();
+            }
+        }
+        
+        if (this.gremiosList == null) {
+            this.gremiosList = this.gremioService.findAll();
+            
+            if (gremiosList == null) {
+                gremiosList = new LinkedList<>();
             }
         }
     }
@@ -404,8 +416,8 @@ public class PersonasController implements Serializable {
         this.persona.getEducacionesNoFormalesList().remove(educacionNoFormal);
     }
 
-    public void onIdentificacionChange() {
-        this.persona.setLegajo(this.persona.getNumeroIdentificacion());
+    public void onLegajoChange() {
+        this.persona.setNumeroIdentificacion(this.persona.getLegajo());
     }
 
     public void onSectorChange() {
@@ -508,9 +520,17 @@ public class PersonasController implements Serializable {
                 }
             }
             
-            for (CategoriaLaboral c : categoriasLaboralesList) {
-                if (c.getIdCategoriaLaboral().equals(persona.getIdCategoriaLaboral().getIdCategoriaLaboral())) {
-                    persona.setIdCategoriaLaboral(c);
+            //Actualizamos la categoria laboral
+            for (CategoriaLaboral categoriaLaboralItem : categoriasLaboralesList) {
+                if (categoriaLaboralItem.getIdCategoriaLaboral().equals(persona.getIdCategoriaLaboral().getIdCategoriaLaboral())) {
+                    persona.setIdCategoriaLaboral(categoriaLaboralItem);
+                }
+            }
+            
+            //Actualizamos el gremio
+            for (Gremio gremio : gremiosList) {
+                if (gremio.getIdGremio().equals(persona.getGremio().getIdGremio())) {
+                    persona.setGremio(gremio);
                 }
             }
 
@@ -1006,6 +1026,22 @@ public class PersonasController implements Serializable {
 
     public void setCuestionarioDesarrolloProfesional(Cuestionario cuestionarioDesarrolloProfesional) {
         this.cuestionarioDesarrolloProfesional = cuestionarioDesarrolloProfesional;
+    }
+
+    public List<Gremio> getGremiosList() {
+        return gremiosList;
+    }
+
+    public void setGremiosList(List<Gremio> gremiosList) {
+        this.gremiosList = gremiosList;
+    }
+
+    public IGremioService getGremioService() {
+        return gremioService;
+    }
+
+    public void setGremioService(IGremioService gremioService) {
+        this.gremioService = gremioService;
     }
     //</editor-fold>
 }
