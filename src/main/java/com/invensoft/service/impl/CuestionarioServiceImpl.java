@@ -28,7 +28,7 @@ public class CuestionarioServiceImpl implements ICuestionarioService {
     @Override
     public List<Cuestionario> findAll() {
         try {
-            return cuestionarioDao.findAll();
+            return cuestionarioDao.findAllOrderBy("descripcion");
         } catch (Exception e) {
             messageBean.addError("Ha ocurrido un error al consultar el listado de cuestionarios", e.getMessage());
             return null;

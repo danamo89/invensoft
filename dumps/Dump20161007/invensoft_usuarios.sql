@@ -1,0 +1,58 @@
+-- MySQL dump 10.13  Distrib 5.7.12, for osx10.9 (x86_64)
+--
+-- Host: 127.0.0.1    Database: invensoft
+-- ------------------------------------------------------
+-- Server version	5.7.14
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `usuarios`
+--
+
+DROP TABLE IF EXISTS `usuarios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `usuarios` (
+  `ID_USUARIO` int(11) NOT NULL AUTO_INCREMENT,
+  `NOMBRES` varchar(100) NOT NULL,
+  `APELLIDOS` varchar(100) NOT NULL,
+  `EMAIL` varchar(100) DEFAULT NULL,
+  `USERNAME` varchar(45) NOT NULL,
+  `PASSWORD` varchar(45) NOT NULL,
+  `ESTADO` int(11) NOT NULL DEFAULT '1' COMMENT '0 = INACTIVO\n1 = ACTIVO',
+  `ULTIMO_ACCESO` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID_USUARIO`),
+  UNIQUE KEY `USERNAME_UNIQUE` (`USERNAME`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuarios`
+--
+
+LOCK TABLES `usuarios` WRITE;
+/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
+INSERT INTO `usuarios` VALUES (2,'David','Navarro Mora',NULL,'danamo','f6c1239939935b1b961472d143629f78',1,NULL),(7,'Operativo','Operativo',NULL,'operativo','550b09e26cb76af68b4f16bef416a943',1,NULL),(8,'RRHH','RRHH',NULL,'rrhh','da06f545695f8da80f2d4465d55b5d93',1,NULL),(9,'Directivo','Directivo',NULL,'directivo','1472ba5d8bfe2354e543a2e075321d39',1,NULL),(10,'Data','Entry',NULL,'dataentry','059876fcd17c365f8c3d843f4c74f0b3',1,NULL),(13,'Data','Entry',NULL,'dataentry2','059876fcd17c365f8c3d843f4c74f0b3',1,NULL),(14,'Data','Entry',NULL,'dataentry3','059876fcd17c365f8c3d843f4c74f0b3',1,NULL),(15,'Data','Entry',NULL,'dataentry4','059876fcd17c365f8c3d843f4c74f0b3',1,NULL),(16,'Data','Entry',NULL,'dataentry5','059876fcd17c365f8c3d843f4c74f0b3',1,NULL),(17,'Data','Entry',NULL,'dataentry6','059876fcd17c365f8c3d843f4c74f0b3',1,NULL),(18,'Test','Test',NULL,'test','098f6bcd4621d373cade4e832627b4f6',0,NULL);
+/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2016-10-07  0:33:07

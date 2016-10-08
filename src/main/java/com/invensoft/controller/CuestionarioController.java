@@ -107,6 +107,10 @@ public class CuestionarioController implements Serializable {
             }
             
             cuestionarioService.save(this.cuestionario);
+            
+            cuestionariosList.clear();
+            cuestionariosList.addAll(cuestionarioService.findAll());
+            showCuestionariosTable = false;
         } catch (Exception e) {
             e.printStackTrace();
         }

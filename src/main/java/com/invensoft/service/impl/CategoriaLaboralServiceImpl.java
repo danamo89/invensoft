@@ -28,7 +28,7 @@ public class CategoriaLaboralServiceImpl implements ICategoriaLaboralService {
     @Override
     public List<CategoriaLaboral> findAll() {
         try {
-            return categoriaLaboralDao.findAll();
+            return categoriaLaboralDao.findAllOrderBy("cat");
         } catch (Exception e) {
             messageBean.addError("Ha ocurrido un error", e.getMessage());
             return null;
