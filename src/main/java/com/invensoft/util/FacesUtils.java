@@ -69,6 +69,23 @@ public class FacesUtils {
         return cantViewCuestionario;
     }
     
+    public static boolean sessionUserCanDelete() {
+        boolean cantViewCuestionario = false;
+        
+        try {
+            for (UsuarioRol usuarioRol : getSessionUser().getUsuarioRolList()) {
+                if (usuarioRol.getRol().getCanDelete().equals("1")) {
+                    cantViewCuestionario = true;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            cantViewCuestionario = false;
+        }
+        
+        return cantViewCuestionario;
+    }
+    
     public static ValueExpression createValueExpression(String expression, Class<?> expectedType) {
         FacesContext context = FacesContext.getCurrentInstance();
         return context.getApplication().getExpressionFactory()

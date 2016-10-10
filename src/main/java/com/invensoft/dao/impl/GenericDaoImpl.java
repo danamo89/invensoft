@@ -91,6 +91,13 @@ public abstract class GenericDaoImpl<T, ID extends Serializable> implements IGen
             entity = getEntityManager().merge(entity);
         }
     }
+    
+    @Transactional
+    @Override
+    public void delete(ID id) throws Exception {
+        T entidad = getEntityManager().getReference(getPersistentClass(), id);
+        getEntityManager().remove(entidad);
+    }
 
     public Class<T> getPersistentClass() {
         return persistentClass;

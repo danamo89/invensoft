@@ -760,12 +760,16 @@
                                 <p:outputLabel value="#{informacionLaboral.cargo}" />
                             </p:column>
                             <p:column headerText="Desde">
-                                <p:outputLabel value="#{informacionLaboral.desde}" />
+                                <p:outputLabel value="#{informacionLaboral.desde}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
                             </p:column>
                             <p:column headerText="Hasta">
-                                <p:outputLabel value="#{informacionLaboral.hasta}" />
+                                <p:outputLabel value="#{informacionLaboral.hasta}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
                             </p:column>
-                            <p:column style="width: 3%">
+                            <p:column style="width: 6%">
                                 <p:commandButton icon="ui-icon-search" disabled="#{usuarioController.readOnly}"
                                                  actionListener="#{personasController.onViewInformacionLaboralDetail(informacionLaboral)}"
                                                  ajax="true" update="personasForm:generalTabView:input-informacion-laboral"/>
@@ -979,10 +983,21 @@
                     <p:column headerText="Email" filterBy="#{persona.email}" filterMatchMode="contains">
                         <p:outputLabel value="#{persona.email}" />
                     </p:column>
-                    <p:column style="width:32px;text-align: center">
-                        <p:commandButton icon="ui-icon-search" title="View" actionListener="#{personasController.onViewPersonaDetailedInfo(persona)}" update=":personasForm"/>
+                    <p:column style="width:6%;text-align: center">
+                        <p:commandButton icon="ui-icon-search" title="Detalle" actionListener="#{personasController.onViewPersonaDetailedInfo(persona)}" update=":personasForm"/>
+                        <p:commandButton icon="ui-icon-trash" title="Eliminar" actionListener="#{personasController.onDeletePersona(persona)}" 
+                                         update=":personasForm" rendered="#{usuarioController.canDelete}">
+                            <p:confirm header="Confirmación" message="¿Realmente desea eliminar el registro?" icon="ui-icon-alert" />
+                        </p:commandButton>
                     </p:column>
                 </p:dataTable>
+                
+                <p:confirmDialog global="true" >
+                    <center>
+                        <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    </center>
+                </p:confirmDialog>
             </h:panelGroup>
 
         </h:form>

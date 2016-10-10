@@ -16,10 +16,18 @@
                 </p:row>
                 <p:row>
                     <p:column>
-                        <center><p:chart type="pie" model="#{personasChartsController.pieChartPersonasXFormacionFormal}" style="width:400px;height:300px" /></center>
+                        <center><p:chart type="pie" model="#{personasChartsController.pieChartPersonasXFormacionFormal}" style="width:500px;height:300px" /></center>
                     </p:column>
                     <p:column>
                         <center><p:chart type="pie" model="#{personasChartsController.pieChartPersonasXSector}" style="width:500px;height:300px" /></center>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <center><p:chart type="pie" model="#{personasChartsController.pieChartPersonasXCategoriaLaboral}" style="width:500px;height:300px" /></center>
+                    </p:column>
+                    <p:column>
+                        <center><p:chart type="pie" model="#{personasChartsController.pieChartPersonasXLocalidad}" style="width:500px;height:300px" /></center>
                     </p:column>
                 </p:row>
             </p:panelGrid>

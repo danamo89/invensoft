@@ -63,4 +63,11 @@ public interface IGenericDao<T, ID extends Serializable> extends Serializable {
      */
     public void save(List<T> entities) throws Exception;
     
+    /**
+     * 
+     * @param id 
+     * @throws java.lang.Exception 
+     */
+    public void delete(ID id) throws Exception;
+    
 }

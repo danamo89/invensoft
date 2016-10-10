@@ -12,6 +12,7 @@ import com.invensoft.util.MessageBean;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -159,6 +160,37 @@ public class PersonaServiceImpl implements IPersonaService {
         workbook.write(out);
         out.close();
         System.out.println("cellstyle.xlsx written successfully");
+    }
+
+    @Override
+    public List<Object[]> findTopPersonasXCategoriaLaboral(Integer top) {
+        try {    
+            return personaDao.findTopPersonasXCategoriaLaboral(top);
+        } catch (Exception e) {
+            messageBean.addError("Error", "Ha ocurrido un error al consultar los datos. " + e.getMessage());
+            return new LinkedList<>();
+        }
+    }
+
+    @Override
+    public List<Object[]> findTopPersonasXLocalidad(Integer top) {
+        try {    
+            return personaDao.findTopPersonasXLocalidad(top);
+        } catch (Exception e) {
+            messageBean.addError("Error", "Ha ocurrido un error al consultar los datos. " + e.getMessage());
+            return new LinkedList<>();
+        }
+    }
+
+    @Override
+    public void delete(Persona persona) {
+        try {
+            personaDao.delete(persona.getIdPersona());
+            messageBean.addInfo("Datos eliminados", "Se han eliminado los registros de forma exitosa");
+        } catch (Exception e) {
+            messageBean.addError("Error", "Ha ocurrido un error al eliminar los datos. " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
 }

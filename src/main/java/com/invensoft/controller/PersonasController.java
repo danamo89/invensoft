@@ -277,6 +277,14 @@ public class PersonasController implements Serializable {
             e.printStackTrace();
         }
     }
+    
+    public void onDeletePersona(Persona persona) {
+        personasService.delete(persona);
+        
+        //Recargamos la lista de personas
+        this.personasList.clear();
+        this.personasList.addAll(personasService.findAll());
+    }
 
     public void onViewPersonaDetailedInfo(Persona persona) {
         this.persona = persona;

@@ -56,6 +56,8 @@ public class Rol implements Serializable {
     private String readOnly;
     @Column(name = "VIEW_CUESTIONARIOS", nullable = false)
     private String viewCuestionario;
+    @Column(name = "CAN_DELETE", nullable = false)
+    private String canDelete;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rol", fetch = FetchType.LAZY)
     private List<RolMenu> rolMenuList;
     
@@ -112,6 +114,14 @@ public class Rol implements Serializable {
 
     public void setViewCuestionario(String viewCuestionario) {
         this.viewCuestionario = viewCuestionario;
+    }
+
+    public String getCanDelete() {
+        return canDelete;
+    }
+
+    public void setCanDelete(String canDelete) {
+        this.canDelete = canDelete;
     }
 
     @XmlTransient

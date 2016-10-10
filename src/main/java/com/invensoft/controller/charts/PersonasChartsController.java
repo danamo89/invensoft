@@ -35,10 +35,16 @@ public class PersonasChartsController implements Serializable {
 
     private PieChartModel pieChartPersonasXFormacionFormal;
     private PieChartModel pieChartPersonasXSector;
+    private PieChartModel pieChartPersonasXCategoriaLaboral;
+    private PieChartModel pieChartPersonasXLocalidad;
     private BarChartModel barChartModel;
     private List<Persona> personasList;
+    private List<Object[]> personasXCategoriaLaboralList;
+    private List<Object[]> personasXLocalidadList;
     private List<Pais> paisesList;
     private List<Sector> sectoresList;
+    private Integer topPersonasXCategoriaLaboral;
+    private Integer topPersonasXLocalidad;
 
     //Services
     @ManagedProperty(value = "#{personaService}")
@@ -67,10 +73,24 @@ public class PersonasChartsController implements Serializable {
         if (sectoresList == null) {
             sectoresList = sectorService.findAll();
         }
+        
+        topPersonasXCategoriaLaboral = 20;
+        
+        if (personasXCategoriaLaboralList == null) {
+            personasXCategoriaLaboralList = personaService.findTopPersonasXCategoriaLaboral(topPersonasXCategoriaLaboral);
+        }
+        
+        topPersonasXLocalidad = 10;
+        
+        if (personasXLocalidadList == null) {
+            personasXLocalidadList = personaService.findTopPersonasXLocalidad(topPersonasXLocalidad);
+        }
 
         this.loadChartData();
         this.createPieChartPersonasXFormacionFormal();
         this.createPieChartPersonasXSector();
+        this.createPieCharPersonasXCategoriaLaboral();
+        this.createPieCharPersonasXLocalidad();
     }
 
     private void loadChartData() {
@@ -183,6 +203,38 @@ public class PersonasChartsController implements Serializable {
         }
     }
 
+    private void createPieCharPersonasXCategoriaLaboral() {
+        try {
+            pieChartPersonasXCategoriaLaboral = new PieChartModel();
+            pieChartPersonasXCategoriaLaboral.setLegendPosition("w");
+            pieChartPersonasXCategoriaLaboral.setShowDataLabels(true);
+            
+            for (Object[] objects : personasXCategoriaLaboralList) {
+                pieChartPersonasXCategoriaLaboral.set("("+objects[1].toString()+") "+objects[0],Integer.parseInt(objects[1].toString()));
+            }
+            
+            pieChartPersonasXCategoriaLaboral.setTitle("Top "+topPersonasXCategoriaLaboral+" cantidad de personas por Categoria Laboral.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createPieCharPersonasXLocalidad() {
+        try {
+            pieChartPersonasXLocalidad = new PieChartModel();
+            pieChartPersonasXLocalidad.setLegendPosition("w");
+            pieChartPersonasXLocalidad.setShowDataLabels(true);
+            
+            for (Object[] objects : personasXLocalidadList) {
+                pieChartPersonasXLocalidad.set("("+objects[1].toString()+") "+objects[0],Integer.parseInt(objects[1].toString()));
+            }
+            
+            pieChartPersonasXLocalidad.setTitle("Top "+topPersonasXLocalidad+" cantidad de personas por Localidad.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     //<editor-fold defaultstate="collapsed" desc="Getter && Setter">
     public List<Persona> getPersonasList() {
         return personasList;
@@ -254,6 +306,54 @@ public class PersonasChartsController implements Serializable {
 
     public void setSectorService(ISectorService sectorService) {
         this.sectorService = sectorService;
+    }
+    
+    public PieChartModel getPieChartPersonasXCategoriaLaboral() {
+        return pieChartPersonasXCategoriaLaboral;
+    }
+
+    public void setPieChartPersonasXCategoriaLaboral(PieChartModel pieChartPersonasXCategoriaLaboral) {
+        this.pieChartPersonasXCategoriaLaboral = pieChartPersonasXCategoriaLaboral;
+    }
+
+    public List<Object[]> getPersonasXCategoriaLaboralList() {
+        return personasXCategoriaLaboralList;
+    }
+
+    public void setPersonasXCategoriaLaboralList(List<Object[]> personasXCategoriaLaboralList) {
+        this.personasXCategoriaLaboralList = personasXCategoriaLaboralList;
+    }
+
+    public Integer getTopPersonasXCategoriaLaboral() {
+        return topPersonasXCategoriaLaboral;
+    }
+
+    public void setTopPersonasXCategoriaLaboral(Integer topPersonasXCategoriaLaboral) {
+        this.topPersonasXCategoriaLaboral = topPersonasXCategoriaLaboral;
+    }
+
+    public PieChartModel getPieChartPersonasXLocalidad() {
+        return pieChartPersonasXLocalidad;
+    }
+
+    public void setPieChartPersonasXLocalidad(PieChartModel pieChartPersonasXLocalidad) {
+        this.pieChartPersonasXLocalidad = pieChartPersonasXLocalidad;
+    }
+
+    public List<Object[]> getPersonasXLocalidadList() {
+        return personasXLocalidadList;
+    }
+
+    public void setPersonasXLocalidadList(List<Object[]> personasXLocalidadList) {
+        this.personasXLocalidadList = personasXLocalidadList;
+    }
+
+    public Integer getTopPersonasXLocalidad() {
+        return topPersonasXLocalidad;
+    }
+
+    public void setTopPersonasXLocalidad(Integer topPersonasXLocalidad) {
+        this.topPersonasXLocalidad = topPersonasXLocalidad;
     }
     //</editor-fold>
 }

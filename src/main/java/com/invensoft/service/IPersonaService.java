@@ -17,7 +17,11 @@ public interface IPersonaService {
     
     List<Persona> findAll();
     void save(Persona persona);
+    void delete(Persona persona);
     
     void exportarExcel(Persona persona, String ubicacion, String nombreArchivo) throws IOException;
+    
+    public List<Object[]> findTopPersonasXCategoriaLaboral(Integer top);
+    public List<Object[]> findTopPersonasXLocalidad(Integer top);
     
 }

@@ -33,6 +33,7 @@ public class UsuarioController implements Serializable {
     
     private boolean readOnly;
     private boolean cantViewCuestionario;
+    private boolean canDelete;
     private boolean showUsuariosTable;
     
     @ManagedProperty(value = "#{rolService}")
@@ -51,6 +52,7 @@ public class UsuarioController implements Serializable {
         showUsuariosTable = true;
         readOnly = FacesUtils.sessionUserIsReadOnly();
         cantViewCuestionario = FacesUtils.sessionUserCantViewCuestionario();
+        canDelete = FacesUtils.sessionUserCanDelete();
         
         this.loadLists();
     }
@@ -178,6 +180,14 @@ public class UsuarioController implements Serializable {
 
     public void setUsuarioService(IUsuarioService usuarioService) {
         this.usuarioService = usuarioService;
+    }
+
+    public boolean isCanDelete() {
+        return canDelete;
+    }
+
+    public void setCanDelete(boolean canDelete) {
+        this.canDelete = canDelete;
     }
     //</editor-fold>
     
