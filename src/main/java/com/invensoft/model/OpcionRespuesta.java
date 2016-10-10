@@ -43,8 +43,8 @@ public class OpcionRespuesta implements Serializable, Comparable<OpcionRespuesta
     @Basic(optional = false)
     @Column(name = "ID_OPCION_RESPUESTA", nullable = false)
     private Integer idOpcionRespuesta;
-    @Size(max = 255)
-    @Column(name = "TEXTO", length = 25)
+    @Size(max = 500)
+    @Column(name = "TEXTO")
     private String texto;
     @Column(name = "ORDEN")
     private Integer orden;
