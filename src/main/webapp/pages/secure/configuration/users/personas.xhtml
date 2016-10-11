@@ -787,7 +787,7 @@
                                 <p:inputMask mask="99" value="#{persona.camisa}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                             </p:column>
                             <p:column headerText="Buzo (talle)">
-                                <p:inputMask mask="a" value="#{persona.buzo}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                <p:inputMask mask="aa" value="#{persona.buzo}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                             </p:column>
                             <p:column headerText="Pantalon (nro)">
                                 <p:inputMask mask="99" value="#{persona.pantalon}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
@@ -796,7 +796,7 @@
                                 <p:inputMask mask="99" value="#{persona.botines}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                             </p:column>
                             <p:column headerText="Campera (talle)">
-                                <p:inputMask mask="a" value="#{persona.campera}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                <p:inputMask mask="aa" value="#{persona.campera}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
                             </p:column>
                             <p:column headerText="Equipo de Lluvia (nro)">
                                 <p:inputMask mask="99" value="#{persona.eqLluvia}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
@@ -939,8 +939,20 @@
             </h:panelGroup>
 
             <h:panelGroup rendered="#{personasController.showPersonasTable}" style="width: 100%; text-align: center">
-                <h:outputText value="Listado de personas registradas en el sistema" style="font-size: 15px"/>
-
+                <p:row>
+                    <p:column style="width: 75%;">
+                        <h:outputText value="Listado de personas registradas en el sistema" style="font-size: 15px"/>
+                    </p:column>
+                    <p:column style="width:30%;">
+                        <p:commandLink actionListener="#{personasController.onExportarPersonasAllExcel()}" 
+                                         disabled="#{usuarioController.readOnly}"
+                                         ajax="false"
+                                         title="Exporta en formato Excel un listado de las Personas Ingresadas en el Sistema">
+                            <h:graphicImage name="images/excel.png" style="height: 50px;"/>
+                        </p:commandLink>
+                    </p:column>
+                </p:row>
+                
                 <br/><br/>
 
                 <p:dataTable id="personasTable" rows="10" paginator="true" paginatorPosition="bottom" style="width: 100%"
@@ -984,7 +996,6 @@
                     </p:column>
                 </p:dataTable>
             </h:panelGroup>
-
         </h:form>
     </ui:define>
 </ui:composition> 

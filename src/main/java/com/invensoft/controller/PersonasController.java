@@ -77,6 +77,7 @@ import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -89,7 +90,7 @@ import org.primefaces.model.UploadedFile;
 @ManagedBean(name = "personasController")
 @ViewScoped
 public class PersonasController implements Serializable {
-
+    
     private Persona persona;
     private Familiar familiar;
     private InformacionLaboral informacionLaboral;
@@ -705,15 +706,43 @@ public class PersonasController implements Serializable {
         }
     }
     
-    public void onExportarExcel() {
+    public void onExportarPersonaExcel() {
         
         try {
-            personasService.exportarExcel(persona, FileUtils.getTempDirectoryPath(), this.persona.getLegajo());
+            String fileName = FileUtils.getTempDirectoryPath()+"/"+this.persona.getLegajo()+".xlsx";
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ExternalContext externalContext = facesContext.getExternalContext();
+            externalContext.setResponseContentType("application/vnd.ms-excel");
+            externalContext.setResponseHeader("Content-Disposition", "attachment; filename=\""+fileName+"\"");
+            
+            XSSFWorkbook workbook = personasService.exportarPersonaExcel(persona);
+            
+            workbook.write(externalContext.getResponseOutputStream());
+            facesContext.responseComplete();
         } catch (IOException ex) {
             Logger.getLogger(PersonasController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    public void onExportarPersonasAllExcel() {
+        
+        try {
+            String fileName = new Date().toString()+".xlsx";
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ExternalContext externalContext = facesContext.getExternalContext();
+            externalContext.setResponseContentType("application/vnd.ms-excel");
+            externalContext.setResponseHeader("Content-Disposition", "attachment; filename=\""+fileName+"\"");
+            
+            XSSFWorkbook workbook = personasService.exportarPersonasAllExcel();
+            
+            if(workbook != null) {
+                workbook.write(externalContext.getResponseOutputStream());
+                facesContext.responseComplete();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(PersonasController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     //<editor-fold defaultstate="collapsed" desc="Getter && Setter">
     public Persona getPersona() {
         return persona;

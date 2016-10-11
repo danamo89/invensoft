@@ -83,6 +83,9 @@ public class Persona implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "APELLIDOS", nullable = false, length = 100)
     private String apellidos;
+    @JoinColumn(name = "ID_TIPO_IDENTIFICACION", referencedColumnName = "ID_TIPO_IDENTIFICACION", nullable = false)
+    @ManyToOne(optional = false)
+    private TipoIdentificacion tipoIdentificacion;
     @Basic(optional = false)
     @NotNull
     @Column(name = "NUMERO_IDENTIFICACION", nullable = false, length = 45)
@@ -175,9 +178,6 @@ public class Persona implements Serializable {
     @JoinColumn(name = "ID_PAIS_ORIGEN", referencedColumnName = "ID_PAIS", nullable = false)
     @ManyToOne(optional = false)
     private Pais paisOrigen;
-    @JoinColumn(name = "ID_TIPO_IDENTIFICACION", referencedColumnName = "ID_TIPO_IDENTIFICACION", nullable = false)
-    @ManyToOne(optional = false)
-    private TipoIdentificacion tipoIdentificacion;
     @JoinColumn(name = "ID_SECTOR", referencedColumnName = "ID_SECTOR", nullable = false)
     @ManyToOne(optional = false)
     private Sector sector;
