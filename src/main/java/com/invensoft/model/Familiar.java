@@ -62,7 +62,7 @@ public class Familiar implements Serializable {
     @Column(name = "PARENTESCO", length = 45)
     private String parentesco;
     @Column(name = "ULTIMO_ANIO_CURSADO")
-    private Integer ultimoAnioCursado;
+    private String ultimoAnioCursado;
     @JoinColumn(name = "ID_TIPO_IDENTIFICACION", referencedColumnName = "ID_TIPO_IDENTIFICACION", nullable = false)
     @ManyToOne(optional = false)
     private TipoIdentificacion tipoIdentificacion;
@@ -123,11 +123,11 @@ public class Familiar implements Serializable {
         this.parentesco = parentesco;
     }
 
-    public Integer getUltimoAnioCursado() {
+    public String getUltimoAnioCursado() {
         return ultimoAnioCursado;
     }
 
-    public void setUltimoAnioCursado(Integer ultimoAnioCursado) {
+    public void setUltimoAnioCursado(String ultimoAnioCursado) {
         this.ultimoAnioCursado = ultimoAnioCursado;
     }
 

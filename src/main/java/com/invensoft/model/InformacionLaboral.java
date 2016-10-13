@@ -57,11 +57,9 @@ public class InformacionLaboral implements Serializable {
     @Column(name = "CARGO", length = 255)
     private String cargo;
     @Column(name = "DESDE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date desde;
+    private String desde;
     @Column(name = "HASTA")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date hasta;
+    private String hasta;
     @Size(max = 255)
     @Column(name = "MOTIVO_EGRESO", length = 255)
     private String motivoEgreso;
@@ -108,19 +106,19 @@ public class InformacionLaboral implements Serializable {
         this.cargo = cargo;
     }
 
-    public Date getDesde() {
+    public String getDesde() {
         return desde;
     }
 
-    public void setDesde(Date desde) {
+    public void setDesde(String desde) {
         this.desde = desde;
     }
 
-    public Date getHasta() {
+    public String getHasta() {
         return hasta;
     }
 
-    public void setHasta(Date hasta) {
+    public void setHasta(String hasta) {
         this.hasta = hasta;
     }
 

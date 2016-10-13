@@ -58,6 +58,8 @@ public class Rol implements Serializable {
     private String viewCuestionario;
     @Column(name = "CAN_DELETE", nullable = false)
     private String canDelete;
+    @Column(name = "CAN_EXPORT_EXCEL", nullable = false)
+    private String canExportExcel;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rol", fetch = FetchType.LAZY)
     private List<RolMenu> rolMenuList;
     
@@ -139,6 +141,14 @@ public class Rol implements Serializable {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    public String getCanExportExcel() {
+        return canExportExcel;
+    }
+
+    public void setCanExportExcel(String canExportExcel) {
+        this.canExportExcel = canExportExcel;
     }
 
     @Override

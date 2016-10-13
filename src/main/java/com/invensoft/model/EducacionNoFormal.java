@@ -45,8 +45,8 @@ public class EducacionNoFormal implements Serializable {
     @Column(name = "ID_EDUCACION_NO_FORMAL", nullable = false)
     private Integer idEducacionNoFormal;
     @Column(name = "FECHA")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fecha;
+//    @Temporal(TemporalType.TIMESTAMP)
+    private String fecha;
     @Basic(optional = false)
     @NotNull
     @Column(name = "INSTITUCION", nullable = false, length = 255)
@@ -83,11 +83,11 @@ public class EducacionNoFormal implements Serializable {
         this.idEducacionNoFormal = idEducacionNoFormal;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 

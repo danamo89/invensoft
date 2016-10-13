@@ -316,11 +316,9 @@
                                 <p:column> 
                                     <p:selectOneMenu  value="#{personasController.familiar.parentesco}" style="width: 95%" 
                                                       disabled="#{usuarioController.readOnly}">
-                                        <f:selectItem itemLabel="Padre" itemValue="Padre"/>
-                                        <f:selectItem itemLabel="Madre" itemValue="Madre"/>
-                                        <f:selectItem itemLabel="Hermano(a)" itemValue="Hermano(a)"/>
-                                        <f:selectItem itemLabel="Tio(a)" itemValue="Tio(a)"/>
-                                        <f:selectItem itemLabel="Primo(a)" itemValue="Primo(a)"/>
+                                        <f:selectItem itemLabel="Esposo(a)" itemValue="Esposo(a)"/>
+                                        <f:selectItem itemLabel="Concubino(a)" itemValue="Concubino(a)"/>
+                                        <f:selectItem itemLabel="Hijo(a)" itemValue="Hijo(a)"/>
                                     </p:selectOneMenu >
                                 </p:column>
                                 <p:column>
@@ -328,7 +326,11 @@
                                 </p:column>
                                 <p:column>
                                     <p:selectOneMenu value="#{personasController.familiar.ultimoAnioCursado}" disabled="#{usuarioController.readOnly}">
-                                        <f:selectItems value="#{personasController.rangoAniosPermitidos}" var="anio" itemLabel="#{anio}" itemValue="#{anio}"/>
+                                        <f:selectItem itemLabel="Primario" itemValue="Primario"/>
+                                        <f:selectItem itemLabel="Secundario" itemValue="Secundario"/>
+                                        <f:selectItem itemLabel="Terciario" itemValue="Terciario"/>
+                                        <f:selectItem itemLabel="Universitario" itemValue="Universitario"/>
+                                        <f:selectItem itemLabel="Postgrado" itemValue="Postgrado"/>
                                     </p:selectOneMenu>
                                 </p:column>
                             </p:row>
@@ -422,6 +424,7 @@
                                 </p:column>
                                 <p:column>
                                     <p:selectOneMenu value="#{personasController.educacionFormal.anioEgreso}" style="width: 95%" disabled="#{usuarioController.readOnly}">
+                                        <f:selectItem noSelectionOption="true" itemLabel="" itemValue="#{null}" />
                                         <f:selectItems value="#{personasController.rangoAniosPermitidos}" var="anio" itemLabel="#{anio}" itemValue="#{anio}"/>
                                     </p:selectOneMenu>
                                 </p:column>
@@ -456,7 +459,7 @@
                                 <p:outputLabel value="#{educacionFormal.nivelEstudio}" />
                             </p:column>
                             <p:column headerText="Año de Egreso" style="width: 10%">
-                                <p:outputLabel value="#{educacionFormal.anioEgreso}" />
+                                <p:outputLabel value="#{educacionFormal.anioEgreso == 0 ? '' : educacionFormal.anioEgreso}" />
                             </p:column>
                             <p:column style="width: 10%">
                                 <p:commandButton icon="ui-icon-search" title="View" actionListener="#{personasController.onViewEducacionFormalDetail(educacionFormal)}" 
@@ -503,7 +506,11 @@
                                     <p:outputLabel value="Fecha"/>
                                 </p:column>
                                 <p:column>
-                                    <p:calendar value="#{personasController.educacionNoFormal.fecha}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                    <p:inputText value="#{personasController.educacionNoFormal.fecha}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                                 validatorMessage="Formato de fecha invalido.">
+                                        <f:validateRegex pattern="^$|\b\d{4}\b|\b\d{2}[/]\d{4}\b|\b\d{2}[/]\d{2}[/]\d{4}\b"/>
+                                    </p:inputText>
+                                    <!--<p:calendar value="#{personasController.educacionNoFormal.fecha}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>-->
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -546,7 +553,7 @@
                             </p:column>
                             <p:column headerText="Fecha del Estudio" style="width: 20%">
                                 <p:outputLabel value="#{educacionNoFormal.fecha}" >
-                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    <!--<f:convertDateTime pattern="dd/MM/yyyy" />-->
                                 </p:outputLabel>
                             </p:column>
                             <p:column style="width: 10%">
@@ -559,7 +566,7 @@
                             </p:column>
                         </p:dataTable>
                     </p:tab>
-                    <p:tab title="Laboral">
+                    <p:tab id="tabInformacionLaboral" title="Laboral">
                         <p:panelGrid style="width: 100%">
                             <f:facet name="header">
                                 <p:row>
@@ -636,7 +643,7 @@
                                 </p:column>
                                 <p:column style="width: 30%">
                                     <p:calendar navigator="true" pattern="dd/MM/yyyy" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
-                                                            value="#{personasController.persona.fechaIngreso}"/>
+                                                value="#{personasController.persona.fechaIngreso}"/>
                                 </p:column>
                                 <p:column style="width: 20%">
                                     <p:outputLabel value="Antiguedad"/>
@@ -714,15 +721,19 @@
                                     <p:outputLabel value="Desde"/>
                                 </p:column>
                                 <p:column style="width: 15%">
-                                    <p:calendar navigator="true" pattern="dd/MM/yyyy" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
-                                                value="#{personasController.informacionLaboral.desde}"/>
+                                    <p:inputText value="#{personasController.informacionLaboral.desde}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                                 validatorMessage="Formato de fecha invalido.">
+                                        <f:validateRegex pattern="^$|\b\d{4}\b|\b\d{2}[/]\d{4}\b|\b\d{2}[/]\d{2}[/]\d{4}\b"/>
+                                    </p:inputText>
                                 </p:column>
                                 <p:column style="width: 5%">
                                     <p:outputLabel value="Hasta"/>
                                 </p:column>
                                 <p:column style="width: 15%">
-                                    <p:calendar navigator="true" pattern="dd/MM/yyyy" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
-                                                value="#{personasController.informacionLaboral.hasta}"/>
+                                    <p:inputText value="#{personasController.informacionLaboral.hasta}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                                 validatorMessage="Formato de fecha invalido.">
+                                        <f:validateRegex pattern="^$|\b\d{4}\b|\b\d{2}[/]\d{4}\b|\b\d{2}[/]\d{2}[/]\d{4}\b"/>
+                                    </p:inputText>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -761,15 +772,15 @@
                             </p:column>
                             <p:column headerText="Desde">
                                 <p:outputLabel value="#{informacionLaboral.desde}" >
-                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    <!--<f:convertDateTime pattern="dd/MM/yyyy" />-->
                                 </p:outputLabel>
                             </p:column>
                             <p:column headerText="Hasta">
                                 <p:outputLabel value="#{informacionLaboral.hasta}" >
-                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    <!--<f:convertDateTime pattern="dd/MM/yyyy" />-->
                                 </p:outputLabel>
                             </p:column>
-                            <p:column style="width: 6%">
+                            <p:column style="width: 8%">
                                 <p:commandButton icon="ui-icon-search" disabled="#{usuarioController.readOnly}"
                                                  actionListener="#{personasController.onViewInformacionLaboralDetail(informacionLaboral)}"
                                                  ajax="true" update="personasForm:generalTabView:input-informacion-laboral"/>
@@ -788,22 +799,40 @@
                                 </p:outputPanel>
                             </f:facet>
                             <p:column headerText="Camisa (nro)">
-                                <p:inputMask mask="99" value="#{persona.camisa}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                <p:inputText value="#{persona.camisa}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                             validatorMessage="Formato invalido">
+                                    <f:validateRegex pattern="^$|[a-zA-Z]{1,2}|[0-9]{1,2}" />
+                                </p:inputText>
                             </p:column>
                             <p:column headerText="Buzo (talle)">
-                                <p:inputMask mask="a" value="#{persona.buzo}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                <p:inputText value="#{persona.buzo}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                             validatorMessage="Formato invalido">
+                                    <f:validateRegex pattern="^$|[a-zA-Z]{1,2}|[0-9]{1,2}" />
+                                </p:inputText>
                             </p:column>
                             <p:column headerText="Pantalon (nro)">
-                                <p:inputMask mask="99" value="#{persona.pantalon}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                <p:inputText value="#{persona.pantalon}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                             validatorMessage="Formato invalido">
+                                    <f:validateRegex pattern="^$|[a-zA-Z]{1,2}|[0-9]{1,2}" />
+                                </p:inputText>
                             </p:column>
                             <p:column headerText="Botines (nro)">
-                                <p:inputMask mask="99" value="#{persona.botines}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                <p:inputText value="#{persona.botines}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                             validatorMessage="Formato invalido">
+                                    <f:validateRegex pattern="^$|[a-zA-Z]{1,2}|[0-9]{1,2}" />
+                                </p:inputText>
                             </p:column>
                             <p:column headerText="Campera (talle)">
-                                <p:inputMask mask="a" value="#{persona.campera}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                <p:inputText value="#{persona.campera}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                             validatorMessage="Formato invalido">
+                                    <f:validateRegex pattern="^$|[a-zA-Z]{1,2}|[0-9]{1,2}" />
+                                </p:inputText>
                             </p:column>
                             <p:column headerText="Equipo de Lluvia (nro)">
-                                <p:inputMask mask="99" value="#{persona.eqLluvia}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                <p:inputText value="#{persona.eqLluvia}" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                             validatorMessage="Formato invalido">
+                                    <f:validateRegex pattern="^$|[a-zA-Z]{1,2}|[0-9]{1,2}" />
+                                </p:inputText>
                             </p:column>
                         </p:dataTable>
                         <br/><br/>
@@ -883,7 +912,7 @@
                                 </p:row>
                             </f:facet>
                         </p:panelGrid>
-                        
+
                         <custom:cuestionario cuestionario="#{personasController.cuestionarioDesarrolloProfesional}" single="true" disabled="#{usuarioController.readOnly}"/>
                     </p:tab>
                     <p:tab title="Salud Ocupacional">
@@ -896,7 +925,7 @@
                                 </p:row>
                             </f:facet>
                         </p:panelGrid>
-                        
+
                         <custom:cuestionario cuestionario="#{personasController.cuestionarioSaludOcupacional}" single="true" disabled="#{usuarioController.readOnly}"/>
                     </p:tab>
                     <p:tab title="Cuestionario" disabled="#{usuarioController.cantViewCuestionario}">
@@ -943,7 +972,11 @@
             </h:panelGroup>
 
             <h:panelGroup rendered="#{personasController.showPersonasTable}" style="width: 100%; text-align: center">
-                <h:outputText value="Listado de personas registradas en el sistema" style="font-size: 15px"/>
+                <p:row>
+                    <p:column style="width: 75%;">
+                        <h:outputText value="Listado de personas registradas en el sistema" style="font-size: 15px"/>
+                    </p:column>
+                </p:row>
 
                 <br/><br/>
 
@@ -961,8 +994,12 @@
                                         <p:outputLabel value="Personas" />
                                     </td>
                                     <td style="border: none; border-width: 0px; text-align: right">
-                                        <!--                                        <p:outputLabel value="Buscar: " />
-                                                                                <p:inputText id="globalFilter" onkeyup="PF('widget').filter()" style="width:150px" placeholder="Enter keyword"/>-->
+                                        <p:commandLink actionListener="#{personasController.onExportarPersonasAllExcel()}" 
+                                                       rendered="#{usuarioController.canExportExcel}"
+                                                       ajax="false"
+                                                       title="Exporta en formato Excel un listado de las Personas Ingresadas en el Sistema">
+                                            <h:graphicImage name="images/excel.png" style="height: 28px;width: 28px"/>
+                                        </p:commandLink>
                                     </td>
                                 </tr>
                             </table>
@@ -991,7 +1028,7 @@
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>
-                
+
                 <p:confirmDialog global="true" >
                     <center>
                         <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
@@ -999,7 +1036,6 @@
                     </center>
                 </p:confirmDialog>
             </h:panelGroup>
-
         </h:form>
     </ui:define>
 </ui:composition> 

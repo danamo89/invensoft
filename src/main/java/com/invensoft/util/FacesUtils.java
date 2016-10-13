@@ -70,20 +70,37 @@ public class FacesUtils {
     }
     
     public static boolean sessionUserCanDelete() {
-        boolean cantViewCuestionario = false;
+        boolean can = false;
         
         try {
             for (UsuarioRol usuarioRol : getSessionUser().getUsuarioRolList()) {
                 if (usuarioRol.getRol().getCanDelete().equals("1")) {
-                    cantViewCuestionario = true;
+                    can = true;
                     break;
                 }
             }
         } catch (Exception e) {
-            cantViewCuestionario = false;
+            can = false;
         }
         
-        return cantViewCuestionario;
+        return can;
+    }
+    
+    public static boolean sessionUserCanExportExcel() {
+        boolean can = false;
+        
+        try {
+            for (UsuarioRol usuarioRol : getSessionUser().getUsuarioRolList()) {
+                if (usuarioRol.getRol().getCanExportExcel().equals("1")) {
+                    can = true;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            can = false;
+        }
+        
+        return can;
     }
     
     public static ValueExpression createValueExpression(String expression, Class<?> expectedType) {

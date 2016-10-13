@@ -83,6 +83,9 @@ public class Persona implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "APELLIDOS", nullable = false, length = 100)
     private String apellidos;
+    @JoinColumn(name = "ID_TIPO_IDENTIFICACION", referencedColumnName = "ID_TIPO_IDENTIFICACION", nullable = false)
+    @ManyToOne(optional = false)
+    private TipoIdentificacion tipoIdentificacion;
     @Basic(optional = false)
     @NotNull
     @Column(name = "NUMERO_IDENTIFICACION", nullable = false, length = 45)
@@ -103,11 +106,11 @@ public class Persona implements Serializable {
     @Size(max = 5)
     @Column(name = "NUMERO_DOMICILIO", length = 5)
     private String numeroDomicilio;
-    @Size(max = 2)
-    @Column(name = "PISO", length = 2)
+    @Size(max = 10)
+    @Column(name = "PISO")
     private String piso;
-    @Size(max = 5)
-    @Column(name = "DEPARTAMENTO", length = 5)
+    @Size(max = 20)
+    @Column(name = "DEPARTAMENTO")
     private String departamento;
     @Size(max = 10)
     @Column(name = "CODIGO_POSTAL", length = 10)
@@ -143,15 +146,15 @@ public class Persona implements Serializable {
     @Column(name="BUZO", nullable = true)
     private String buzo;
     @Column(name="PANTALON", nullable = true)
-    private Integer pantalon;
+    private String pantalon;
     @Column(name="BOTINES", nullable = true)
-    private Integer botines;
+    private String botines;
     @Column(name="CAMPERA", nullable = true)
     private String campera;
     @Column(name = "EQ_LLUVIA")
-    private Integer eqLluvia;
+    private String eqLluvia;
     @Column(name = "CAMISA")
-    private Integer camisa;
+    private String camisa;
     @Size(max = 1)
     @Column(name = "TIENE_CARNET_CONDUCTOR", length = 1)
     private String tieneCarnetConductor;
@@ -175,9 +178,6 @@ public class Persona implements Serializable {
     @JoinColumn(name = "ID_PAIS_ORIGEN", referencedColumnName = "ID_PAIS", nullable = false)
     @ManyToOne(optional = false)
     private Pais paisOrigen;
-    @JoinColumn(name = "ID_TIPO_IDENTIFICACION", referencedColumnName = "ID_TIPO_IDENTIFICACION", nullable = false)
-    @ManyToOne(optional = false)
-    private TipoIdentificacion tipoIdentificacion;
     @JoinColumn(name = "ID_SECTOR", referencedColumnName = "ID_SECTOR", nullable = false)
     @ManyToOne(optional = false)
     private Sector sector;
@@ -481,19 +481,19 @@ public class Persona implements Serializable {
         this.buzo = buzo;
     }
 
-    public Integer getPantalon() {
+    public String getPantalon() {
         return pantalon;
     }
 
-    public void setPantalon(Integer pantalon) {
+    public void setPantalon(String pantalon) {
         this.pantalon = pantalon;
     }
 
-    public Integer getBotines() {
+    public String getBotines() {
         return botines;
     }
 
-    public void setBotines(Integer botines) {
+    public void setBotines(String botines) {
         this.botines = botines;
     }
 
@@ -521,19 +521,19 @@ public class Persona implements Serializable {
         this.documentosPersonaList = documentosPersonaList;
     }
 
-    public Integer getCamisa() {
+    public String getCamisa() {
         return camisa;
     }
 
-    public void setCamisa(Integer camisa) {
+    public void setCamisa(String camisa) {
         this.camisa = camisa;
     }
     
-    public Integer getEqLluvia() {
+    public String getEqLluvia() {
         return eqLluvia;
     }
 
-    public void setEqLluvia(Integer eqLluvia) {
+    public void setEqLluvia(String eqLluvia) {
         this.eqLluvia = eqLluvia;
     }
     

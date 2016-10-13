@@ -47,9 +47,7 @@ public class EducacionFormal implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "NIVEL_ESTUDIO", nullable = false, length = 50)
     private String nivelEstudio;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ANIO_EGRESO", nullable = false)
+    @Column(name = "ANIO_EGRESO")
     private int anioEgreso;
     @Basic(optional = false)
     @NotNull

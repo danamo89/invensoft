@@ -34,6 +34,7 @@ public class UsuarioController implements Serializable {
     private boolean readOnly;
     private boolean cantViewCuestionario;
     private boolean canDelete;
+    private boolean canExportExcel;
     private boolean showUsuariosTable;
     
     @ManagedProperty(value = "#{rolService}")
@@ -53,6 +54,7 @@ public class UsuarioController implements Serializable {
         readOnly = FacesUtils.sessionUserIsReadOnly();
         cantViewCuestionario = FacesUtils.sessionUserCantViewCuestionario();
         canDelete = FacesUtils.sessionUserCanDelete();
+        canExportExcel = FacesUtils.sessionUserCanExportExcel();
         
         this.loadLists();
     }
@@ -188,6 +190,14 @@ public class UsuarioController implements Serializable {
 
     public void setCanDelete(boolean canDelete) {
         this.canDelete = canDelete;
+    }
+
+    public boolean isCanExportExcel() {
+        return canExportExcel;
+    }
+
+    public void setCanExportExcel(boolean canExportExcel) {
+        this.canExportExcel = canExportExcel;
     }
     //</editor-fold>
     
