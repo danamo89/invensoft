@@ -26,6 +26,11 @@
             </p:layoutUnit>
 
             <p:layoutUnit position="center">
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="/images/ajax-loader.gif" />
+                </p:dialog>
+                
                 <p:messages autoUpdate="true" severity="fatal" showDetail="true" closable="true" escape="false"/>
                 <p:messages autoUpdate="true" severity="error,warning,info" closable="true" escape="false"/>
                 <br/>
