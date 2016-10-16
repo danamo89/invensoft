@@ -23,20 +23,20 @@ public class PersonaDaoImpl extends GenericDaoImpl<Persona, Integer> implements 
     @Override
     public List<Object[]> findTopPersonasXCategoriaLaboral(Integer top) throws Exception {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT CL.DESCRIPCION, T.CANTIDAD ");
-        sql.append("  FROM CATEGORIAS_LABORALES CL ");
-        sql.append("     , (SELECT @rownum:=0) X");
+        sql.append("select cl.descripcion, t.cantidad ");
+        sql.append("  from categorias_laborales cl ");
+        sql.append("     , (select @rownum:=0) x");
         sql.append("     , ( ");
-        sql.append("            SELECT (@rownum:=@rownum+1) N");
-        sql.append("                 , COUNT(PE.ID_PERSONA) CANTIDAD ");
-        sql.append("                 , PE.ID_CATEGORIA_LABORAL");
-        sql.append("              FROM PERSONAS PE, (SELECT @rownum:=0) X");
-        sql.append("          GROUP BY PE.ID_CATEGORIA_LABORAL");
-        sql.append("          ORDER BY 2 DESC");
-        sql.append("       ) T");
-        sql.append("  WHERE CL.ID_CATEGORIA_LABORAL = T.ID_CATEGORIA_LABORAL");
-        sql.append("    AND T.N <= ").append(top);
-        sql.append(" ORDER BY 2 DESC, 1 ASC ");
+        sql.append("            select (@rownum:=@rownum+1) n");
+        sql.append("                 , count(pe.id_persona) cantidad ");
+        sql.append("                 , pe.id_categoria_laboral");
+        sql.append("              from personas pe, (select @rownum:=0) x");
+        sql.append("          group by pe.id_categoria_laboral");
+        sql.append("          order by 2 desc");
+        sql.append("       ) t");
+        sql.append("  where cl.id_categoria_laboral = t.id_categoria_laboral");
+        sql.append("    and t.n <= ").append(top);
+        sql.append(" order by 2 desc, 1 asc ");
         
         Query query = getEntityManager().createNativeQuery(sql.toString());
         return (List<Object[]>) query.getResultList();
@@ -45,22 +45,22 @@ public class PersonaDaoImpl extends GenericDaoImpl<Persona, Integer> implements 
     @Override
     public List<Object[]> findTopPersonasXLocalidad(Integer top) throws Exception {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT CONCAT(P.NOMBRE,' - ',L.NOMBRE) NOMBRE, T.CANTIDAD ");
-        sql.append("  FROM LOCALIDADES L ");
-        sql.append("     ,  PROVINCIAS P ");
-        sql.append("     , (SELECT @rownum:=0) X");
+        sql.append("select concat(p.nombre,' - ',l.nombre) nombre, t.cantidad ");
+        sql.append("  from localidades l ");
+        sql.append("     ,  provincias p ");
+        sql.append("     , (select @rownum:=0) x");
         sql.append("     , ( ");
-        sql.append("            SELECT (@rownum:=@rownum+1) N");
-        sql.append("                 , COUNT(PE.ID_PERSONA) CANTIDAD ");
-        sql.append("                 , PE.ID_LOCALIDAD");
-        sql.append("              FROM PERSONAS PE, (SELECT @rownum:=0) X");
-        sql.append("          GROUP BY PE.ID_LOCALIDAD");
-        sql.append("          ORDER BY 2 DESC");
-        sql.append("       ) T");
-        sql.append("  WHERE L.ID_LOCALIDAD = T.ID_LOCALIDAD ");
-        sql.append("    AND L.ID_PROVINCIA = P.ID_PROVINCIA ");
-        sql.append("    AND T.N <= ").append(top);
-        sql.append(" ORDER BY 2 DESC, 1 ASC ");
+        sql.append("            select (@rownum:=@rownum+1) n");
+        sql.append("                 , count(pe.id_persona) cantidad ");
+        sql.append("                 , pe.id_localidad");
+        sql.append("              from personas pe, (select @rownum:=0) x");
+        sql.append("          group by pe.id_localidad");
+        sql.append("          order by 2 desc");
+        sql.append("       ) t");
+        sql.append("  where l.id_localidad = t.id_localidad ");
+        sql.append("    and l.id_provincia = p.id_provincia ");
+        sql.append("    and t.n <= ").append(top);
+        sql.append(" order by 2 desc, 1 asc ");
         
         Query query = getEntityManager().createNativeQuery(sql.toString());
         return (List<Object[]>) query.getResultList();

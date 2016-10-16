@@ -80,8 +80,8 @@ public abstract class GenericDaoImpl<T, ID extends Serializable> implements IGen
 
     @Transactional
     @Override
-    public synchronized void save(T entity) throws Exception {
-        getEntityManager().merge(entity);
+    public synchronized T save(T entity) throws Exception {
+        return getEntityManager().merge(entity);
     }
 
     @Transactional

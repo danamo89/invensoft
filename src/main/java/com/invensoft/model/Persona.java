@@ -18,6 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -193,9 +194,16 @@ public class Persona implements Serializable {
     @JoinColumn(name = "ID_GREMIO", referencedColumnName = "ID_GREMIO")
     @ManyToOne
     private Gremio gremio;
-    @JoinColumn(name = "ID_FOTO_PERSONA", referencedColumnName = "id_foto_persona")
-    @ManyToOne
-    private FotoPersona fotoPersona;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Column(name = "FOTO", nullable = false)
+    private byte[] foto;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 4)
+    @Column(name = "EXTENSION", nullable = false, length = 4)
+    private String extension;
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<EducacionFormal> educacionesFormalesList;
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.LAZY, orphanRemoval = true)
@@ -562,12 +570,20 @@ public class Persona implements Serializable {
         return "com.invensoft.model.Persona[ idPersona=" + idPersona + " ]";
     }
 
-    public FotoPersona getFotoPersona() {
-        return fotoPersona;
+    public byte[] getFoto() {
+        return foto;
     }
 
-    public void setFotoPersona(FotoPersona fotoPersona) {
-        this.fotoPersona = fotoPersona;
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 
     public Puesto getPuesto() {

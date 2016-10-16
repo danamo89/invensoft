@@ -17,7 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public interface IPersonaService {
     
     List<Persona> findAll();
-    void save(Persona persona);
+    Persona save(Persona persona);
     void delete(Persona persona);
     
     XSSFWorkbook exportarPersonaExcel(Persona persona) throws IOException;

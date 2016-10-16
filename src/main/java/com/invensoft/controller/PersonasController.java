@@ -16,7 +16,6 @@ import com.invensoft.model.Pais;
 import com.invensoft.model.Persona;
 import com.invensoft.model.Documento;
 import com.invensoft.model.DocumentoPersona;
-import com.invensoft.model.FotoPersona;
 import com.invensoft.model.Gremio;
 import com.invensoft.model.GrupoPreguntas;
 import com.invensoft.model.InformacionLaboral;
@@ -300,14 +299,14 @@ public class PersonasController implements Serializable {
         idProvinciaSelected = this.persona.getLocalidad().getProvincia().getIdProvincia();
         onProvinciaChange();
 
-        if (this.persona.getFotoPersona() != null) {
+        if (this.persona.getFoto() != null && this.persona.getExtension() != null) {
             try {
                 String relativePath = "/resources/images";
                 String absolutePath = context.getExternalContext().getRealPath(relativePath);
-                String fileExtension = this.persona.getFotoPersona().getExtension();
+                String fileExtension = this.persona.getExtension();
                 String fileName = this.persona.getLegajo() + "." + fileExtension;
 
-                FileUtils.writeByteArrayToFile(new File(absolutePath + "/" + fileName), this.persona.getFotoPersona().getFoto());
+                FileUtils.writeByteArrayToFile(new File(absolutePath + "/" + fileName), this.persona.getFoto());
 
                 this.rutaFoto = relativePath + "/" + fileName;
             } catch (IOException e) {
@@ -545,7 +544,7 @@ public class PersonasController implements Serializable {
 
             updateDocumentosPersona();
             
-            personasService.save(persona);
+            this.persona = personasService.save(persona);
             respuestaPreguntaService.save(createListToMergeForCuestionario(cuestionarioSaludOcupacional));
             respuestaPreguntaService.save(createListToMergeForCuestionario(cuestionarioDesarrolloProfesional));
             for (CuestionarioSector cuestionarioSector : persona.getSector().getCuestionariosSectorList()) {
@@ -571,7 +570,7 @@ public class PersonasController implements Serializable {
                 for (RespuestaPregunta respuestaPreguntaItem : grupoPreguntas.getRespuestaPreguntasList()) {
                     if (respuestaPreguntaItem.getValue() != null && !respuestaPreguntaItem.getValue().isEmpty()) {
                         RespuestaPregunta respuestaPregunta = new RespuestaPregunta(respuestaPreguntaItem.getIdRespuestaPregunta());
-                        respuestaPregunta.setPersona(persona);
+                        respuestaPregunta.setPersona(this.persona);
                         respuestaPregunta.setTextoRespuesta(respuestaPreguntaItem.getTextoRespuesta());
                         respuestaPregunta.setPregunta(respuestaPreguntaItem.getPregunta());
 
@@ -641,21 +640,18 @@ public class PersonasController implements Serializable {
             FacesContext context = FacesContext.getCurrentInstance();
             ExternalContext externalContext = context.getExternalContext();
             
-            if(externalContext.getUserPrincipal() != null) {
+            if (externalContext.getUserPrincipal() != null) {
                 String user = externalContext.getUserPrincipal().getName();
                 tempFileName = "tmp_"+user;
-            }else {
+            } else {
                 tempFileName = new Date().toString();
             }
             
             byte[] content = IOUtils.toByteArray(uploadedFile.getInputstream());
             String extension = uploadedFile.getFileName().split("\\.")[1].toLowerCase();
             
-            FotoPersona foto = new FotoPersona();
-            foto.setFoto(content);
-            foto.setExtension(extension);
-
-            this.persona.setFotoPersona(foto);
+            this.persona.setFoto(content);
+            this.persona.setExtension(extension);
 
             String relativeWebPath = "/resources/images/";
             String absoluteDiskPath = externalContext.getRealPath(relativeWebPath);

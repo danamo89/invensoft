@@ -55,13 +55,14 @@ public class PersonaServiceImpl implements IPersonaService {
     }
 
     @Override 
-    public void save(Persona persona) {
+    public Persona save(Persona persona) {
         try {
-            personaDao.save(persona);
             messageBean.addInfo("Datos guardados!", "Se han guardado los datos de forma correcta.");
+            return personaDao.save(persona);
         } catch (Exception e) {
             messageBean.addError("Ha ocurrido un error al guardar los datos de la persona seleccionada", e.getMessage());
             e.printStackTrace();
+            return null;
         }
     }
     

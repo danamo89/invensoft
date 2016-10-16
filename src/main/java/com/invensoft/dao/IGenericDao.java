@@ -54,7 +54,7 @@ public interface IGenericDao<T, ID extends Serializable> extends Serializable {
      * @param entity
      * @throws Exception 
      */
-    public void save(T entity) throws Exception;
+    public T save(T entity) throws Exception;
     
     /**
      * 
