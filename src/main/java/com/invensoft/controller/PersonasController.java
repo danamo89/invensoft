@@ -544,10 +544,18 @@ public class PersonasController implements Serializable {
 
             updateDocumentosPersona();
             
+            List<CuestionarioSector> cuestionariosSector = persona.getSector().getCuestionariosSectorList();
+            
             this.persona = personasService.save(persona);
             respuestaPreguntaService.save(createListToMergeForCuestionario(cuestionarioSaludOcupacional));
             respuestaPreguntaService.save(createListToMergeForCuestionario(cuestionarioDesarrolloProfesional));
-            for (CuestionarioSector cuestionarioSector : persona.getSector().getCuestionariosSectorList()) {
+            
+            for (CuestionarioSector cuestionarioSector : cuestionariosSector) {
+                for(GrupoPreguntas grupoPreguntas : cuestionarioSector.getCuestionario().getGrupoPreguntasList()) {
+                    for(RespuestaPregunta respuestaPregunta : grupoPreguntas.getRespuestaPreguntasList()) {
+                        respuestaPregunta.setPersona(this.persona);
+                    }
+                }
                 respuestaPreguntaService.save(createListToMergeForCuestionario(cuestionarioSector.getCuestionario()));
             }
             
