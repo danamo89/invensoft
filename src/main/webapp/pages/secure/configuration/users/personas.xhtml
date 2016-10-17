@@ -344,7 +344,7 @@
                         </p:panelGrid>
                         <br/><br/>
                         <p:dataTable id="tableFamiliares" rows="5" paginator="true" paginatorPosition="bottom" style="width: 100%"
-                                     rowIndexVar="index" widgetVar="widget" var="familiar" value="#{personasController.persona.familiaresList}"
+                                     rowIndexVar="index"  var="familiar" value="#{personasController.persona.familiaresList}"
                                      emptyMessage="No posee registros aún.">
                             <f:facet name="header">
                                 <p:outputPanel>
@@ -439,7 +439,7 @@
                         </p:panelGrid>
                         <br/><br/>
                         <p:dataTable id="tableEducacionesFormales" rows="5" paginator="true" paginatorPosition="bottom" style="width: 100%"
-                                     rowIndexVar="index" widgetVar="widget" var="educacionFormal" value="#{personasController.persona.educacionesFormalesList}"
+                                     rowIndexVar="index" var="educacionFormal" value="#{personasController.persona.educacionesFormalesList}"
                                      emptyMessage="No posee registros aún.">
                             <f:facet name="header">
                                 <p:outputPanel>
@@ -532,7 +532,7 @@
                         </p:panelGrid>
                         <br/><br/>
                         <p:dataTable id="tableEducacionesNoFormales" rows="5" paginator="true" paginatorPosition="bottom" style="width: 100%"
-                                     rowIndexVar="index" widgetVar="widget" var="educacionNoFormal" value="#{personasController.persona.educacionesNoFormalesList}"
+                                     rowIndexVar="index" var="educacionNoFormal" value="#{personasController.persona.educacionesNoFormalesList}"
                                      emptyMessage="No posee registros aún.">
                             <f:facet name="header">
                                 <p:outputPanel>
@@ -754,7 +754,7 @@
                         </p:panelGrid>
                         <br/><br/>
                         <p:dataTable id="tableInformacionLaboral" rows="5" paginator="true" paginatorPosition="bottom" style="width: 100%"
-                                     rowIndexVar="index" widgetVar="widget" var="informacionLaboral" value="#{personasController.persona.informacionLaboralList}"
+                                     rowIndexVar="index" var="informacionLaboral" value="#{personasController.persona.informacionLaboralList}"
                                      emptyMessage="No posee registros aún.">
                             <f:facet name="header">
                                 <p:outputPanel>
@@ -954,6 +954,7 @@
                     <p:row>
                         <p:column style="text-align: right">
                             <p:commandButton value="Cancelar" icon="ui-icon-close" style="background-color: tomato" update=":personasForm" immediate="true">
+                                <p:confirm header="Perdida de datos" message="Si cancelas el proceso antes de guardar puedes perder los datos ingresados. ¿Realmente desea salir?" icon="ui-icon-alert" />
                                 <f:setPropertyActionListener  target="#{personasController.showPersonasTable}" value="#{!personasController.showPersonasTable}"/>
                             </p:commandButton> 
                         </p:column>

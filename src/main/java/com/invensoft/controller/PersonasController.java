@@ -544,12 +544,14 @@ public class PersonasController implements Serializable {
 
             updateDocumentosPersona();
             
+            persona.setRespuestaPreguntaList(new LinkedList<RespuestaPregunta>());
+            for (CuestionarioSector cuestionarioSector : persona.getSector().getCuestionariosSectorList()) {
+                persona.getRespuestaPreguntaList().addAll(createListToMergeForCuestionario(cuestionarioSector.getCuestionario()));
+            }
+            
             this.persona = personasService.save(persona);
             respuestaPreguntaService.save(createListToMergeForCuestionario(cuestionarioSaludOcupacional));
             respuestaPreguntaService.save(createListToMergeForCuestionario(cuestionarioDesarrolloProfesional));
-            for (CuestionarioSector cuestionarioSector : persona.getSector().getCuestionariosSectorList()) {
-                respuestaPreguntaService.save(createListToMergeForCuestionario(cuestionarioSector.getCuestionario()));
-            }
             
             //Recargamos la lista de personas
             this.personasList.clear();
@@ -569,16 +571,10 @@ public class PersonasController implements Serializable {
             for (GrupoPreguntas grupoPreguntas : cuestionario.getGrupoPreguntasList()) {
                 for (RespuestaPregunta respuestaPreguntaItem : grupoPreguntas.getRespuestaPreguntasList()) {
                     if (respuestaPreguntaItem.getValue() != null && !respuestaPreguntaItem.getValue().isEmpty()) {
-                        RespuestaPregunta respuestaPregunta = new RespuestaPregunta(respuestaPreguntaItem.getIdRespuestaPregunta());
-                        respuestaPregunta.setPersona(this.persona);
-                        respuestaPregunta.setTextoRespuesta(respuestaPreguntaItem.getTextoRespuesta());
-                        respuestaPregunta.setPregunta(respuestaPreguntaItem.getPregunta());
+                        respuestaPreguntaItem.setPersona(this.persona);
+                        respuestaPreguntaItem.traspose();
 
-                        if (respuestaPreguntaItem.getOpcionRespuesta() != null && respuestaPreguntaItem.getOpcionRespuesta().getIdOpcionRespuesta() != null) {
-                            respuestaPregunta.setOpcionRespuesta(new OpcionRespuesta(respuestaPreguntaItem.getOpcionRespuesta().getIdOpcionRespuesta(), respuestaPreguntaItem.getPregunta()));
-                        }
-
-                        listRespuestasPreguntas.add(respuestaPregunta);
+                        listRespuestasPreguntas.add(respuestaPreguntaItem);
                     }
                 }
             }

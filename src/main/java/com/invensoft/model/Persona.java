@@ -172,7 +172,7 @@ public class Persona implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaIngreso;
     @Column(name = "ANTIGUEDAD")
-    private Integer antiguedad;
+    private String antiguedad;
     @JoinColumn(name = "ID_ESTADO_CIVIL", referencedColumnName = "ID_ESTADO_CIVIL", nullable = false)
     @ManyToOne(optional = false)
     private EstadoCivil estadoCivil;
@@ -635,11 +635,11 @@ public class Persona implements Serializable {
         this.fechaIngreso = fechaIngreso;
     }
 
-    public Integer getAntiguedad() {
+    public String getAntiguedad() {
         return antiguedad;
     }
 
-    public void setAntiguedad(Integer antiguedad) {
+    public void setAntiguedad(String antiguedad) {
         this.antiguedad = antiguedad;
     }
     public String getTieneCarnetConductor() {

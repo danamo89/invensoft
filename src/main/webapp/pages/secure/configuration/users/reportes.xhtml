@@ -23,11 +23,13 @@
                     </p:column>
                 </p:row>
                 <p:row>
-                    <p:column>
-                        <center><p:chart type="pie" model="#{personasChartsController.pieChartPersonasXCategoriaLaboral}" style="width:500px;height:300px" /></center>
+                    <p:column colspan="2">
+                        <center><p:chart type="pie" model="#{personasChartsController.pieChartPersonasXCategoriaLaboral}" style="height:500px" /></center>
                     </p:column>
-                    <p:column>
-                        <center><p:chart type="pie" model="#{personasChartsController.pieChartPersonasXLocalidad}" style="width:500px;height:300px" /></center>
+                </p:row>
+                <p:row>
+                    <p:column colspan="2">
+                        <center><p:chart type="pie" model="#{personasChartsController.pieChartPersonasXLocalidad}" style="height:400px" /></center>
                     </p:column>
                 </p:row>
             </p:panelGrid>

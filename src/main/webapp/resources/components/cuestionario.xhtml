@@ -30,12 +30,12 @@
                     <br/>
                     <p:outputLabel value="#{status.index+1}). #{respuestaPregunta.pregunta.texto}" style="text-align: left"/>
 
-                    <p:selectManyCheckbox layout="grid" columns="1" style="text-align: left" value="#{respuestaPregunta.opcionRespuesta.idOpcionRespuesta}"
+                    <p:selectManyCheckbox layout="grid" columns="1" style="text-align: left" value="#{respuestaPregunta.arrayIdsOpcionesRespuesta}"
                                           rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Check' ? true : false}" disabled="#{cc.attrs.disabled}">
                         <f:selectItems value="#{respuestaPregunta.pregunta.opcioneRespuestaList}" var="opcionRespuesta" itemLabel="#{opcionRespuesta.texto}" itemValue="#{opcionRespuesta.idOpcionRespuesta}" />
                     </p:selectManyCheckbox>
 
-                    <p:selectOneRadio layout="grid" columns="1" style="text-align: left" value="#{respuestaPregunta.opcionRespuesta.idOpcionRespuesta}"
+                    <p:selectOneRadio layout="grid" columns="1" style="text-align: left" value="#{respuestaPregunta.idOpcionRespuesta}"
                                       rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Radio' ? true : false}" disabled="#{cc.attrs.disabled}">
                         <f:selectItems value="#{respuestaPregunta.pregunta.opcioneRespuestaList}" var="opcionRespuesta" itemLabel="#{opcionRespuesta.texto}" itemValue="#{opcionRespuesta.idOpcionRespuesta}" />
                     </p:selectOneRadio>
@@ -69,32 +69,15 @@
                         <br/>
                         <p:outputLabel value="#{status.index+1}). #{respuestaPregunta.pregunta.texto}" style="text-align: left"/>
 
-                        <p:selectManyCheckbox layout="grid" columns="1" style="text-align: left" value="#{respuestaPregunta.opcionRespuesta.idOpcionRespuesta}"
+                        <p:selectManyCheckbox layout="grid" columns="1" style="text-align: left" value="#{respuestaPregunta.arrayIdsOpcionesRespuesta}"
                                               rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Check' ? true : false}" disabled="#{cc.attrs.disabled}">
                             <f:selectItems value="#{respuestaPregunta.pregunta.opcioneRespuestaList}" var="opcionRespuesta" itemLabel="#{opcionRespuesta.texto}" itemValue="#{opcionRespuesta.idOpcionRespuesta}" />
                         </p:selectManyCheckbox>
 
-                        <p:selectOneRadio layout="grid" columns="1" style="text-align: left" value="#{respuestaPregunta.opcionRespuesta.idOpcionRespuesta}"
+                        <p:selectOneRadio layout="grid" columns="1" style="text-align: left" value="#{respuestaPregunta.idOpcionRespuesta}"
                                           rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Radio' ? true : false}" disabled="#{cc.attrs.disabled}">
                             <f:selectItems value="#{respuestaPregunta.pregunta.opcioneRespuestaList}" var="opcionRespuesta" itemLabel="#{opcionRespuesta.texto}" itemValue="#{opcionRespuesta.idOpcionRespuesta}" />
                         </p:selectOneRadio>
-                        
-<!--                        <p:panelGrid style="background-color: infobackground">
-                            <ui:repeat value="#{respuestaPregunta.pregunta.opcioneRespuestaList}" var="opcionRespuesta" varStatus="statusOpcionRespuesta">
-                                <f:facet name="header">
-                                    <p:outputLabel value="#{status.index+1}). #{respuestaPregunta.pregunta.texto}" style="text-align: left"/>
-                                </f:facet>
-                                <p:row>
-                                    <p:column>
-                                        <p:selectOneRadio /> 
-                                        <p:selectBooleanCheckbox />
-                                    </p:column>
-                                    <p:column>
-                                        <p:outputLabel value="#{opcionRespuesta.texto}" />
-                                    </p:column>
-                                </p:row>
-                            </ui:repeat>
-                        </p:panelGrid>-->
 
                         <h:panelGroup rendered="#{respuestaPregunta.pregunta.estiloOpciones eq 'Input' ? true : false}">
                             <br/><p:inputText style="width: 100%" value="#{respuestaPregunta.textoRespuesta}" disabled="#{cc.attrs.disabled}"/><br/>

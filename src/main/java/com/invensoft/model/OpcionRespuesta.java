@@ -51,8 +51,6 @@ public class OpcionRespuesta implements Serializable, Comparable<OpcionRespuesta
     @JoinColumn(name = "ID_PREGUNTA", referencedColumnName = "ID_PREGUNTA", nullable = false)
     @ManyToOne(optional = false)
     private Pregunta pregunta;
-    @OneToMany(mappedBy = "opcionRespuesta", fetch = FetchType.LAZY)
-    private List<RespuestaPregunta> respuestaPreguntaList;
     
     public OpcionRespuesta() {
     }
@@ -130,15 +128,6 @@ public class OpcionRespuesta implements Serializable, Comparable<OpcionRespuesta
     @Override
     public int compareTo(OpcionRespuesta o) {
         return orden.compareTo(o.getOrden());
-    }
-
-    @XmlTransient
-    public List<RespuestaPregunta> getRespuestaPreguntaList() {
-        return respuestaPreguntaList;
-    }
-
-    public void setRespuestaPreguntaList(List<RespuestaPregunta> respuestaPreguntaList) {
-        this.respuestaPreguntaList = respuestaPreguntaList;
     }
     
 }
