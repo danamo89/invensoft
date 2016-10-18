@@ -7,6 +7,8 @@ package com.invensoft.dao.impl;
 
 import com.invensoft.dao.IGremioDao;
 import com.invensoft.model.Gremio;
+import java.util.List;
+import javax.persistence.Query;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,13 @@ import org.springframework.stereotype.Component;
 @Scope(value = "singleton")
 @Component(value = "gremioDao")
 public class GremioDaoImpl extends GenericDaoImpl<Gremio, Integer> implements IGremioDao {
+    
+    @Override
+    public List<Gremio> findAll() {
+        @SuppressWarnings("JPQLValidation")
+        Query query = getEntityManager().createQuery("SELECT e FROM Gremio As e WHERE e.orden IS NOT NULL ORDER BY e.orden");
+        return (List<Gremio>) query.getResultList();
+    }
     
     
 }

@@ -36,6 +36,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Gremios.findByDescripcion", query = "SELECT g FROM Gremio g WHERE g.descripcion = :descripcion")})
 public class Gremio implements Serializable {
 
+    @Column(name = "orden")
+    private Integer orden;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -124,6 +127,14 @@ public class Gremio implements Serializable {
 
     public void setSigla(String sigla) {
         this.sigla = sigla;
+    }
+
+    public Integer getOrden() {
+        return orden;
+    }
+
+    public void setOrden(Integer orden) {
+        this.orden = orden;
     }
     
 }
