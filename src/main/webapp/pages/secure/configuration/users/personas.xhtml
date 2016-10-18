@@ -322,10 +322,12 @@
                                     </p:selectOneMenu >
                                 </p:column>
                                 <p:column>
-                                    <p:outputLabel value="Ultimo año cursado"/>
+                                    <p:outputLabel value="Ultimo año cursado o en curso"/>
                                 </p:column>
                                 <p:column>
                                     <p:selectOneMenu value="#{personasController.familiar.ultimoAnioCursado}" disabled="#{usuarioController.readOnly}">
+                                        <f:selectItem itemLabel="" itemValue="" noSelectionOption="true"/>
+                                        <f:selectItem itemLabel="Inicial" itemValue="Inicial"/>
                                         <f:selectItem itemLabel="Primario" itemValue="Primario"/>
                                         <f:selectItem itemLabel="Secundario" itemValue="Secundario"/>
                                         <f:selectItem itemLabel="Terciario" itemValue="Terciario"/>
@@ -758,7 +760,7 @@
                                      emptyMessage="No posee registros aún.">
                             <f:facet name="header">
                                 <p:outputPanel>
-                                    <p:outputLabel value="Listado de Cargos" />
+                                    <p:outputLabel value="Empleos Anteriores (últimos tres)" />
                                 </p:outputPanel>
                             </f:facet>
                             <p:column headerText="#" style="width: 3%">

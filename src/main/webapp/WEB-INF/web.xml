@@ -67,6 +67,12 @@
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
+    
+    <!-- Custom -->
+    <listener>
+        <listener-class>com.invensoft.util.Cleaner</listener-class>
+    </listener>
+    
     <session-config>
         <session-timeout>
             30
