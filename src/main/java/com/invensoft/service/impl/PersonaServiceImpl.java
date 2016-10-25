@@ -44,9 +44,9 @@ public class PersonaServiceImpl implements IPersonaService {
     @Autowired
     private MessageBean messageBean;
     
-    public List<> findPersonasBasicData() {
-        
-    }
+//    public List<> findPersonasBasicData() {
+//        
+//    }
     
     @Override
     public List<Persona> findAll() {
