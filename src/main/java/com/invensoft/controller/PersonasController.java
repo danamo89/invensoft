@@ -549,9 +549,12 @@ public class PersonasController implements Serializable {
                 persona.getRespuestaPreguntaList().addAll(createListToMergeForCuestionario(cuestionarioSector.getCuestionario()));
             }
             
+            persona.getRespuestaPreguntaList().addAll(createListToMergeForCuestionario(cuestionarioSaludOcupacional));
+            persona.getRespuestaPreguntaList().addAll(createListToMergeForCuestionario(cuestionarioDesarrolloProfesional));
+            
             this.persona = personasService.save(persona);
-            respuestaPreguntaService.save(createListToMergeForCuestionario(cuestionarioSaludOcupacional));
-            respuestaPreguntaService.save(createListToMergeForCuestionario(cuestionarioDesarrolloProfesional));
+//            respuestaPreguntaService.save(createListToMergeForCuestionario(cuestionarioSaludOcupacional));
+//            respuestaPreguntaService.save(createListToMergeForCuestionario(cuestionarioDesarrolloProfesional));
             
             //Recargamos la lista de personas
             this.personasList.clear();

@@ -169,8 +169,7 @@ public class Persona implements Serializable {
     @Column(name = "LINEA", length = 45)
     private String linea;
     @Column(name = "FECHA_INGRESO")
-    @Temporal(TemporalType.DATE)
-    private Date fechaIngreso;
+    private String fechaIngreso;
     @Column(name = "ANTIGUEDAD")
     private String antiguedad;
     @JoinColumn(name = "ID_ESTADO_CIVIL", referencedColumnName = "ID_ESTADO_CIVIL", nullable = false)
@@ -627,11 +626,11 @@ public class Persona implements Serializable {
         this.linea = linea;
     }
 
-    public Date getFechaIngreso() {
+    public String getFechaIngreso() {
         return fechaIngreso;
     }
 
-    public void setFechaIngreso(Date fechaIngreso) {
+    public void setFechaIngreso(String fechaIngreso) {
         this.fechaIngreso = fechaIngreso;
     }
 

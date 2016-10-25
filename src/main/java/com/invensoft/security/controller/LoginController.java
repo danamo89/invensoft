@@ -56,7 +56,7 @@ public class LoginController implements Serializable {
             SecurityContextHolder.getContext().setAuthentication(authenticationResponseToken);
             //ok, test if authenticated, if yes reroute
             if (authenticationResponseToken.isAuthenticated()) {
-                Usuario usuario = (Usuario)request.getSession().getAttribute("s_obj_usuario");
+//                Usuario usuario = (Usuario)request.getSession().getAttribute("s_obj_usuario");
                 
                 ((MenuController) FacesUtils.getBackingBean("menuController")).loadMenu();
 

@@ -21,6 +21,15 @@ import org.springframework.stereotype.Component;
 public class PersonaDaoImpl extends GenericDaoImpl<Persona, Integer> implements IPersonaDao {
     
     @Override
+    public List<Object[]> findPersonasBasicData() throws Exception {
+        StringBuilder sql = new StringBuilder();
+        sql.append("select id_persona, nombres, apellidos, email from personas order by apellidos, nombres");
+        
+        Query query = getEntityManager().createNativeQuery(sql.toString());
+        return (List<Object[]>) query.getResultList();
+    }
+    
+    @Override
     public List<Object[]> findTopPersonasXCategoriaLaboral(Integer top) throws Exception {
         StringBuilder sql = new StringBuilder();
         sql.append("select cl.descripcion, t.cantidad ");

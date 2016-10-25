@@ -53,8 +53,7 @@ public class Familiar implements Serializable {
     @Column(name = "NOMBRE", nullable = false, length = 255)
     private String nombre;
     @Column(name = "FECHA_NACIMIENTO")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaNacimiento;
+    private String fechaNacimiento;
     @Size(max = 45)
     @Column(name = "NUMERO_IDENTIFICACION", length = 45)
     private String numeroIdentificacion;
@@ -99,11 +98,11 @@ public class Familiar implements Serializable {
         this.nombre = nombre;
     }
 
-    public Date getFechaNacimiento() {
+    public String getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(String fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 

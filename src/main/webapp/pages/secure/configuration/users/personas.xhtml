@@ -305,8 +305,10 @@
                                     <p:outputLabel value="Fecha de Nacimiento"/>
                                 </p:column>
                                 <p:column style="width: 20%">
-                                    <p:calendar navigator="true" pattern="dd/MM/yyyy" value="#{personasController.familiar.fechaNacimiento}"
-                                                readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"/>
+                                    <p:inputText readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                                value="#{personasController.familiar.fechaNacimiento}">
+                                        <f:validateRegex pattern="^$|\b\d{4}\b|\b\d{2}[/]\d{4}\b|\b\d{2}[/]\d{2}[/]\d{4}\b"/>
+                                    </p:inputText>
                                 </p:column>
                             </p:row>
                             <p:row>    
@@ -319,6 +321,7 @@
                                         <f:selectItem itemLabel="Esposo(a)" itemValue="Esposo(a)"/>
                                         <f:selectItem itemLabel="Concubino(a)" itemValue="Concubino(a)"/>
                                         <f:selectItem itemLabel="Hijo(a)" itemValue="Hijo(a)"/>
+                                        <f:selectItem itemLabel="Hijastro(a)" itemValue="Hijastro(a)"/>
                                     </p:selectOneMenu >
                                 </p:column>
                                 <p:column>
@@ -644,8 +647,10 @@
                                     <p:outputLabel value="Fecha de Ingreso"/>
                                 </p:column>
                                 <p:column style="width: 30%">
-                                    <p:calendar navigator="true" pattern="dd/MM/yyyy" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
-                                                value="#{personasController.persona.fechaIngreso}"/>
+                                    <p:inputText readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                                value="#{personasController.persona.fechaIngreso}">
+                                        <f:validateRegex pattern="^$|\b\d{4}\b|\b\d{2}[/]\d{4}\b|\b\d{2}[/]\d{2}[/]\d{4}\b"/>
+                                    </p:inputText>
                                 </p:column>
                                 <p:column style="width: 20%">
                                     <p:outputLabel value="Antiguedad"/>
@@ -956,7 +961,7 @@
                     <p:row>
                         <p:column style="text-align: right">
                             <p:commandButton value="Cancelar" icon="ui-icon-close" style="background-color: tomato" update=":personasForm" immediate="true">
-                                <p:confirm header="Perdida de datos" message="Si cancelas el proceso antes de guardar puedes perder los datos ingresados. ¿Realmente desea salir?" icon="ui-icon-alert" />
+                                <p:confirm disabled="#{usuarioController.readOnly}" header="Perdida de datos" message="Si cancelas el proceso antes de guardar puedes perder los datos ingresados. ¿Realmente desea salir?" icon="ui-icon-alert" />
                                 <f:setPropertyActionListener  target="#{personasController.showPersonasTable}" value="#{!personasController.showPersonasTable}"/>
                             </p:commandButton> 
                         </p:column>
@@ -964,12 +969,6 @@
                             <p:commandButton value="Aceptar" icon="ui-icon-check" style="background-color: seagreen" actionListener="#{personasController.onSave()}" 
                                              disabled="#{usuarioController.readOnly}" update=":personasForm"/>
                         </p:column>
-                        <!--
-                        <p:column>
-                            <p:commandButton value="Exportar" icon="ui-icon-look" style="background-color: seagreen" actionListener="#{personasController.onExportarExcel()}" 
-                                             disabled="#{usuarioController.readOnly}" update=":personasForm"/>
-                        </p:column>
-                        -->
                     </p:row>
                 </p:panelGrid>
             </h:panelGroup>

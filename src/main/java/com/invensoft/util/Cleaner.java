@@ -19,7 +19,7 @@ public class Cleaner implements HttpSessionListener {
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-//         (new Timer()).schedule(new Clean(), new Date(), (5*60*1000));
+         (new Timer()).schedule(new Clean(), new Date(), (5*60*1000));
     }
 
     @Override
@@ -36,7 +36,6 @@ class Clean extends TimerTask {
         try {
             Runtime runtime = Runtime.getRuntime();
             double memoria=(double)runtime.freeMemory()/(double)runtime.totalMemory();
-            System.out.println(" Memoria Libre: "+(int)(memoria*100)+"%");
             if (memoria <= 20) {
                 System.out.println("Llamando al GC");
                 System.gc();
