@@ -8,6 +8,7 @@ package com.invensoft.util;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
@@ -15,18 +16,11 @@ import javax.servlet.http.HttpSessionListener;
  *
  * @author dnavarro
  */
-public class Cleaner implements HttpSessionListener {
+public class Cleaner extends HttpServlet {
 
-    @Override
-    public void sessionCreated(HttpSessionEvent se) {
+    public void init() {
          (new Timer()).schedule(new Clean(), new Date(), (5*60*1000));
     }
-
-    @Override
-    public void sessionDestroyed(HttpSessionEvent se) {
-        
-    }
-    
 }
 
 
@@ -37,7 +31,7 @@ class Clean extends TimerTask {
             Runtime runtime = Runtime.getRuntime();
             double memoria=(double)runtime.freeMemory()/(double)runtime.totalMemory();
             if (memoria <= 20) {
-                System.out.println("Llamando al GC");
+                System.out.println(new Date().toString() + " - Llamando al GC");
                 System.gc();
             }
         } catch (Exception e) {
