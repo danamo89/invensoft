@@ -23,7 +23,7 @@ public class PersonaDaoImpl extends GenericDaoImpl<Persona, Integer> implements 
     @Override
     public List<Object[]> findPersonasBasicData() throws Exception {
         StringBuilder sql = new StringBuilder();
-        sql.append("select id_persona, nombres, apellidos, email from personas order by apellidos, nombres");
+        sql.append("select legajo, nombres, apellidos, email, id_persona from personas order by apellidos, nombres");
         
         Query query = getEntityManager().createNativeQuery(sql.toString());
         return (List<Object[]>) query.getResultList();

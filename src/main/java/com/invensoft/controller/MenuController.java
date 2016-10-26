@@ -40,39 +40,41 @@ public class MenuController implements Serializable {
      * Creates a new instance of MenuController
      */
     public MenuController() {
-        
+
     }
 
     public void loadMenu() {
         try {
-            menuBinding = new Menu();
-            List<com.invensoft.model.Menu> listMenus = new LinkedList<>();
-            Map<Integer, com.invensoft.model.Menu> mapaMenu = new HashMap<>();
+            if (menuBinding == null) {
+                menuBinding = new Menu();
+                List<com.invensoft.model.Menu> listMenus = new LinkedList<>();
+                Map<Integer, com.invensoft.model.Menu> mapaMenu = new HashMap<>();
 
-            if (FacesUtils.getSessionUser() != null) {
-                //Cargamos todos los menues disponibles para el usuario
-                for (UsuarioRol usuarioRol : FacesUtils.getSessionUser().getUsuarioRolList()) {
-                    for (final RolMenu rolMenu : usuarioRol.getRol().getRolMenuList()) {
-                        mapaMenu.put(rolMenu.getMenu().getIdMenu(), rolMenu.getMenu());
-                    }
-                }
-                
-                //Ordenamos las opciones del menu
-                listMenus.addAll(mapaMenu.values());
-                Collections.sort(listMenus);
-                
-                //Agregamos las opciones al menu principal
-                for (final com.invensoft.model.Menu menu : listMenus) {
-                    UIMenuItem subMenuItem = new UIMenuItem();
-                    subMenuItem.setValue(menu.getNombre());
-                    subMenuItem.addActionListener(new ActionListener() {
-                        @Override
-                        public void processAction(ActionEvent event) throws AbortProcessingException {
-                            onRedirectTo(menu.getUrl());
+                if (FacesUtils.getSessionUser() != null) {
+                    //Cargamos todos los menues disponibles para el usuario
+                    for (UsuarioRol usuarioRol : FacesUtils.getSessionUser().getUsuarioRolList()) {
+                        for (final RolMenu rolMenu : usuarioRol.getRol().getRolMenuList()) {
+                            mapaMenu.put(rolMenu.getMenu().getIdMenu(), rolMenu.getMenu());
                         }
-                    });
-                    
-                    menuBinding.getChildren().add(subMenuItem);
+                    }
+
+                    //Ordenamos las opciones del menu
+                    listMenus.addAll(mapaMenu.values());
+                    Collections.sort(listMenus);
+
+                    //Agregamos las opciones al menu principal
+                    for (final com.invensoft.model.Menu menu : listMenus) {
+                        UIMenuItem subMenuItem = new UIMenuItem();
+                        subMenuItem.setValue(menu.getNombre());
+                        subMenuItem.addActionListener(new ActionListener() {
+                            @Override
+                            public void processAction(ActionEvent event) throws AbortProcessingException {
+                                onRedirectTo(menu.getUrl());
+                            }
+                        });
+
+                        menuBinding.getChildren().add(subMenuItem);
+                    }
                 }
             }
         } catch (Exception e) {

@@ -1023,8 +1023,8 @@
                         <p:outputLabel value="#{persona[3]}" />
                     </p:column>
                     <p:column style="width:6%;text-align: center">
-                        <p:commandButton icon="ui-icon-search" title="Detalle" actionListener="#{personasController.onViewPersonaDetailedInfo(persona[0])}" update=":personasForm"/>
-                        <p:commandButton icon="ui-icon-trash" title="Eliminar" actionListener="#{personasController.onDeletePersona(persona[0])}" 
+                        <p:commandButton icon="ui-icon-search" title="Detalle" actionListener="#{personasController.onViewPersonaDetailedInfo(persona[4])}" update=":personasForm"/>
+                        <p:commandButton icon="ui-icon-trash" title="Eliminar" actionListener="#{personasController.onDeletePersona(persona[4])}" 
                                          update=":personasForm" rendered="#{usuarioController.canDelete}">
                             <p:confirm header="Confirmación" message="¿Realmente desea eliminar el registro?" icon="ui-icon-alert" />
                         </p:commandButton>
