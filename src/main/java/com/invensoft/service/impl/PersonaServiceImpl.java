@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -44,9 +46,25 @@ public class PersonaServiceImpl implements IPersonaService {
     @Autowired
     private MessageBean messageBean;
     
-//    public List<> findPersonasBasicData() {
-//        
-//    }
+    public Persona findById(Integer id) {
+        try {
+            return personaDao.find(id);
+        } catch (Exception ex) {
+            Logger.getLogger(PersonaServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            messageBean.addError("Ha ocurrido un error al tratar de encontrar a una persona", ex.getMessage());
+            return null;
+        }
+    }
+    
+    public List<Object[]> findPersonasBasicData() {
+        try {
+            return personaDao.findPersonasBasicData();
+        } catch (Exception ex) {
+            Logger.getLogger(PersonaServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            messageBean.addError("Ha ocurrido un error al consultar el listado de personas", ex.getMessage());
+            return null;
+        }
+    }
     
     @Override
     public List<Persona> findAll() {

@@ -1010,21 +1010,21 @@
                     <p:column headerText="#" style="width: 3%">
                         <p:outputLabel value="#{index+1}" />
                     </p:column>
-                    <p:column headerText="Legajo" filterBy="#{persona.legajo}" filterMatchMode="contains">
-                        <p:outputLabel value="#{persona.legajo}" />
+                    <p:column headerText="Legajo" filterBy="#{persona[0]}" filterMatchMode="contains">
+                        <p:outputLabel value="#{persona[0]}" />
                     </p:column>
-                    <p:column headerText="Nombres" filterBy="#{persona.nombres}" filterMatchMode="contains">
-                        <p:outputLabel value="#{persona.nombres}" />
+                    <p:column headerText="Nombres" filterBy="#{persona[1]}" filterMatchMode="contains">
+                        <p:outputLabel value="#{persona[1]}" />
                     </p:column>
-                    <p:column headerText="Apellidos" filterBy="#{persona.apellidos}" filterMatchMode="contains">
-                        <p:outputLabel value="#{persona.apellidos}" />
+                    <p:column headerText="Apellidos" filterBy="#{persona[2]}" filterMatchMode="contains">
+                        <p:outputLabel value="#{persona[2]}" />
                     </p:column>
-                    <p:column headerText="Email" filterBy="#{persona.email}" filterMatchMode="contains">
-                        <p:outputLabel value="#{persona.email}" />
+                    <p:column headerText="Email" filterBy="#{persona[3]}" filterMatchMode="contains">
+                        <p:outputLabel value="#{persona[3]}" />
                     </p:column>
                     <p:column style="width:6%;text-align: center">
-                        <p:commandButton icon="ui-icon-search" title="Detalle" actionListener="#{personasController.onViewPersonaDetailedInfo(persona)}" update=":personasForm"/>
-                        <p:commandButton icon="ui-icon-trash" title="Eliminar" actionListener="#{personasController.onDeletePersona(persona)}" 
+                        <p:commandButton icon="ui-icon-search" title="Detalle" actionListener="#{personasController.onViewPersonaDetailedInfo(persona[0])}" update=":personasForm"/>
+                        <p:commandButton icon="ui-icon-trash" title="Eliminar" actionListener="#{personasController.onDeletePersona(persona[0])}" 
                                          update=":personasForm" rendered="#{usuarioController.canDelete}">
                             <p:confirm header="Confirmación" message="¿Realmente desea eliminar el registro?" icon="ui-icon-alert" />
                         </p:commandButton>

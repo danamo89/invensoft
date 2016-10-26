@@ -15,14 +15,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author David
  */
 public interface IPersonaService {
-    
+    Persona findById(Integer id);
     List<Persona> findAll();
     Persona save(Persona persona);
     void delete(Persona persona);
     
     XSSFWorkbook exportarPersonaExcel(Persona persona) throws IOException;
     XSSFWorkbook exportarPersonasAllExcel() throws IOException;
-    
+    public List<Object[]> findPersonasBasicData();
     public List<Object[]> findTopPersonasXCategoriaLaboral(Integer top);
     public List<Object[]> findTopPersonasXLocalidad(Integer top);
     

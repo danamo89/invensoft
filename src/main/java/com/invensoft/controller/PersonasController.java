@@ -99,7 +99,7 @@ public class PersonasController implements Serializable {
     private Puesto puesto;
     private CategoriaLaboral categoriaLaboral;
     
-    private List<Persona> personasList;
+    private List<Object[]> personasList;
     private List<TipoIdentificacion> tiposIdentificacionList;
     private List<Pais> paisesList;
     private List<EstadoCivil> estadosCivilesList;
@@ -159,7 +159,7 @@ public class PersonasController implements Serializable {
     @PostConstruct
     public void initController() {
         showPersonasTable = true;
-        personasList = personasService.findAll();
+        personasList = personasService.findPersonasBasicData();
 
         familiar = new Familiar();
         educacionFormal = new EducacionFormal();
@@ -278,16 +278,17 @@ public class PersonasController implements Serializable {
         }
     }
     
-    public void onDeletePersona(Persona persona) {
+    public void onDeletePersona(Object arg) {
+        this.persona = personasService.findById((Integer) arg);
         personasService.delete(persona);
         
         //Recargamos la lista de personas
         this.personasList.clear();
-        this.personasList.addAll(personasService.findAll());
+        this.personasList.addAll(personasService.findPersonasBasicData());
     }
 
-    public void onViewPersonaDetailedInfo(Persona persona) {
-        this.persona = persona;
+    public void onViewPersonaDetailedInfo(Object arg) {
+        this.persona = personasService.findById((Integer) arg);
         
         this.showPersonasTable = false;
         FacesContext context = FacesContext.getCurrentInstance();
@@ -558,7 +559,7 @@ public class PersonasController implements Serializable {
             
             //Recargamos la lista de personas
             this.personasList.clear();
-            this.personasList = personasService.findAll();
+            this.personasList = personasService.findPersonasBasicData();
 
             this.showPersonasTable = true;
 
@@ -787,11 +788,11 @@ public class PersonasController implements Serializable {
         this.educacionNoFormal = educacionNoFormal;
     }
 
-    public List<Persona> getPersonasList() {
+    public List<Object[]> getPersonasList() {
         return personasList;
     }
 
-    public void setPersonasList(List<Persona> personasList) {
+    public void setPersonasList(List<Object[]> personasList) {
         this.personasList = personasList;
     }
 
