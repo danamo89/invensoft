@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -30,8 +31,9 @@ import org.primefaces.component.menuitem.UIMenuItem;
  *
  * @author David
  */
-@Named(value = "menuController")
-@ViewScoped
+//@Named(value = "menuController")
+@ManagedBean(name = "menuController")
+@SessionScoped
 public class MenuController implements Serializable {
 
     private Menu menuBinding;
@@ -45,7 +47,6 @@ public class MenuController implements Serializable {
 
     public void loadMenu() {
         try {
-            if (menuBinding == null) {
                 menuBinding = new Menu();
                 List<com.invensoft.model.Menu> listMenus = new LinkedList<>();
                 Map<Integer, com.invensoft.model.Menu> mapaMenu = new HashMap<>();
@@ -76,7 +77,6 @@ public class MenuController implements Serializable {
                         menuBinding.getChildren().add(subMenuItem);
                     }
                 }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
