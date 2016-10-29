@@ -470,7 +470,7 @@ public class PersonaServiceImpl implements IPersonaService {
                 cell.setCellValue(persona.getLinea() != null ? persona.getLinea() : "");
                 cell.setCellStyle(valueStyle);
                 cell = (XSSFCell) row.createCell((short) 26);
-                cell.setCellValue(persona.getFechaIngreso() != null ? dateFormat.format(persona.getFechaIngreso()) : "");
+                cell.setCellValue(persona.getFechaIngreso() != null ? persona.getFechaIngreso() : "");
                 cell.setCellStyle(valueStyle);
                 cell = (XSSFCell) row.createCell((short) 27);
                 cell.setCellValue(persona.getAntiguedad() != null ? persona.getAntiguedad().toString() : "");
