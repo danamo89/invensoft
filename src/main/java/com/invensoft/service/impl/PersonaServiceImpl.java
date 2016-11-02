@@ -46,6 +46,7 @@ public class PersonaServiceImpl implements IPersonaService {
     @Autowired
     private MessageBean messageBean;
     
+    @Override
     public Persona findById(Integer id) {
         try {
             return personaDao.find(id);
@@ -56,9 +57,21 @@ public class PersonaServiceImpl implements IPersonaService {
         }
     }
     
+    @Override
     public List<Object[]> findPersonasBasicData() {
         try {
             return personaDao.findPersonasBasicData();
+        } catch (Exception ex) {
+            Logger.getLogger(PersonaServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            messageBean.addError("Ha ocurrido un error al consultar el listado de personas", ex.getMessage());
+            return null;
+        }
+    }
+    
+    @Override
+    public List<Object[]> findPersonasReportData() {
+        try {
+            return personaDao.findPersonasReportData();
         } catch (Exception ex) {
             Logger.getLogger(PersonaServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             messageBean.addError("Ha ocurrido un error al consultar el listado de personas", ex.getMessage());
@@ -198,7 +211,7 @@ public class PersonaServiceImpl implements IPersonaService {
 
     @Override
     public XSSFWorkbook exportarPersonasAllExcel() throws IOException {
-        List<Persona> personas = findAll();
+        List<Object[]> personas = findPersonasReportData();
         XSSFWorkbook workbook = null;
         
         if(personas.size() > 0) {
@@ -268,57 +281,75 @@ public class PersonaServiceImpl implements IPersonaService {
             cell = (XSSFCell) row.createCell((short) 0);
             cell.setCellValue("Legajo");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 1);
             cell.setCellValue("Nombre");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 2);
             cell.setCellValue("Apellido");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 3);
             cell.setCellValue("Cuil");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 4);
             cell.setCellValue("Tipo Identificacion");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 5);
             cell.setCellValue("Numero de Identificacion");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 6);
             cell.setCellValue("Fecha Nacimiento");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 7);
             cell.setCellValue("Lugar de Nacimiento");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 8);
             cell.setCellValue("Domicilio");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 9);
             cell.setCellValue("Numero");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 10);
             cell.setCellValue("Piso");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 11);
             cell.setCellValue("Departamento");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 12);
             cell.setCellValue("Localidad");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 13);
             cell.setCellValue("Cod. Postal");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 14);
             cell.setCellValue("Email");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 15);
             cell.setCellValue("Telefono");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 16);
             cell.setCellValue("Celular");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 17);
             cell.setCellValue("Estado Civil");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 18);
             cell.setCellValue("Pais de Origen");
             cell.setCellStyle(headerStyle);
@@ -327,191 +358,263 @@ public class PersonaServiceImpl implements IPersonaService {
             cell = (XSSFCell) row.createCell((short) 19);
             cell.setCellValue("Puesto");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 20);
             cell.setCellValue("Categoria Laboral");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 21);
             cell.setCellValue("Gremio");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 22);
             cell.setCellValue("Horario");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 23);
             cell.setCellValue("Lugar de Trabajo");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 24);
+            cell.setCellValue("Area de Trabajo");
+            cell.setCellStyle(headerStyle);
+            
+            cell = (XSSFCell) row.createCell((short) 25);
             cell.setCellValue("Jefe Inmediato");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 25);
+            
+            cell = (XSSFCell) row.createCell((short) 26);
             cell.setCellValue("Linea");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 26);
+            
+            cell = (XSSFCell) row.createCell((short) 27);
             cell.setCellValue("Fecha de Ingreso");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 27);
+            
+            cell = (XSSFCell) row.createCell((short) 28);
             cell.setCellValue("Antiguedad");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 28);
+            
+            cell = (XSSFCell) row.createCell((short) 29);
             cell.setCellValue("Obra Social");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 29);
+            
+            cell = (XSSFCell) row.createCell((short) 30);
             cell.setCellValue("Banco de Cobro");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 30);
+            
+            cell = (XSSFCell) row.createCell((short) 31);
             cell.setCellValue("Tiene Credencial ART");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 31);
+            
+            cell = (XSSFCell) row.createCell((short) 32);
             cell.setCellValue("Carnet de Conductor");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 32);
-            cell.setCellValue("Carnet de Conductor desde");
-            cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 33);
             cell.setCellValue("Carnet de Conductor desde");
             cell.setCellStyle(headerStyle);
+            
             cell = (XSSFCell) row.createCell((short) 34);
+            cell.setCellValue("Carnet de Conductor hasta");
+            cell.setCellStyle(headerStyle);
+            
+            cell = (XSSFCell) row.createCell((short) 35);
             cell.setCellValue("Buzo");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 35);
+            
+            cell = (XSSFCell) row.createCell((short) 36);
             cell.setCellValue("Pantalon");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 36);
+            
+            cell = (XSSFCell) row.createCell((short) 37);
             cell.setCellValue("Botines");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 37);
+            
+            cell = (XSSFCell) row.createCell((short) 38);
             cell.setCellValue("Campera");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 38);
+            
+            cell = (XSSFCell) row.createCell((short) 39);
             cell.setCellValue("Eq. de Lluvia");
             cell.setCellStyle(headerStyle);
-            cell = (XSSFCell) row.createCell((short) 39);
+            
+            cell = (XSSFCell) row.createCell((short) 40);
             cell.setCellValue("Camisa");
             cell.setCellStyle(headerStyle);
+            
             Integer indx = row.getRowNum() + 1;
 
-            for(Persona persona : personas) {            
+            for(Object[] persona : personas) {  
                 row = spreadsheet.createRow(indx);
                 cell = (XSSFCell) row.createCell((short) 0);
-                cell.setCellValue(persona.getLegajo() != null ? persona.getLegajo() : "");
+                cell.setCellValue((String)persona[0] != null ? (String)persona[0] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 1);
-                cell.setCellValue(persona.getNombres() != null ? persona.getNombres() : "");
+                cell.setCellValue((String)persona[1] != null ? (String)persona[1] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 2);
-                cell.setCellValue(persona.getApellidos() != null ? persona.getApellidos() : "");
+                cell.setCellValue((String)persona[2] != null ? (String)persona[2] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 3);
-                cell.setCellValue(persona.getCuil() != null ? persona.getCuil() : "");
+                cell.setCellValue((String)persona[3] != null ? (String)persona[3] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 4);
-                cell.setCellValue(persona.getTipoIdentificacion().getDescripcion() != null ? persona.getTipoIdentificacion().getDescripcion() : "");
+                cell.setCellValue((String)persona[4] != null ? (String)persona[4] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 5);
-                cell.setCellValue(persona.getNumeroIdentificacion() != null ? persona.getNumeroIdentificacion() : "");
+                cell.setCellValue((String)persona[5] != null ? (String)persona[5] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 6);
-                cell.setCellValue(persona.getFechaNacimiento() != null ? dateFormat.format(persona.getFechaNacimiento()) : "");
+                cell.setCellValue((String)persona[6] != null ? (String)persona[6] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 7);
-                cell.setCellValue(persona.getLugarNacimiento() != null ? persona.getLugarNacimiento() : "");
+                cell.setCellValue((String)persona[7] != null ? (String)persona[7] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 8);
-                cell.setCellValue(persona.getDomicilio() != null ? persona.getDomicilio() : "");
+                cell.setCellValue((String)persona[8] != null ? (String)persona[8] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 9);
-                cell.setCellValue(persona.getNumeroDomicilio() != null ? persona.getNumeroDomicilio() : "");
+                cell.setCellValue((String)persona[9] != null ? (String)persona[9] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 10);
-                cell.setCellValue(persona.getPiso() != null ? persona.getPiso() : "");
+                cell.setCellValue((String)persona[10] != null ? (String)persona[10] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 11);
-                cell.setCellValue(persona.getDepartamento() != null ? persona.getDepartamento() : "");
+                cell.setCellValue((String)persona[11] != null ? (String)persona[11] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 12);
-                cell.setCellValue(persona.getLocalidad().getNombre() != null ? persona.getLocalidad().getNombre() : "");
+                cell.setCellValue((String)persona[12] != null ? (String)persona[12] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 13);
-                cell.setCellValue(persona.getCodigoPostal() != null ? persona.getCodigoPostal() : "");
+                cell.setCellValue((String)persona[13] != null ? (String)persona[13] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 14);
-                cell.setCellValue(persona.getEmail() != null ? persona.getEmail() : "");
+                cell.setCellValue((String)persona[14] != null ? (String)persona[14] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 15);
-                cell.setCellValue(persona.getTelefonoParticular() != null ? persona.getTelefonoParticular() : "");
+                cell.setCellValue((String)persona[15] != null ? (String)persona[15] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 16);
-                cell.setCellValue(persona.getCelular() != null ? persona.getCelular() : "");
+                cell.setCellValue((String)persona[16] != null ? (String)persona[16] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 17);
-                cell.setCellValue(persona.getEstadoCivil().getDescripcion() != null ? persona.getEstadoCivil().getDescripcion() : "");
+                cell.setCellValue((String)persona[17] != null ? (String)persona[17] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 18);
-                cell.setCellValue(persona.getPaisOrigen().getNombre() != null ? persona.getPaisOrigen().getNombre() : "");
+                cell.setCellValue((String)persona[18] != null ? (String)persona[18] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 19);
-                cell.setCellValue(persona.getPuesto().getDescripcion() != null ? persona.getPuesto().getDescripcion() : "");
+                cell.setCellValue((String)persona[19] != null ? (String)persona[19] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 20);
-                cell.setCellValue(persona.getIdCategoriaLaboral().getDescripcion() != null ? persona.getIdCategoriaLaboral().getDescripcion() : "");
+                cell.setCellValue((String)persona[20] != null ? (String)persona[20] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 21);
-                cell.setCellValue(persona.getGremio().getDescripcion() != null ? persona.getGremio().getDescripcion() : "");
+                cell.setCellValue((String)persona[21] != null ? (String)persona[21] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 22);
-                cell.setCellValue(persona.getHorario() != null ? persona.getHorario() : "");
+                cell.setCellValue((String)persona[22] != null ? (String)persona[22] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 23);
-                cell.setCellValue(persona.getLugarDeTrabajo() != null ? persona.getLugarDeTrabajo() : "");
+                cell.setCellValue((String)persona[23] != null ? (String)persona[23] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 24);
-                cell.setCellValue(persona.getJefeInmediato() != null ? persona.getJefeInmediato() : "");
+                cell.setCellValue((String)persona[24] != null ? (String)persona[24] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 25);
-                cell.setCellValue(persona.getLinea() != null ? persona.getLinea() : "");
+                cell.setCellValue((String)persona[25] != null ? (String)persona[25] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 26);
-                cell.setCellValue(persona.getFechaIngreso() != null ? persona.getFechaIngreso() : "");
+                cell.setCellValue((String)persona[26] != null ? (String)persona[26] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 27);
-                cell.setCellValue(persona.getAntiguedad() != null ? persona.getAntiguedad().toString() : "");
+                cell.setCellValue((String)persona[27] != null ? (String)persona[27] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 28);
-                cell.setCellValue(persona.getObraSocial() != null ? persona.getObraSocial() : "");
+                cell.setCellValue((String)persona[28] != null ? (String)persona[28] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 29);
-                cell.setCellValue(persona.getBanco() != null ? persona.getBanco() : "");
+                cell.setCellValue((String)persona[29] != null ? (String)persona[29] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 30);
-                cell.setCellValue(persona.getTieneCredencialArt() != null ? persona.getTieneCredencialArt() : "");
+                cell.setCellValue((String)persona[30] != null ? (String)persona[30] : "");
                 cell.setCellStyle(valueStyle);
+                
+                /* Credencial ART - BEGIN */
                 cell = (XSSFCell) row.createCell((short) 31);
-                cell.setCellValue(persona.getTieneCarnetConductor() != null ? persona.getTieneCarnetConductor() : "");
+                cell.setCellValue((String)persona[31] != null ? (String)persona[31] : "");
                 cell.setCellStyle(valueStyle);
+                /* Credencial ART - END 
+                
+                /* Carnet de Conductor - BEGIN */
                 cell = (XSSFCell) row.createCell((short) 32);
-                cell.setCellValue(persona.getCarnetConductorDesde() != null ? dateFormat.format(persona.getCarnetConductorDesde()) : "");
+                cell.setCellValue((String)persona[32] != null ? (String)persona[32] : "");
                 cell.setCellStyle(valueStyle);
+                /* Carnet de Conductor - END */
+                
                 cell = (XSSFCell) row.createCell((short) 33);
-                cell.setCellValue(persona.getCarnetConductorHasta() != null ? dateFormat.format(persona.getCarnetConductorHasta()) : "");
+                cell.setCellValue((String)persona[33] != null ? (String)persona[33] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 34);
-                cell.setCellValue(persona.getBuzo() != null ? persona.getBuzo() : "");
+                cell.setCellValue((String)persona[34] != null ? (String)persona[34] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 35);
-                cell.setCellValue(persona.getPantalon() != null ? persona.getPantalon().toString() : "");
+                cell.setCellValue((String)persona[35] != null ? (String)persona[35] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 36);
-                cell.setCellValue(persona.getBotines() != null ? persona.getBotines().toString() : "");
+                cell.setCellValue((String)persona[36] != null ? (String)persona[36] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 37);
-                cell.setCellValue(persona.getCampera() != null ? persona.getCampera() : "");
+                cell.setCellValue((String)persona[37] != null ? (String)persona[37] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 38);
-                cell.setCellValue(persona.getEqLluvia() != null ? persona.getEqLluvia().toString() : "");
+                cell.setCellValue((String)persona[38] != null ? (String)persona[38] : "");
                 cell.setCellStyle(valueStyle);
+                
                 cell = (XSSFCell) row.createCell((short) 39);
-                cell.setCellValue(persona.getCamisa() != null ? persona.getCamisa().toString() : "");
+                cell.setCellValue((String)persona[39] != null ? (String)persona[39] : "");
                 cell.setCellStyle(valueStyle);
-
+                
+                cell = (XSSFCell) row.createCell((short) 40);
+                cell.setCellValue((String)persona[40] != null ? (String)persona[40] : "");
+                cell.setCellStyle(valueStyle);
+                
                 indx ++;
             }
 

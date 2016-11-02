@@ -159,12 +159,12 @@ public class Persona implements Serializable {
     @Size(max = 1)
     @Column(name = "TIENE_CARNET_CONDUCTOR", length = 1)
     private String tieneCarnetConductor;
+    
     @Column(name = "CARNET_CONDUCTOR_DESDE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date carnetConductorDesde;
+    private String carnetConductorDesde;
     @Column(name = "CARNET_CONDUCTOR_HASTA")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date carnetConductorHasta;
+    private String carnetConductorHasta;
+    
     @Size(max = 45)
     @Column(name = "LINEA", length = 45)
     private String linea;
@@ -649,19 +649,19 @@ public class Persona implements Serializable {
         this.tieneCarnetConductor = tieneCarnetConductor;
     }
 
-    public Date getCarnetConductorDesde() {
+    public String getCarnetConductorDesde() {
         return carnetConductorDesde;
     }
 
-    public void setCarnetConductorDesde(Date carnetConductorDesde) {
+    public void setCarnetConductorDesde(String carnetConductorDesde) {
         this.carnetConductorDesde = carnetConductorDesde;
     }
 
-    public Date getCarnetConductorHasta() {
+    public String getCarnetConductorHasta() {
         return carnetConductorHasta;
     }
 
-    public void setCarnetConductorHasta(Date carnetConductorHasta) {
+    public void setCarnetConductorHasta(String carnetConductorHasta) {
         this.carnetConductorHasta = carnetConductorHasta;
     }
 

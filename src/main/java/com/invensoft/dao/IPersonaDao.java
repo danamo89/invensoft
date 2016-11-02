@@ -15,6 +15,7 @@ import java.util.List;
 public interface IPersonaDao extends IGenericDao<Persona, Integer> {
     
     public List<Object[]> findPersonasBasicData() throws Exception;
+    public List<Object[]> findPersonasReportData() throws Exception;
     public List<Object[]> findTopPersonasXCategoriaLaboral(Integer top) throws Exception;
     public List<Object[]> findTopPersonasXLocalidad(Integer top) throws Exception;
     

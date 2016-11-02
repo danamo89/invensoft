@@ -23,6 +23,7 @@ public interface IPersonaService {
     XSSFWorkbook exportarPersonaExcel(Persona persona) throws IOException;
     XSSFWorkbook exportarPersonasAllExcel() throws IOException;
     public List<Object[]> findPersonasBasicData();
+    public List<Object[]> findPersonasReportData();
     public List<Object[]> findTopPersonasXCategoriaLaboral(Integer top);
     public List<Object[]> findTopPersonasXLocalidad(Integer top);
     

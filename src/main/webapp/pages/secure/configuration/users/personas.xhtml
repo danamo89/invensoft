@@ -866,15 +866,19 @@
                                     <p:outputLabel value="Desde: "/>
                                 </p:column>
                                 <p:column>
-                                    <p:calendar navigator="true" pattern="dd/MM/yyyy" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
-                                                value="#{personasController.persona.carnetConductorDesde}"/>
+                                    <p:inputText readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                                 value="#{personasController.persona.carnetConductorDesde}">
+                                        <f:validateRegex pattern="^$|\b\d{4}\b|\b\d{2}[/]\d{4}\b|\b\d{2}[/]\d{2}[/]\d{4}\b"/>
+                                    </p:inputText>
                                 </p:column>
                                 <p:column>
                                     <p:outputLabel value="Hasta: "/>
                                 </p:column>
                                 <p:column>
-                                    <p:calendar navigator="true" pattern="dd/MM/yyyy" readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
-                                                value="#{personasController.persona.carnetConductorHasta}"/>
+                                    <p:inputText readonly="#{usuarioController.readOnly}" disabled="#{usuarioController.readOnly}"
+                                                 value="#{personasController.persona.carnetConductorHasta}">
+                                        <f:validateRegex pattern="^$|\b\d{4}\b|\b\d{2}[/]\d{4}\b|\b\d{2}[/]\d{2}[/]\d{4}\b"/>
+                                    </p:inputText>
                                 </p:column>
                             </p:row>
                         </p:panelGrid>
