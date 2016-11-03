@@ -230,7 +230,7 @@ public class PersonasController implements Serializable {
             for (Provincia provincia : provinciasList) {
                 Map<String, Object> fieldsAndValues = new HashMap<>();
                 fieldsAndValues.put("provincia.idProvincia", provincia.getIdProvincia());
-                mapProvinciasLocalidades.put(provincia.getIdProvincia(), localidadService.findByOrderBy(fieldsAndValues, new String[]{"orden"}));
+                mapProvinciasLocalidades.put(provincia.getIdProvincia(), localidadService.findByOrderBy(fieldsAndValues, new String[]{"nombre"}));
             }
 
             idProvinciaSelected = provinciasList.get(0).getIdProvincia();
